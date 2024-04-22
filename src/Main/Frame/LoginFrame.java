@@ -42,6 +42,15 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         JLabel title = new JLabel();
 
 
+        //背景图片
+        ImageIcon backgroundImage = new ImageIcon("src/Main/Resources/background.png");
+        JLabel background = new JLabel(backgroundImage);
+        background.setSize(450,320);
+        background.setBounds(0, 0, 450, 320);
+        this.getContentPane().add(background);
+
+
+
         //输入文本框提示
         JLabel UserNameTip = new JLabel("User Name");
         JLabel UserPasswordTip = new JLabel(" Password");
@@ -78,7 +87,7 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
 
         //Guest访客模式
 //        JButton guest = new JButton("Guest Mode");
-        JLabel guestTips = new JLabel("Try LogFree Guest Mode?  -->");
+        JLabel guestTips = new JLabel("Try Log Free Guest Mode?  -->");
         guestTips.setSize(205, 25);
         guestTips.setBounds(35, 225, 205, 25);
         guest.setSize(100, 25);
@@ -161,8 +170,10 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             userPassword.setEchoChar((char) 0);
+            System.out.println("Show Password");
         } else if (e.getStateChange() == ItemEvent.DESELECTED) {
             userPassword.setEchoChar((char) 9679);
+            System.out.println("Hide password");
         }
     }
 }
