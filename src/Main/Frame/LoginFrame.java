@@ -86,7 +86,7 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
 
 
     //登陆失败提示框初始化
-    private void initialLoginFault(int issue) {
+    private void initialLoginFailure(int issue) {
         JOptionPane loginFault = new JOptionPane("Caution");
         String content = "initial";
         if (issue == WRONG_PASSWORD) {
@@ -115,16 +115,16 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
             System.out.println();
             //@Test_Fault Dialog initialization
             if(loginUserName.getText().equals("")) {
-                initialLoginFault(NONE_INPUT);
+                initialLoginFailure(NONE_INPUT);
             } else {
                 if (!loginUserName.getText().equals("gan")) {
-                    initialLoginFault(INVALID_USERNAME);
+                    initialLoginFailure(INVALID_USERNAME);
                 }
                 if (userPassword.getPassword().length == 0) {
-                    initialLoginFault(NONE_PASSWORD);
+                    initialLoginFailure(NONE_PASSWORD);
                     return;
                 } else if (userPassword.getPassword()[0] != '0') {
-                    initialLoginFault(WRONG_PASSWORD);
+                    initialLoginFailure(WRONG_PASSWORD);
                 }
             }
 
