@@ -1,4 +1,4 @@
-import view.GameFrame;
+import Demo.view.GameFrame;
 
 import javax.swing.*;
 

@@ -1,9 +1,11 @@
 package Main;
 
-import Main.Frame.GameFrameSetup;
+import Main.Frame.GameFrame;
+import Main.Frame.LoginFrame;
 
 public class GameStart {
     public static void main(String[] args) {
-        new GameFrameSetup().setup();
+        //new GameFrame().setup();
+        new LoginFrame().setup();
     }
 }

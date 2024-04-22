@@ -1,4 +1,4 @@
-package view;
+package Demo.view;
 
 import controller.GameController;
 import util.ColorMap;
@@ -13,14 +13,14 @@ public class GameFrame extends JFrame {
     private JButton loadBtn;
 
     private JLabel stepLabel;
-    private GamePanel gamePanel;
+    private view.GamePanel gamePanel;
 
     public GameFrame(int width, int height) {
         this.setTitle("2024 CS109 Project Demo");
         this.setLayout(null);
         this.setSize(width, height);
         ColorMap.InitialColorMap();
-        gamePanel = new GamePanel((int) (this.getHeight() * 0.8));
+        gamePanel = new view.GamePanel((int) (this.getHeight() * 0.8));
         gamePanel.setLocation(this.getHeight() / 15, this.getWidth() / 15);
         this.add(gamePanel);
 

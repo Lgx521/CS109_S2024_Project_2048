@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GameFrameSetup extends JFrame implements ActionListener {
+public class GameFrame extends JFrame implements ActionListener {
 
     //创建setup方法供外界访问
     public void setup() {
@@ -14,13 +14,11 @@ public class GameFrameSetup extends JFrame implements ActionListener {
     }
 
 
-
-
-
+    //初始化界面
     private void initialGameFrame() {
         this.getContentPane().removeAll();
         this.setTitle("2048");
-        this.setSize(700,500);
+        this.setSize(800,550);
         this.setAlwaysOnTop(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -28,7 +26,7 @@ public class GameFrameSetup extends JFrame implements ActionListener {
 
         //设置菜单栏
         JMenuBar jMenuBar = new JMenuBar();
-        jMenuBar.setSize(700,25);
+        jMenuBar.setSize(800,25);
 
         JMenu game = new JMenu("GamePlay");
         JMenu users = new JMenu("Users");
@@ -58,9 +56,7 @@ public class GameFrameSetup extends JFrame implements ActionListener {
 
         this.getContentPane().add(jMenuBar);
 
-
     }
-
 
 
 

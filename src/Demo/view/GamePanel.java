@@ -6,9 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class GamePanel extends ListenerPanel {
+public class GamePanel extends view.ListenerPanel {
     private final int COUNT = 4;
-    private GridComponent[][] grids;
+    private view.GridComponent[][] grids;
 
     private GridNumber model;
     private JLabel stepLabel;
@@ -22,7 +22,7 @@ public class GamePanel extends ListenerPanel {
         this.setBackground(Color.DARK_GRAY);
         this.setSize(size, size);
         this.GRID_SIZE = size / COUNT;
-        this.grids = new GridComponent[COUNT][COUNT];
+        this.grids = new view.GridComponent[COUNT][COUNT];
         this.model = new GridNumber(COUNT, COUNT);
         initialGame();
 
@@ -36,7 +36,7 @@ public class GamePanel extends ListenerPanel {
         this.steps = 0;
         for (int i = 0; i < grids.length; i++) {
             for (int j = 0; j < grids[i].length; j++) {
-                grids[i][j] = new GridComponent(i, j, model.getNumber(i, j), this.GRID_SIZE);
+                grids[i][j] = new view.GridComponent(i, j, model.getNumber(i, j), this.GRID_SIZE);
                 grids[i][j].setLocation(j * GRID_SIZE, i * GRID_SIZE);
                 this.add(grids[i][j]);
             }
