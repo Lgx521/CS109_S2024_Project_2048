@@ -19,7 +19,6 @@ public class GameFrame extends JFrame implements ActionListener {
         this.getContentPane().removeAll();
         this.setTitle("2048");
         this.setSize(800,550);
-        this.setAlwaysOnTop(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);

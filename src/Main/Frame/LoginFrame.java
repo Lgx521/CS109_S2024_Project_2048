@@ -14,6 +14,11 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
     Checkbox showPwd = new Checkbox("Display");
     JButton commitJbt = new JButton("Log in");
 
+    private final int NONE_INPUT = 0;
+    private final int NONE_PASSWORD = 1;
+    private final int WRONG_PASSWORD = 2;
+    private final int INVALID_USERNAME = 3;
+
 
     //创建setup方法供外界访问
     public void setup() {
@@ -21,12 +26,11 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         this.setVisible(true);
     }
 
-
+    //初始化主界面
     private void initialLoginFrame() {
         this.getContentPane().removeAll();
         this.setTitle("Log in - Welcome to play 2048");
         this.setSize(450,320);
-        this.setAlwaysOnTop(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
@@ -81,6 +85,24 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
 
 
 
+    //登陆失败提示框初始化
+    private void initialLoginFault(int issue) {
+        JOptionPane loginFault = new JOptionPane("Caution");
+        String content = "initial";
+        if (issue == WRONG_PASSWORD) {
+            content = "Wrong Password!";
+        } else if (issue == INVALID_USERNAME) {
+            content = "This User doesn't exist.\nPlease Log Up!\nOr Try Guest mode?";
+        } else if (issue == NONE_INPUT) {
+            content = "Please input your Info!\nTry Guest mode?";
+        } else if (issue == NONE_PASSWORD) {
+            content = "Please input your password!";
+        }
+        loginFault.showMessageDialog(null,content,"Caution",JOptionPane.ERROR_MESSAGE);
+    }
+
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
@@ -91,6 +113,21 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
                 System.out.print(userPassword.getPassword()[i]);
             }
             System.out.println();
+            //@Test_Fault Dialog initialization
+            if(loginUserName.getText().equals("")) {
+                initialLoginFault(NONE_INPUT);
+            } else {
+                if (!loginUserName.getText().equals("gan")) {
+                    initialLoginFault(INVALID_USERNAME);
+                }
+                if (userPassword.getPassword().length == 0) {
+                    initialLoginFault(NONE_PASSWORD);
+                    return;
+                } else if (userPassword.getPassword()[0] != '0') {
+                    initialLoginFault(WRONG_PASSWORD);
+                }
+            }
+
         }
     }
 
