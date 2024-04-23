@@ -33,9 +33,6 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
 
-        //标题
-//        JLabel title = new JLabel("");
-
 
         //背景图片
         ImageIcon backgroundImage = new ImageIcon("src/Main/Resources/background.png");
@@ -47,7 +44,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
         //输入文本框提示
         JLabel UserNameTip = new JLabel("User Name");
         JLabel UserPasswordTip = new JLabel("Input Password");
-        JLabel CommitPwdTip = new JLabel("Commit Password");
+        JLabel CommitPwdTip = new JLabel("Verify Password");
 
         UserNameTip.setSize(70, 25);
         UserPasswordTip.setSize(140, 25);
@@ -55,7 +52,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
         UserNameTip.setBounds(58, 95, 70, 25);
         UserPasswordTip.setBounds(32, 135, 140, 25);
-        CommitPwdTip.setBounds(15, 175, 140, 25);
+        CommitPwdTip.setBounds(29, 175, 140, 25);
 
 
         //输入文本框
@@ -100,14 +97,96 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
     }
 
+    private final int NOTICE = 0;
+    private final int NO_USERNAME_INPUT = 1;
+    private final int NO_PASSWORD_INPUT = 2;
+    private final int NO_PASSWORD_VERIFICATION_INPUT = 3;
+    private final int VERIFICATION_ERROR = 4;
+
+
+    //notice提示初始化
+    private void initialNoticeDialog(int issue) {
+        String content = "initial";
+        if (issue == NOTICE) {
+            content = "Your User Name can only contains\n" +
+                    "English letters, Numbers and _";
+            JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.WARNING_MESSAGE);
+            return;
+        } else if (issue == NO_USERNAME_INPUT) {
+            content = "Please input your user name!";
+        } else if (issue == NO_PASSWORD_INPUT) {
+            content = "No password input!";
+        } else if (issue == NO_PASSWORD_VERIFICATION_INPUT) {
+            content = "Verify your password!";
+        } else if (issue == VERIFICATION_ERROR) {
+            content = "Verification Error!\nYou must input same password";
+        }
+        JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private boolean userNameValidation(String texts) {
+        String regex = "\\w+";
+        boolean result = texts.matches(regex);
+        return result;
+    }
+
+    private boolean passwordCommiting(char[] raw, char[] commit) {
+        if (raw.length != commit.length) {
+            return false;
+        }
+        for (int i = 0; i < raw.length; i++) {
+            if (raw[i] != commit[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void SignInValidation() {
+        int passwordInputLength = userPassword.getPassword().length;
+        int passwordCommitInputLength = userPasswordCommit.getPassword().length;
+        if (!loginUserName.getText().isEmpty()) {
+            boolean validation = userNameValidation(loginUserName.getText());
+            if (passwordInputLength != 0) {
+                if (passwordCommitInputLength != 0) {
+                    if (validation) {
+                        if (passwordCommiting(userPassword.getPassword(), userPasswordCommit.getPassword())) {
+                            System.out.println("Verify SignIn Successfully");
+                            this.dispose();
+                            new LoginFrame().setup();
+                            //todo: 接入文件写入
+                        } else {
+                            initialNoticeDialog(VERIFICATION_ERROR);
+                        }
+
+                    } else {
+                        System.out.println("Invalid UserName");
+                        initialNoticeDialog(NOTICE);
+                    }
+                } else {
+                    System.out.println("No password Verification");
+                    initialNoticeDialog(NO_PASSWORD_VERIFICATION_INPUT);
+                }
+            } else {
+                System.out.println("No password");
+                initialNoticeDialog(NO_PASSWORD_INPUT);
+            }
+        } else {
+            System.out.println("No user name input");
+            initialNoticeDialog(NO_USERNAME_INPUT);
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         if (obj == signIn) {
-            System.out.println("Commit SignIn");
+            SignInValidation();
+
         }
     }
+
 
     @Override
     public void itemStateChanged(ItemEvent e) {
@@ -129,9 +208,5 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
                 System.out.println("Hide Commited Password");
             }
         }
-
-
     }
 }
-
-

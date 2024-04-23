@@ -1,5 +1,7 @@
 package Main;
 
+import Main.Frame.GameFrame;
+import Main.Frame.LoginFrame;
 import Main.Frame.SigninFrame;
 
 public class GameStart {
