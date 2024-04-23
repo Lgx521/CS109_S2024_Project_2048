@@ -15,6 +15,7 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
     JButton commitJbt = new JButton("Log in");
     JButton signinJtb = new JButton("Sign In");
     JButton guest = new JButton("Guest Mode");
+    JCheckBox a = new JCheckBox("test");
 
 
     private final int NONE_INPUT = 0;
@@ -45,10 +46,8 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         //背景图片
         ImageIcon backgroundImage = new ImageIcon("src/Main/Resources/background.png");
         JLabel background = new JLabel(backgroundImage);
-        background.setSize(450,320);
+        background.setSize(450, 320);
         background.setBounds(0, 0, 450, 320);
-        this.getContentPane().add(background);
-
 
 
         //输入文本框提示
@@ -63,9 +62,6 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
 
 
         //输入文本框
-//        JTextField loginUserName = new JTextField();
-//        JPasswordField userPassword = new JPasswordField();
-
         loginUserName.setSize(200, 25);
         loginUserName.setBounds(130, 95, 200, 25);
 
@@ -73,20 +69,19 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         userPassword.setBounds(130, 135, 200, 25);
 
 
-//        Checkbox showPwd = new Checkbox("Display");
         showPwd.setSize(80, 25);
         showPwd.setBounds(327, 135, 80, 25);
         showPwd.addItemListener(this);
+        Color a = new Color(198, 218, 217);
+        showPwd.setBackground(a);
 
 
         //选择按钮
-//        JButton commitJbt = new JButton("Log in");
         commitJbt.setSize(80, 30);
         commitJbt.setBounds(175, 175, 100, 30);
         commitJbt.addActionListener(this);
 
         //Guest访客模式
-//        JButton guest = new JButton("Guest Mode");
         JLabel guestTips = new JLabel("Try Log Free Guest Mode?  -->");
         guestTips.setSize(205, 25);
         guestTips.setBounds(35, 225, 205, 25);
@@ -96,7 +91,6 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
 
 
         //跳转到注册界面
-//        JButton signinJtb = new JButton("Sign In");
         JLabel tips = new JLabel("Don't have a Account now?  -->");
         tips.setSize(205, 25);
         tips.setBounds(35, 250, 205, 25);
@@ -115,6 +109,8 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         this.getContentPane().add(guestTips);
         this.getContentPane().add(guest);
         this.getContentPane().add(showPwd);
+        this.getContentPane().add(background);
+
     }
 
 

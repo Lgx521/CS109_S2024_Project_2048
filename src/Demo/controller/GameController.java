@@ -17,6 +17,7 @@ public class GameController {
         this.model = model;
 
     }
+
     public void restartGame() {
         System.out.println("Do restart game here");
     }

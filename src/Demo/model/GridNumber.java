@@ -26,6 +26,7 @@ public class GridNumber {
             }
         }
     }
+
     //todo: finish the method of four direction moving.
     public void moveRight() {
         for (int i = 0; i < numbers.length; i++) {

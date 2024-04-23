@@ -34,14 +34,14 @@ public class GameFrame extends JFrame implements ActionListener {
     private void initialGameFrame() {
         this.getContentPane().removeAll();
         this.setTitle("2048");
-        this.setSize(800,550);
+        this.setSize(800, 550);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
 
         //设置菜单栏
         JMenuBar jMenuBar = new JMenuBar();
-        jMenuBar.setSize(800,25);
+        jMenuBar.setSize(800, 25);
 
 //        JMenu game = new JMenu("GamePlay");
 //        JMenu users = new JMenu("Users");
@@ -80,9 +80,6 @@ public class GameFrame extends JFrame implements ActionListener {
         this.getContentPane().add(jMenuBar);
 
     }
-
-
-
 
 
     @Override
