@@ -50,8 +50,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener {
 
     JLabel backgroundImage = new JLabel();
 
-    JLabel test = new JLabel();
-
     private final String ImagePath = "src/Main/Resources/";
 
 
