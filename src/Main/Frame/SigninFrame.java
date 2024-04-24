@@ -119,7 +119,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
         } else if (issue == NO_PASSWORD_VERIFICATION_INPUT) {
             content = "Verify your password!";
         } else if (issue == VERIFICATION_ERROR) {
-            content = "Verification Error!\nYou must input same password";
+            content = "Verification Failed!\nYou must input same password";
         }
         JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.ERROR_MESSAGE);
     }
