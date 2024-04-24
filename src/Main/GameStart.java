@@ -7,6 +7,6 @@ public class GameStart {
         //new GameFrame().setup();
         //new LoginFrame().setup();
         //new SigninFrame().setup();
-        new InitialGrids().gameStart();
+        new InitialGrids().setup();
     }
 }

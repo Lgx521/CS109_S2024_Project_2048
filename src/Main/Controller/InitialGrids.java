@@ -1,23 +1,15 @@
 package Main.Controller;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class InitialGrids implements KeyListener {
+public class InitialGrids {
 
-    public void gameStart() {
-        gameCore();
-    }
-
-    int[][] data = new int[4][4];
-
-    private void gameCore() {
+    public void setup() {
         initialData();
         printData(data);
     }
 
-
+    int[][] data = new int[4][4];
 
     private int[][] initialData() {
         for (int i = 0; i < data.length; i++) {
@@ -57,20 +49,4 @@ public class InitialGrids implements KeyListener {
         }
     }
 
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        System.out.println(e.getKeyCode());
-    }
 }
