@@ -152,7 +152,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener {
 
     private void setBackgroundImage(String ImagePath) {
         this.getContentPane().remove(backgroundImage);
-        System.out.println("removed");
         this.setLayout(null);
         //背景图
         ImageIcon Image = new ImageIcon(ImagePath + ".png");
@@ -190,7 +189,30 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        Object obj = e.getSource();
+        if (obj == undo) {
+            System.out.println("undo");
+        } else if (obj == hammer) {
+            System.out.println("use prop hammer");
+        } else if (obj == ai) {
+            System.out.println("use AI");
+        } else if (obj == _2N) {
+            System.out.println("2^n mode");
+        } else if (obj == _3N) {
+            System.out.println("3^n mode");
+        } else if (obj == countdown) {
+            System.out.println("countdown mode");
+        } else if (obj == target) {
+            System.out.println("target select mode");
+        } else if (obj == Default) {
+            System.out.println("Change theme to: default");
+        } else if (obj == forest) {
+            System.out.println("Change theme to: forest");
+        } else if (obj == ocean) {
+            System.out.println("Change theme to: ocean");
+        } else if (obj == flames) {
+            System.out.println("Change theme to: flames");
+        }
     }
 
     @Override
@@ -217,41 +239,27 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener {
         Object obj = e.getSource();
         if (obj == undo) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_UNDO");
-            System.out.println("bgI_undo");
         } else if (obj == hammer) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_HAMMER");
-            System.out.println("bgI_hammer");
         } else if (obj == ai) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_AI");
-            System.out.println("bgI_ai");
         } else if (obj == _2N) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_2n");
-            System.out.println("bgI_2n");
         } else if (obj == _3N) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_3n");
-            System.out.println("bgI_3n");
         } else if (obj == countdown) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_COUNTDOWN");
-            System.out.println("bgI_countdown");
         } else if (obj == target) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_TARGET");
-            System.out.println("bgI_target");
         } else if (obj == Default) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_DEFAULT");
-            System.out.println("bgI_default");
         } else if (obj == forest) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_FOREST");
-            System.out.println("bgI_forest");
         } else if (obj == ocean) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_OCEAN");
-            System.out.println("bgI_ocean");
         } else if (obj == flames) {
             setBackgroundImage(ImagePath + "Click/GameFrameBackground_FLAMES");
-            System.out.println("bgI_flames");
         }
         this.getContentPane().repaint();
     }
 }
-
-
-
