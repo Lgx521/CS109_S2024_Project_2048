@@ -126,8 +126,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
     private boolean userNameValidation(String texts) {
         String regex = "\\w+";
-        boolean result = texts.matches(regex);
-        return result;
+        return texts.matches(regex);
     }
 
     private boolean passwordCommiting(char[] raw, char[] commit) {

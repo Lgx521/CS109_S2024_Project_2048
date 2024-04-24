@@ -1,13 +1,12 @@
 package Main;
 
-import Main.Frame.GameFrame;
-import Main.Frame.LoginFrame;
-import Main.Frame.SigninFrame;
+import Main.Controller.InitialGrids;
 
 public class GameStart {
     public static void main(String[] args) {
         //new GameFrame().setup();
         //new LoginFrame().setup();
-        new SigninFrame().setup();
+        //new SigninFrame().setup();
+        new InitialGrids().gameStart();
     }
 }

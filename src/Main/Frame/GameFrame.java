@@ -9,7 +9,6 @@ public class GameFrame extends JFrame implements ActionListener {
     //创建setup方法供外界访问
     public void setup() {
         initialGameFrame();
-
         this.setVisible(true);
     }
 
