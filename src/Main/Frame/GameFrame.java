@@ -58,11 +58,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     Container ImageContainer = new Container();
 
 
-
-
     private final String ImagePath = "src/Main/Resources/";
     private final String NumImagePath = "src/Main/Resources/Cells/";
-
 
 
     //初始化界面
@@ -172,7 +169,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 JLabel imageLable = new JLabel();
                 ImageIcon image = new ImageIcon(NumImagePath + data[i][j] + ".png");
                 imageLable.setIcon(image);
-                imageLable.setSize(100,100);
+                imageLable.setSize(100, 100);
                 imageLable.setBounds(32 + 100 * j, 98 + 100 * i, 100, 100);
                 imageLable.setBorder(new BevelBorder(BevelBorder.LOWERED));
                 this.ImageContainer.add(imageLable);
@@ -188,7 +185,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.setContentPane(ImageContainer);
         this.ImageContainer.repaint();
     }
-
 
 
     @Override
@@ -277,17 +273,17 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == _3N) {
             setImages(ImagePath + "Click/GameFrameBackground_3n", data);
         } else if (obj == countdown) {
-            setImages(ImagePath + "Click/GameFrameBackground_COUNTDOWN",data);
+            setImages(ImagePath + "Click/GameFrameBackground_COUNTDOWN", data);
         } else if (obj == target) {
-            setImages(ImagePath + "Click/GameFrameBackground_TARGET",data);
+            setImages(ImagePath + "Click/GameFrameBackground_TARGET", data);
         } else if (obj == Default) {
-            setImages(ImagePath + "Click/GameFrameBackground_DEFAULT",data);
+            setImages(ImagePath + "Click/GameFrameBackground_DEFAULT", data);
         } else if (obj == forest) {
-            setImages(ImagePath + "Click/GameFrameBackground_FOREST",data);
+            setImages(ImagePath + "Click/GameFrameBackground_FOREST", data);
         } else if (obj == ocean) {
-            setImages(ImagePath + "Click/GameFrameBackground_OCEAN",data);
+            setImages(ImagePath + "Click/GameFrameBackground_OCEAN", data);
         } else if (obj == flames) {
-            setImages(ImagePath + "Click/GameFrameBackground_FLAMES",data);
+            setImages(ImagePath + "Click/GameFrameBackground_FLAMES", data);
         }
         this.getContentPane().repaint();
     }

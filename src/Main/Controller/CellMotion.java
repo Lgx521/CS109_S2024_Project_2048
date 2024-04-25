@@ -6,24 +6,26 @@ public class CellMotion {
 
     public void test() {
         int[][] data = {
-                {2, 2, 2, 2},
-                {4, 2, 4, 0},
-                {0, 2, 0, 0},
-                {2, 2, 4, 4}
+                {128, 4, 64, 64},
+                {4, 8, 256, 16},
+                {4, 64, 32, 8},
+                {2, 8, 4, 32}
         };
-
         printData(data);
-        System.out.println();
+        System.out.println(isRightMovable(data[0]));
+        System.out.println(ifEnding(data));
 
+        System.out.println("Move right1");
         moveRight(data);
+        System.out.println(ifEnding(data));
 
-        printData(data);
-
-
+        System.out.println("Move right2");
+        moveRight(data);
 
 
     }
 
+    Random r = new Random();
 
 
 /*
@@ -50,6 +52,21 @@ public class CellMotion {
 
     //向右移动
     public void moveRight(int[][] data) {
+        if (ifEnding(data)) {
+            System.out.println("Game Over!");
+            return;
+        }
+        boolean flag0 = false;
+        for (int i = 0; i < data.length; i++) {
+            if (isRightMovable(data[i])) {
+                flag0 = true;
+                break;
+            }
+        }
+        if (!flag0) {
+            System.out.println("can't move");
+            return;
+        }
         for (int i = 0; i < data.length; i++) {
             loop:
             while (isRightMovable(data[i])) {
@@ -93,12 +110,32 @@ public class CellMotion {
 
             }
         }
-        RandomAddingCell(data);
-        printData(data);
+        if (ifEnding(data)) {
+            printData(data);
+            System.out.println("Game Over!");
+        } else {
+            RandomAddingCell(data);
+            printData(data);
+        }
     }
 
     //向左移动
     public void moveLeft(int[][] data) {
+        if (ifEnding(data)) {
+            System.out.println("Game Over!");
+            return;
+        }
+        boolean flag0 = false;
+        for (int i = 0; i < data.length; i++) {
+            if (isLeftMovable(data[i])) {
+                flag0 = true;
+                break;
+            }
+        }
+        if (!flag0) {
+            System.out.println("can't move");
+            return;
+        }
         for (int i = 0; i < data.length; i++) {
             loop:
             while (isLeftMovable(data[i])) {
@@ -142,8 +179,14 @@ public class CellMotion {
 
             }
         }
-        RandomAddingCell(data);
-        printData(data);
+
+        if (ifEnding(data)) {
+            printData(data);
+            System.out.println("Game Over!");
+        } else {
+            RandomAddingCell(data);
+            printData(data);
+        }
     }
 
     //判断给定行能否向右移动
@@ -237,37 +280,92 @@ public class CellMotion {
 
     //向上移动
     public void moveUp(int[][] data) {
+        if (ifEnding(data)) {
+            System.out.println("Game Over!");
+            return;
+        }
         moveLeft(SymmetryTransformation(data));
-        SymmetryTransformation(data);
         printData(data);
+        if (ifEnding(data)) {
+            printData(data);
+            System.out.println("Game Over!");
+        } else {
+            SymmetryTransformation(data);
+            printData(data);
+        }
     }
 
     //向下移动
     public void moveDown(int[][] data) {
+        if (ifEnding(data)) {
+            System.out.println("Game Over!");
+            return;
+        }
         moveRight(SymmetryTransformation(data));
-        SymmetryTransformation(data);
         printData(data);
+        if (ifEnding(data)) {
+            printData(data);
+            System.out.println("Game Over!");
+        } else {
+            SymmetryTransformation(data);
+            printData(data);
+        }
     }
 
     //移动后在空白位置增加一个新的2
     private void RandomAddingCell(int[][] data) {
-        Random r = new Random();
-        int i = r.nextInt(data.length);
-        int j = r.nextInt(data[0].length);
-        if (data[i][j] == 0) {
-            data[i][j] = 2;
-        } else {
-            RandomAddingCell(data);
+        boolean flag = false;
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                if (data[i][j] == 0) {
+                    flag = true;
+                    break;
+                }
+            }
         }
+
+        if (flag) {
+            int[] selectable = {2, 4};
+            int newCell = r.nextInt(0, 2);
+            int i = r.nextInt(data.length);
+            int j = r.nextInt(data[0].length);
+            if (data[i][j] == 0) {
+                data[i][j] = selectable[newCell];
+            } else {
+                RandomAddingCell(data);
+            }
+        } else {
+            return;
+        }
+
+
     }
 
+    //判断游戏是否结束
+    private boolean ifEnding(int[][] data) {
+        boolean flag = true;
+        for (int i = 0; i < data.length; i++) {
+            if (isLeftMovable(data[i]) || isRightMovable(data[i])) {
+                return false;
+            }
+        }
+        int[][] temp = SymmetryTransformation(data);
+        for (int i = 0; i < data[0].length; i++) {
+            if (isLeftMovable(temp[i]) || isRightMovable(temp[i])) {
+                SymmetryTransformation(data);
+                return false;
+            }
+        }
+        SymmetryTransformation(data);
+        return true;
+    }
 
 
     //在控制台输出当前棋盘
     private void printData(int[][] data) {
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
-                System.out.printf("%-3d", data[i][j]);
+                System.out.printf("%-4d", data[i][j]);
             }
             System.out.println();
         }

@@ -11,8 +11,7 @@ public class GameStart {
         new GameFrame().setup();
 //        new LoginFrame().setup();
 //        new SigninFrame().setup();
-        //new InitialGrids().setup();
-
+//        new InitialGrids().setup();
 //        new CellMotion().test();
     }
 }

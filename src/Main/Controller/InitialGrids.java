@@ -44,7 +44,7 @@ public class InitialGrids {
     private void printData(int[][] data) {
         for (int[] datum : data) {
             for (int j = 0; j < data[0].length; j++) {
-                System.out.printf("%-3d", datum[j]);
+                System.out.printf("%-4d", datum[j]);
             }
             System.out.println();
         }

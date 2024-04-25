@@ -138,14 +138,14 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
                 //todo:用户存在
                 if (loginUserName.getText().equals("gan")) {
                     //todo:用户存在逻辑
-                }else{
+                } else {
                     initialLoginFailure(INVALID_USERNAME);
                     return;
                 }
                 //todo:密码判断
                 if (userPassword.getPassword().length == 0) {
                     initialLoginFailure(NONE_PASSWORD);
-                } else  {
+                } else {
                     if (userPassword.getPassword()[0] != '0') {
                         initialLoginFailure(WRONG_PASSWORD);
                     } else {
