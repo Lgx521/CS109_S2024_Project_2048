@@ -94,6 +94,7 @@ public class CellMotion {
             }
         }
         RandomAddingCell(data);
+        printData(data);
     }
 
     //向左移动
@@ -142,6 +143,7 @@ public class CellMotion {
             }
         }
         RandomAddingCell(data);
+        printData(data);
     }
 
     //判断给定行能否向右移动
@@ -237,12 +239,14 @@ public class CellMotion {
     public void moveUp(int[][] data) {
         moveLeft(SymmetryTransformation(data));
         SymmetryTransformation(data);
+        printData(data);
     }
 
     //向下移动
     public void moveDown(int[][] data) {
         moveRight(SymmetryTransformation(data));
         SymmetryTransformation(data);
+        printData(data);
     }
 
     //移动后在空白位置增加一个新的2
@@ -267,6 +271,7 @@ public class CellMotion {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
 
