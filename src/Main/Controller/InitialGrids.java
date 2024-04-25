@@ -4,9 +4,10 @@ import java.util.Random;
 
 public class InitialGrids {
 
-    public void setup() {
-        initialData();
+    public int[][] setup() {
+        int[][] data = initialData();
         printData(data);
+        return data;
     }
 
     int[][] data = new int[4][4];

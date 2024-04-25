@@ -1,18 +1,23 @@
 package Main.Frame;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import Main.Controller.CellMotion;
+import Main.Controller.InitialGrids;
 
-public class GameFrame extends JFrame implements ActionListener, MouseListener {
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import java.awt.*;
+import java.awt.event.*;
+
+public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
+
+    private int[][] data = new InitialGrids().setup();
 
     //创建setup方法供外界访问
     public void setup() {
         initialGameFrame();
-        setBackgroundImage(ImagePath + "GameFrameBackground");
+        setImages(ImagePath + "GameFrameBackground", data);
         addMouseListener(this);
+        addKeyListener(this);
         this.setVisible(true);
     }
 
@@ -50,14 +55,21 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener {
 
     JLabel backgroundImage = new JLabel();
 
+    Container ImageContainer = new Container();
+
+
+
+
     private final String ImagePath = "src/Main/Resources/";
+    private final String NumImagePath = "src/Main/Resources/Cells/";
+
 
 
     //初始化界面
     private void initialGameFrame() {
         this.getContentPane().removeAll();
         this.setTitle("2048");
-        this.setSize(800, 600);
+        this.setSize(800, 630);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
@@ -133,31 +145,51 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener {
         ocean.addMouseListener(this);
         flames.addMouseListener(this);
 
-        this.getContentPane().add(jMenuBar);
-        this.getContentPane().add(undo);
-        this.getContentPane().add(hammer);
-        this.getContentPane().add(ai);
-        this.getContentPane().add(_2N);
-        this.getContentPane().add(_3N);
-        this.getContentPane().add(countdown);
-        this.getContentPane().add(target);
-        this.getContentPane().add(Default);
-        this.getContentPane().add(forest);
-        this.getContentPane().add(ocean);
-        this.getContentPane().add(flames);
+        this.setJMenuBar(jMenuBar);
 
     }
 
-    private void setBackgroundImage(String ImagePath) {
-        this.getContentPane().remove(backgroundImage);
+
+    private void setImages(String ImagePath, int[][] data) {
+        this.ImageContainer.removeAll();
         this.setLayout(null);
+
+        this.ImageContainer.add(undo);
+        this.ImageContainer.add(hammer);
+        this.ImageContainer.add(ai);
+        this.ImageContainer.add(_2N);
+        this.ImageContainer.add(_3N);
+        this.ImageContainer.add(countdown);
+        this.ImageContainer.add(target);
+        this.ImageContainer.add(Default);
+        this.ImageContainer.add(forest);
+        this.ImageContainer.add(ocean);
+        this.ImageContainer.add(flames);
+
+        //添加数字图片
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                JLabel imageLable = new JLabel();
+                ImageIcon image = new ImageIcon(NumImagePath + data[i][j] + ".png");
+                imageLable.setIcon(image);
+                imageLable.setSize(100,100);
+                imageLable.setBounds(32 + 100 * j, 98 + 100 * i, 100, 100);
+                imageLable.setBorder(new BevelBorder(BevelBorder.LOWERED));
+                this.ImageContainer.add(imageLable);
+            }
+        }
         //背景图
         ImageIcon Image = new ImageIcon(ImagePath + ".png");
         backgroundImage.setIcon(Image);
         backgroundImage.setSize(800, 550);
         backgroundImage.setBounds(0, 23, 800, 550);
-        this.getContentPane().add(backgroundImage);
+        this.ImageContainer.add(backgroundImage);
+
+        this.setContentPane(ImageContainer);
+        this.ImageContainer.repaint();
     }
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -187,6 +219,15 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
         Object obj = e.getSource();
         if (obj == undo) {
             System.out.println("undo");
@@ -214,50 +255,72 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
     public void mouseEntered(MouseEvent e) {
         changeBackgroundImage(e);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        setBackgroundImage(ImagePath + "GameFrameBackground");
-        System.out.println("background re-set");
+        setImages(ImagePath + "GameFrameBackground", data);
     }
 
     private void changeBackgroundImage(MouseEvent e) {
         Object obj = e.getSource();
         if (obj == undo) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_UNDO");
+            setImages(ImagePath + "Click/GameFrameBackground_UNDO", data);
         } else if (obj == hammer) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_HAMMER");
+            setImages(ImagePath + "Click/GameFrameBackground_HAMMER", data);
         } else if (obj == ai) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_AI");
+            setImages(ImagePath + "Click/GameFrameBackground_AI", data);
         } else if (obj == _2N) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_2n");
+            setImages(ImagePath + "Click/GameFrameBackground_2n", data);
         } else if (obj == _3N) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_3n");
+            setImages(ImagePath + "Click/GameFrameBackground_3n", data);
         } else if (obj == countdown) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_COUNTDOWN");
+            setImages(ImagePath + "Click/GameFrameBackground_COUNTDOWN",data);
         } else if (obj == target) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_TARGET");
+            setImages(ImagePath + "Click/GameFrameBackground_TARGET",data);
         } else if (obj == Default) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_DEFAULT");
+            setImages(ImagePath + "Click/GameFrameBackground_DEFAULT",data);
         } else if (obj == forest) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_FOREST");
+            setImages(ImagePath + "Click/GameFrameBackground_FOREST",data);
         } else if (obj == ocean) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_OCEAN");
+            setImages(ImagePath + "Click/GameFrameBackground_OCEAN",data);
         } else if (obj == flames) {
-            setBackgroundImage(ImagePath + "Click/GameFrameBackground_FLAMES");
+            setImages(ImagePath + "Click/GameFrameBackground_FLAMES",data);
         }
         this.getContentPane().repaint();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == 37) {
+            System.out.println("left");
+            new CellMotion().moveLeft(data);
+            setImages(ImagePath + "GameFrameBackground", data);
+        } else if (code == 38) {
+            System.out.println("up");
+            new CellMotion().moveUp(data);
+            setImages(ImagePath + "GameFrameBackground", data);
+        } else if (code == 39) {
+            System.out.println("right");
+            new CellMotion().moveRight(data);
+            setImages(ImagePath + "GameFrameBackground", data);
+        } else if (code == 40) {
+            System.out.println("down");
+            new CellMotion().moveDown(data);
+            setImages(ImagePath + "GameFrameBackground", data);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }
