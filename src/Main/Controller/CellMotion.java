@@ -44,6 +44,10 @@ public class CellMotion {
 
     Undo undo = new Undo();
 
+    public String getSteps() {
+        int steps = undo.getSteps();
+        return steps + "";
+    }
 
 
 /*

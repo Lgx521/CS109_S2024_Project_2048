@@ -190,8 +190,17 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         backgroundImage.setIcon(Image);
         backgroundImage.setSize(800, 550);
         backgroundImage.setBounds(0, 23, 800, 550);
-        this.ImageContainer.add(backgroundImage);
 
+        //步数
+        JLabel steplable = new JLabel(motion.getSteps());
+        steplable.setSize(60,40);
+        steplable.setBounds(715, 200, 60, 40);
+        steplable.setFont(new Font("Console",Font.BOLD,18));
+        steplable.setForeground(Color.WHITE);
+
+
+        this.ImageContainer.add(steplable);
+        this.ImageContainer.add(backgroundImage);
         this.setContentPane(ImageContainer);
         this.ImageContainer.repaint();
     }
