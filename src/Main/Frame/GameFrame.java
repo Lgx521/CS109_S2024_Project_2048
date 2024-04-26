@@ -31,7 +31,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         setImages(ImagePath + "GameFrameBackground", data);
     }
 
-
     JMenu game = new JMenu("GamePlay");
     JMenu users = new JMenu("Users");
     JMenu music = new JMenu("Select Music");
@@ -157,6 +156,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
 
+    //搭建图片
     private void setImages(String ImagePath, int[][] data) {
         this.ImageContainer.removeAll();
         this.setLayout(null);
@@ -191,11 +191,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         backgroundImage.setSize(800, 550);
         backgroundImage.setBounds(0, 23, 800, 550);
 
-        //步数
+        //步数显示
         JLabel steplable = new JLabel(motion.getSteps());
-        steplable.setSize(60,40);
+        steplable.setSize(60, 40);
         steplable.setBounds(715, 200, 60, 40);
-        steplable.setFont(new Font("Console",Font.BOLD,18));
+        steplable.setFont(new Font("Console", Font.ITALIC, 18));
         steplable.setForeground(Color.WHITE);
 
 

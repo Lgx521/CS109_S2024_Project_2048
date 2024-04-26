@@ -29,35 +29,42 @@ public class Undo extends JFrame {
     private int[][] temp_1 = new int[4][4];
     private int[][] temp_2 = new int[4][4];
     private int[][] temp_3 = new int[4][4];
+    private int[][] temp_4 = new int[4][4];
 
     //保存某一步的状态
     public void saveStatus(int[][] data) {
-        if (this.steps % 3 == 1) {
-            for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[0].length; j++) {
-                    temp_1[i][j] = data[i][j];
-                }
-            }
-        } else if (this.steps % 3 == 2) {
-            for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[0].length; j++) {
-                    temp_2[i][j] = data[i][j];
-                }
-            }
-        } else if (this.steps % 3 == 0) {
+        if ((this.steps + 1) % 4 == 3) {
             for (int i = 0; i < data.length; i++) {
                 for (int j = 0; j < data[0].length; j++) {
                     temp_3[i][j] = data[i][j];
                 }
             }
+        } else if ((this.steps + 1) % 4 == 2) {
+            for (int i = 0; i < data.length; i++) {
+                for (int j = 0; j < data[0].length; j++) {
+                    temp_2[i][j] = data[i][j];
+                }
+            }
+        } else if ((this.steps + 1) % 4 == 1) {
+            for (int i = 0; i < data.length; i++) {
+                for (int j = 0; j < data[0].length; j++) {
+                    temp_1[i][j] = data[i][j];
+                }
+            }
+        } else if ((this.steps + 1) % 4 == 0) {
+            for (int i = 0; i < data.length; i++) {
+                for (int j = 0; j < data[0].length; j++) {
+                    temp_4[i][j] = data[i][j];
+                }
+            }
         }
-
-        System.out.println("print temp 1");
-        printData(temp_1);
-        System.out.println("print temp 2");
-        printData(temp_2);
-        System.out.println("print temp 3");
-        printData(temp_3);
+//
+//        System.out.println("print temp 1");
+//        printData(temp_1);
+//        System.out.println("print temp 2");
+//        printData(temp_2);
+//        System.out.println("print temp 3");
+//        printData(temp_3);
     }
 
     //控制台输出矩阵
@@ -78,22 +85,28 @@ public class Undo extends JFrame {
             return;
         }
         if (undoTimes > 0) {
-            if (steps % 3 == 1) {
-                for (int i = 0; i < temp_3.length; i++) {
-                    for (int j = 0; j < temp_3[0].length; j++) {
-                        data[i][j] = temp_3[i][j];
-                    }
-                }
-            } else if (steps % 3 == 2) {
+            if (steps % 4 == 1) {
                 for (int i = 0; i < temp_1.length; i++) {
                     for (int j = 0; j < temp_1[0].length; j++) {
                         data[i][j] = temp_1[i][j];
                     }
                 }
-            } else if (steps % 3 == 0) {
+            } else if (steps % 4 == 2) {
                 for (int i = 0; i < temp_2.length; i++) {
                     for (int j = 0; j < temp_2[0].length; j++) {
                         data[i][j] = temp_2[i][j];
+                    }
+                }
+            } else if (steps % 4 == 3) {
+                for (int i = 0; i < temp_3.length; i++) {
+                    for (int j = 0; j < temp_3[0].length; j++) {
+                        data[i][j] = temp_3[i][j];
+                    }
+                }
+            } else if (steps % 4 == 0) {
+                for (int i = 0; i < temp_4.length; i++) {
+                    for (int j = 0; j < temp_4[0].length; j++) {
+                        data[i][j] = temp_4[i][j];
                     }
                 }
             }
