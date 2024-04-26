@@ -28,16 +28,14 @@ public class CellMotion {
 
     public void test() {
         int[][] data0 = {
-                {16, 16, 16, 0},
-                {0, 0, 0, 2},
+                {16, 16, 16, 2},
+                {0, 0, 0, 0},
                 {0, 0, 0, 0},
                 {0, 0, 0, 0}
         };
         moveUp(data0);
 
         moveUp(data0);
-
-        undo.UNDO(data0);
 
 
 
@@ -80,12 +78,12 @@ public class CellMotion {
             System.out.println("Game Over!");
             return;
         }
-        undo.saveStatus(data);
         boolean flag0 = isFlagRight(data);
         if (!flag0) {
-            System.out.println("can't move");
+            System.out.println("can't move right");
             return;
         }
+        undo.saveStatus(data);
         for (int i = 0; i < data.length; i++) {
             loop:
             while (isRightMovable(data[i])) {
@@ -159,12 +157,12 @@ public class CellMotion {
             System.out.println("Game Over!");
             return;
         }
-        undo.saveStatus(data);
         boolean flag0 = isFlagLeft(data);
         if (!flag0) {
-            System.out.println("can't move");
+            System.out.println("can't move left");
             return;
         }
+        undo.saveStatus(data);
         for (int i = 0; i < data.length; i++) {
             loop:
             while (isLeftMovable(data[i])) {
@@ -327,25 +325,70 @@ public class CellMotion {
             System.out.println("Game Over!");
             return;
         }
-        moveLeft(SymmetryTransformation(data));
-
-        if (isFlagLeft(SymmetryTransformation(data))) {
-            SymmetryTransformation(data);
-        }else {
-            undo.getStatusSymmetryTransformed();
-            SymmetryTransformation(data);
+        boolean flag0 = isFlagLeft(SymmetryTransformation(data));
+        SymmetryTransformation(data);
+        if (!flag0) {
+            System.out.println("can't move up");
+            return;
         }
+        undo.saveStatus(data);
+        SymmetryTransformation(data);
+        for (int i = 0; i < data.length; i++) {
+            loop:
+            while (isLeftMovable(data[i])) {
+                boolean flag = false;
+                if (data[i][0] == 0) {
+                    data[i][0] = data[i][1];
+                    data[i][1] = data[i][2];
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                }
+                if (data[i][1] == 0) {
+                    data[i][1] = data[i][2];
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                }
+                if (data[i][2] == 0) {
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                }
+                if (data[i][0] == data[i][1] && data[i][0] != 0) {
+                    data[i][0] = 2 * data[i][0];
+                    data[i][1] = data[i][2];
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                    flag = true;
+                }
+                if (data[i][1] == data[i][2] && data[i][1] != 0) {
+                    data[i][1] = 2 * data[i][1];
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                    flag = true;
+                }
+                if (data[i][2] == data[i][3] && data[i][2] != 0) {
+                    data[i][2] = 2 * data[i][2];
+                    data[i][3] = 0;
+                    flag = true;
+                }
+                if (flag) {
+                    break loop;
+                }
 
+            }
+        }
+        SymmetryTransformation(data);
 
         if (ifEnding(data)) {
             printData(data);
             System.out.println("Game Over!");
         } else {
-            System.out.println("Transformed");
-            SymmetryTransformation(data);
-            undo.getStatusSymmetryTransformed();
+            RandomAddingCell(data);
+            undo.setSteps(undo.getSteps() + 1);
+            undo.saveStatus(data);
+            undo.setUndoTimes();
             printData(data);
         }
+
     }
 
     //向下移动
@@ -354,24 +397,70 @@ public class CellMotion {
             System.out.println("Game Over!");
             return;
         }
-        moveRight(SymmetryTransformation(data));
-
-        if (isFlagRight(SymmetryTransformation(data))) {
-            SymmetryTransformation(data);
-        }else {
-            undo.getStatusSymmetryTransformed();
-            SymmetryTransformation(data);
+        boolean flag0 = isFlagRight(SymmetryTransformation(data));
+        SymmetryTransformation(data);
+        if (!flag0) {
+            System.out.println("can't move down");
+            return;
         }
+        undo.saveStatus(data);
+        SymmetryTransformation(data);
+        for (int i = 0; i < data.length; i++) {
+            loop:
+            while (isRightMovable(data[i])) {
+                boolean flag = false;
+                if (data[i][3] == 0) {
+                    data[i][3] = data[i][2];
+                    data[i][2] = data[i][1];
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                }
+                if (data[i][2] == 0) {
+                    data[i][2] = data[i][1];
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                }
+                if (data[i][1] == 0) {
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                }
+                if (data[i][2] == data[i][3] && data[i][2] != 0) {
+                    data[i][3] = 2 * data[i][3];
+                    data[i][2] = data[i][1];
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                    flag = true;
+                }
+                if (data[i][2] == data[i][1] && data[i][1] != 0) {
+                    data[i][2] = 2 * data[i][2];
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                    flag = true;
+                }
+                if (data[i][1] == data[i][0] && data[i][0] != 0) {
+                    data[i][1] = 2 * data[i][1];
+                    data[i][0] = 0;
+                    flag = true;
+                }
+                if (flag) {
+                    break loop;
+                }
 
+            }
+        }
+        SymmetryTransformation(data);
         if (ifEnding(data)) {
             printData(data);
             System.out.println("Game Over!");
         } else {
-            System.out.println("Transformed");
-            SymmetryTransformation(data);
-            undo.getStatusSymmetryTransformed();
+            RandomAddingCell(data);
+            undo.setSteps(undo.getSteps() + 1);
+            undo.saveStatus(data);
+            undo.setUndoTimes();
             printData(data);
         }
+
+
     }
 
     //移动后在空白位置增加一个新的2
