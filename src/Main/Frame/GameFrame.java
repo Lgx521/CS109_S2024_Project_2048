@@ -10,15 +10,25 @@ import java.awt.event.*;
 
 public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
-    private int[][] data = new InitialGrids().setup();
+    private int[][] data;
 
     //创建setup方法供外界访问
     public void setup() {
         initialGameFrame();
-        setImages(ImagePath + "GameFrameBackground", data);
+        replayGame();
         addMouseListener(this);
         addKeyListener(this);
         this.setVisible(true);
+    }
+
+    //产生motion对象，实现每次重启游戏步数清零重计
+    CellMotion motion;
+
+    //todo：改变主题后，以改变后的主题启动
+    private void replayGame() {
+        data = new InitialGrids().setup();
+        motion = new CellMotion();
+        setImages(ImagePath + "GameFrameBackground", data);
     }
 
 
@@ -187,6 +197,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
 
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
@@ -194,6 +206,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             System.exit(0);
         } else if (obj == replay) {
             System.out.println("Replay Game");
+            replayGame();
         } else if (obj == load) {
             System.out.println("Load Game");
         } else if (obj == save) {
@@ -213,6 +226,13 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
+    //进行重做操作
+    private void performUNDO() {
+        System.out.println("undo");
+        motion.UNDO(data);
+        setImages(ImagePath + "GameFrameBackground", data);
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -226,7 +246,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     public void mouseReleased(MouseEvent e) {
         Object obj = e.getSource();
         if (obj == undo) {
-            System.out.println("undo");
+            performUNDO();
         } else if (obj == hammer) {
             System.out.println("use prop hammer");
         } else if (obj == ai) {
@@ -293,24 +313,25 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == 37) {
             System.out.println("left");
-            new CellMotion().moveLeft(data);
+            motion.moveLeft(data);
             setImages(ImagePath + "GameFrameBackground", data);
         } else if (code == 38) {
             System.out.println("up");
-            new CellMotion().moveUp(data);
+            motion.moveUp(data);
             setImages(ImagePath + "GameFrameBackground", data);
         } else if (code == 39) {
             System.out.println("right");
-            new CellMotion().moveRight(data);
+            motion.moveRight(data);
             setImages(ImagePath + "GameFrameBackground", data);
         } else if (code == 40) {
             System.out.println("down");
-            new CellMotion().moveDown(data);
+            motion.moveDown(data);
             setImages(ImagePath + "GameFrameBackground", data);
         }
     }

@@ -4,6 +4,9 @@ import java.util.Random;
 
 public class CellMotion {
 
+    /*
+    To test the GameOver Validation
+
     public void test() {
         int[][] data = {
                 {128, 4, 64, 64},
@@ -21,11 +24,32 @@ public class CellMotion {
 
         System.out.println("Move right2");
         moveRight(data);
+    }*/
+
+    public void test() {
+        int[][] data0 = {
+                {16, 16, 16, 0},
+                {0, 0, 0, 2},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0}
+        };
+        moveUp(data0);
+
+        moveUp(data0);
+
+        undo.UNDO(data0);
+
+
+
+
 
 
     }
 
     Random r = new Random();
+
+    Undo undo = new Undo();
+
 
 
 /*
@@ -56,13 +80,8 @@ public class CellMotion {
             System.out.println("Game Over!");
             return;
         }
-        boolean flag0 = false;
-        for (int i = 0; i < data.length; i++) {
-            if (isRightMovable(data[i])) {
-                flag0 = true;
-                break;
-            }
-        }
+        undo.saveStatus(data);
+        boolean flag0 = isFlagRight(data);
         if (!flag0) {
             System.out.println("can't move");
             return;
@@ -110,13 +129,28 @@ public class CellMotion {
 
             }
         }
+
         if (ifEnding(data)) {
             printData(data);
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
+            undo.setSteps(undo.getSteps() + 1);
+            undo.saveStatus(data);
+            undo.setUndoTimes();
             printData(data);
         }
+    }
+
+    private boolean isFlagRight(int[][] data) {
+        boolean flag0 = false;
+        for (int i = 0; i < data.length; i++) {
+            if (isRightMovable(data[i])) {
+                flag0 = true;
+                break;
+            }
+        }
+        return flag0;
     }
 
     //向左移动
@@ -125,13 +159,8 @@ public class CellMotion {
             System.out.println("Game Over!");
             return;
         }
-        boolean flag0 = false;
-        for (int i = 0; i < data.length; i++) {
-            if (isLeftMovable(data[i])) {
-                flag0 = true;
-                break;
-            }
-        }
+        undo.saveStatus(data);
+        boolean flag0 = isFlagLeft(data);
         if (!flag0) {
             System.out.println("can't move");
             return;
@@ -185,8 +214,22 @@ public class CellMotion {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
+            undo.setSteps(undo.getSteps() + 1);
+            undo.saveStatus(data);
+            undo.setUndoTimes();
             printData(data);
         }
+    }
+
+    private boolean isFlagLeft(int[][] data) {
+        boolean flag0 = false;
+        for (int i = 0; i < data.length; i++) {
+            if (isLeftMovable(data[i])) {
+                flag0 = true;
+                break;
+            }
+        }
+        return flag0;
     }
 
     //判断给定行能否向右移动
@@ -285,12 +328,22 @@ public class CellMotion {
             return;
         }
         moveLeft(SymmetryTransformation(data));
-        printData(data);
+
+        if (isFlagLeft(SymmetryTransformation(data))) {
+            SymmetryTransformation(data);
+        }else {
+            undo.getStatusSymmetryTransformed();
+            SymmetryTransformation(data);
+        }
+
+
         if (ifEnding(data)) {
             printData(data);
             System.out.println("Game Over!");
         } else {
+            System.out.println("Transformed");
             SymmetryTransformation(data);
+            undo.getStatusSymmetryTransformed();
             printData(data);
         }
     }
@@ -302,12 +355,21 @@ public class CellMotion {
             return;
         }
         moveRight(SymmetryTransformation(data));
-        printData(data);
+
+        if (isFlagRight(SymmetryTransformation(data))) {
+            SymmetryTransformation(data);
+        }else {
+            undo.getStatusSymmetryTransformed();
+            SymmetryTransformation(data);
+        }
+
         if (ifEnding(data)) {
             printData(data);
             System.out.println("Game Over!");
         } else {
+            System.out.println("Transformed");
             SymmetryTransformation(data);
+            undo.getStatusSymmetryTransformed();
             printData(data);
         }
     }
@@ -358,6 +420,11 @@ public class CellMotion {
         }
         SymmetryTransformation(data);
         return true;
+    }
+
+    //UNDO
+    public void UNDO(int[][] data) {
+        undo.UNDO(data);
     }
 
 
