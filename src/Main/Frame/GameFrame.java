@@ -197,8 +197,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();

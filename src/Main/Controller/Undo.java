@@ -14,11 +14,13 @@ public class Undo extends JFrame {
     public int getSteps() {
         return steps;
     }
+
     public void setSteps(int steps) {
         this.steps = steps;
         System.out.println("Current Steps: " + this.steps);
     }
-    public void setUndoTimes(){
+
+    public void setUndoTimes() {
         if (this.undoTimes < 3) {
             this.undoTimes = this.undoTimes + 1;
         }
@@ -27,7 +29,6 @@ public class Undo extends JFrame {
     private int[][] temp_1 = new int[4][4];
     private int[][] temp_2 = new int[4][4];
     private int[][] temp_3 = new int[4][4];
-
 
     //保存某一步的状态
     public void saveStatus(int[][] data) {
@@ -57,45 +58,6 @@ public class Undo extends JFrame {
         printData(temp_2);
         System.out.println("print temp 3");
         printData(temp_3);
-    }
-
-    //对于上下移动，需要对矩阵做对称变换
-    public void getStatusSymmetryTransformed() {
-        int[][] temp = new int[4][4];
-        if ((this.steps - 1) % 3 == 1) {
-            for (int i = 0; i < temp_1.length; i++) {
-                for (int j = 0; j < temp_1[0].length; j++) {
-                    temp[i][j] = temp_1[j][i];
-                }
-            }
-            for (int i = 0; i < temp_1.length; i++) {
-                for (int j = 0; j < temp_1[0].length; j++) {
-                    temp_1[i][j] = temp[i][j];
-                }
-            }
-        } else if ((this.steps - 1) % 3 == 2) {
-            for (int i = 0; i < temp_2.length; i++) {
-                for (int j = 0; j < temp_2[0].length; j++) {
-                    temp[i][j] = temp_2[j][i];
-                }
-            }
-            for (int i = 0; i < temp_2.length; i++) {
-                for (int j = 0; j < temp_2[0].length; j++) {
-                    temp_2[i][j] = temp[i][j];
-                }
-            }
-        } else if ((this.steps - 1) % 3 == 0) {
-            for (int i = 0; i < temp_3.length; i++) {
-                for (int j = 0; j < temp_3[0].length; j++) {
-                    temp[i][j] = temp_3[j][i];
-                }
-            }
-            for (int i = 0; i < temp_3.length; i++) {
-                for (int j = 0; j < temp_3[0].length; j++) {
-                    temp_3[i][j] = temp[i][j];
-                }
-            }
-        }
     }
 
     //控制台输出矩阵

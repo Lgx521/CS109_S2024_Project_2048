@@ -38,10 +38,6 @@ public class CellMotion {
         moveUp(data0);
 
 
-
-
-
-
     }
 
     Random r = new Random();
@@ -515,7 +511,6 @@ public class CellMotion {
     public void UNDO(int[][] data) {
         undo.UNDO(data);
     }
-
 
     //在控制台输出当前棋盘
     private void printData(int[][] data) {
