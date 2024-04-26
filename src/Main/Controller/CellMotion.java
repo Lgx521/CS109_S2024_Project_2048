@@ -7,24 +7,19 @@ public class CellMotion {
 
     //To test the GameOver Validation
 
-//    public void test() {
-//        int[][] data = {
-//                {0, 0, 2, 0},
-//                {0, 0, 0, 0},
-//                {0, 0, 0, 0},
-//                {0, 0, 2, 2}
-//        };
-//        printData(data);
-//        System.out.println(isLeftMovable(data[0]));
-//        System.out.println(ifEnding(data));
-//
-//        System.out.println("Move l1");
-//        moveLeft(data);
-//        System.out.println(ifEnding(data));
-//
-//        System.out.println("Move l2");
-//        moveLeft(data);
-//    }
+    public void test() {
+        int[][] data = {
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+                {16, 4, 2, 4}
+        };
+        printData(data);
+        System.out.println("Move");
+        moveUp(data);
+        System.out.println(ifEnding(data));
+
+    }
 
 //    public void test() {
 //        int[][] data0 = {
@@ -540,14 +535,14 @@ public class CellMotion {
         boolean flag = true;
         for (int i = 0; i < data.length; i++) {
             if (isLeftMovable(data[i]) || isRightMovable(data[i])
-                    ||isLeftMovable(data[i]) || isRightHaveZero(data[i])) {
+                    ||isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
                 return false;
             }
         }
         int[][] temp = SymmetryTransformation(data);
         for (int i = 0; i < data[0].length; i++) {
             if (isLeftMovable(data[i]) || isRightMovable(data[i])
-                    ||isLeftMovable(data[i]) || isRightHaveZero(data[i])) {
+                    ||isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
                 SymmetryTransformation(data);
                 return false;
             }
