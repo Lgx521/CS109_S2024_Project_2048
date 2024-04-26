@@ -8,10 +8,10 @@ import Main.Frame.SigninFrame;
 
 public class GameStart {
     public static void main(String[] args) {
-//        new GameFrame().setup();
+        new GameFrame().setup();
 //        new LoginFrame().setup();
 //        new SigninFrame().setup();
 //        new InitialGrids().setup();
-        new CellMotion().test();
+//        new CellMotion().test();
     }
 }
