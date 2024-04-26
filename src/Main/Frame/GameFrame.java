@@ -192,14 +192,23 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         backgroundImage.setBounds(0, 23, 800, 550);
 
         //步数显示
-        JLabel steplable = new JLabel(motion.getSteps());
+        JLabel steplable = new JLabel(motion.getSteps() + "");
         steplable.setSize(60, 40);
         steplable.setBounds(715, 200, 60, 40);
         steplable.setFont(new Font("Console", Font.ITALIC, 18));
         steplable.setForeground(Color.WHITE);
 
+        //分数显示
+        JLabel scorelable = new JLabel(motion.getScore(motion.getSteps()) + "");
+        scorelable.setSize(60, 40);
+        scorelable.setBounds(715, 168, 60, 40);
+        scorelable.setFont(new Font("Console", Font.ITALIC, 18));
+        scorelable.setForeground(Color.WHITE);
+
+
 
         this.ImageContainer.add(steplable);
+        this.ImageContainer.add(scorelable);
         this.ImageContainer.add(backgroundImage);
         this.setContentPane(ImageContainer);
         this.ImageContainer.repaint();

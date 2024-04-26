@@ -10,7 +10,21 @@ public class Undo extends JFrame {
     private final int MAX_TIMES = 0;
     private final int START_PLACE = 1;
 
+    private int[] score = {0, 0, 0, 0};
+
     //getter and setter
+    public int getScore(int index) {
+        return score[index];
+    }
+
+    public void setScore(int score, int steps) {
+        this.score[(steps + 1) % 4] = this.score[(steps + 1) % 4] + score;
+        System.out.printf("index: %d, {%d, %d, %d, %d}\n",
+                (steps + 1) % 4, this.score[0], this.score[1],
+                this.score[2], this.score[3]);
+    }
+
+
     public int getSteps() {
         return steps;
     }
@@ -26,10 +40,10 @@ public class Undo extends JFrame {
         }
     }
 
+    private int[][] temp_0 = new int[4][4];
     private int[][] temp_1 = new int[4][4];
     private int[][] temp_2 = new int[4][4];
     private int[][] temp_3 = new int[4][4];
-    private int[][] temp_4 = new int[4][4];
 
     //保存某一步的状态
     public void saveStatus(int[][] data) {
@@ -54,17 +68,10 @@ public class Undo extends JFrame {
         } else if ((this.steps + 1) % 4 == 0) {
             for (int i = 0; i < data.length; i++) {
                 for (int j = 0; j < data[0].length; j++) {
-                    temp_4[i][j] = data[i][j];
+                    temp_0[i][j] = data[i][j];
                 }
             }
         }
-//
-//        System.out.println("print temp 1");
-//        printData(temp_1);
-//        System.out.println("print temp 2");
-//        printData(temp_2);
-//        System.out.println("print temp 3");
-//        printData(temp_3);
     }
 
     //控制台输出矩阵
@@ -104,9 +111,9 @@ public class Undo extends JFrame {
                     }
                 }
             } else if (steps % 4 == 0) {
-                for (int i = 0; i < temp_4.length; i++) {
-                    for (int j = 0; j < temp_4[0].length; j++) {
-                        data[i][j] = temp_4[i][j];
+                for (int i = 0; i < temp_0.length; i++) {
+                    for (int j = 0; j < temp_0[0].length; j++) {
+                        data[i][j] = temp_0[i][j];
                     }
                 }
             }
