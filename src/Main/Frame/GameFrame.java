@@ -24,13 +24,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //产生motion对象，实现每次重启游戏步数清零重计
     CellMotion motion;
 
-    //todo：改变主题后，以改变后的主题启动
-    public void replayGame() {
-        data = new InitialGrids().setup();
-        motion = new CellMotion();
-        setImages(ImagePath + "GameFrameBackground", data);
-    }
-
     JMenu game = new JMenu("GamePlay");
     JMenu users = new JMenu("Users");
     JMenu music = new JMenu("Select Music");
@@ -45,7 +38,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JMenuItem music_2 = new JMenuItem("Music 2");
     JMenuItem music_3 = new JMenuItem("Music 3");
 
-    //todo: 只在访客模式显示login
     JMenuItem login = new JMenuItem("Log in");
     JMenuItem logout = new JMenuItem("Log out");
 
@@ -62,14 +54,28 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JLabel ocean = new JLabel();
     JLabel flames = new JLabel();
 
+    //模式选择
+    JButton _64 = new JButton("64");
+    JButton _128 = new JButton("128");
+    JButton _256 = new JButton("256");
+    JButton _512 = new JButton("512");
+    JButton _1024 = new JButton("1024");
+    JButton _2048 = new JButton("2048");
+
     JLabel backgroundImage = new JLabel();
 
     Container ImageContainer = new Container();
 
-
     private final String ImagePath = "src/Main/Resources/";
     private final String NumImagePath = "src/Main/Resources/Cells/";
 
+
+    //重新加载游戏
+    public void replayGame() {
+        data = new InitialGrids().setup();
+        motion = new CellMotion();
+        setImages(ImagePath + "GameFrameBackground", data);
+    }
 
     //初始化界面
     private void initialGameFrame() {
@@ -151,10 +157,16 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         ocean.addMouseListener(this);
         flames.addMouseListener(this);
 
+        _64.addActionListener(this);
+        _128.addActionListener(this);
+        _256.addActionListener(this);
+        _512.addActionListener(this);
+        _1024.addActionListener(this);
+        _2048.addActionListener(this);
+
         this.setJMenuBar(jMenuBar);
 
     }
-
 
     //搭建图片
     private void setImages(String ImagePath, int[][] data) {
@@ -205,96 +217,30 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         scorelable.setFont(new Font("Console", Font.ITALIC, 18));
         scorelable.setForeground(Color.WHITE);
 
+        //目标显示
+        JLabel targetLable = new JLabel(motion.getTarget() + "");
+        targetLable.setSize(100, 50);
+        targetLable.setBounds(480, 188, 100, 50);
+        targetLable.setFont(new Font("Console", Font.ITALIC, 34));
+        targetLable.setForeground(Color.WHITE);
+
+        //背景图片
+        ImageIcon ImageBack = new ImageIcon("src/Main/Resources/ImageBack.png");
+        JLabel backImage = new JLabel(ImageBack);
+        backImage.setSize(800, 580);
+        backImage.setBounds(0, 0, 800, 580);
 
         this.ImageContainer.add(steplable);
         this.ImageContainer.add(scorelable);
+        this.ImageContainer.add(targetLable);
         this.ImageContainer.add(backgroundImage);
+        this.ImageContainer.add(backImage);
         this.setContentPane(ImageContainer);
         this.ImageContainer.repaint();
-    }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object obj = e.getSource();
-        if (obj == exit) {
-            System.exit(0);
-        } else if (obj == replay) {
-            System.out.println("Replay Game");
-            replayGame();
-        } else if (obj == load) {
-            System.out.println("Load Game");
-        } else if (obj == save) {
-            System.out.println("Save Game");
-        } else if (obj == sound) {
-            System.out.println("Sound Turn On/Off");
-        } else if (obj == login) {
-            System.out.println("Login");
-        } else if (obj == logout) {
-            System.out.println("Logout");
-        } else if (obj == music_1) {
-            System.out.println("Play Music 1");
-        } else if (obj == music_2) {
-            System.out.println("Play Music 2");
-        } else if (obj == music_3) {
-            System.out.println("Play Music 3");
-        }
-    }
-
-    //进行重做操作
-    private void performUNDO() {
-        System.out.println("undo");
-        motion.UNDO(data);
-        setImages(ImagePath + "GameFrameBackground", data);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
 
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        Object obj = e.getSource();
-        if (obj == undo) {
-            performUNDO();
-        } else if (obj == hammer) {
-            System.out.println("use prop hammer");
-        } else if (obj == ai) {
-            System.out.println("use AI");
-        } else if (obj == _2N) {
-            System.out.println("2^n mode");
-        } else if (obj == _3N) {
-            System.out.println("3^n mode");
-        } else if (obj == countdown) {
-            System.out.println("countdown mode");
-        } else if (obj == target) {
-            System.out.println("target select mode");
-        } else if (obj == Default) {
-            System.out.println("Change theme to: default");
-        } else if (obj == forest) {
-            System.out.println("Change theme to: forest");
-        } else if (obj == ocean) {
-            System.out.println("Change theme to: ocean");
-        } else if (obj == flames) {
-            System.out.println("Change theme to: flames");
-        }
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        changeBackgroundImage(e);
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        setImages(ImagePath + "GameFrameBackground", data);
-    }
-
+    //实现按钮鼠标进入效果
     private void changeBackgroundImage(MouseEvent e) {
         Object obj = e.getSource();
         if (obj == undo) {
@@ -323,11 +269,168 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.getContentPane().repaint();
     }
 
+    //设置目标块大小对话框
+    private void setTargetDialog() {
+        JDialog targetSet = new JDialog();
+        targetSet.setLayout(null);
+        targetSet.setLocationRelativeTo(null);
+        targetSet.setSize(280, 270);
+        targetSet.setTitle("Set Your Target");
+        _64.setSize(60, 25);
+        _128.setSize(60, 25);
+        _256.setSize(60, 25);
+        _512.setSize(60, 25);
+        _1024.setSize(60, 25);
+        _2048.setSize(60, 25);
+        _64.setBounds(180, 30, 60, 25);
+        _128.setBounds(180, 60, 60, 25);
+        _256.setBounds(180, 90, 60, 25);
+        _512.setBounds(180, 120, 60, 25);
+        _1024.setBounds(180, 150, 60, 25);
+        _2048.setBounds(180, 180, 60, 25);
+        JLabel a = new JLabel("Try the Rules?");
+        a.setSize(120, 25);
+        JLabel b = new JLabel("A little Harder?");
+        b.setSize(120, 25);
+        JLabel c = new JLabel("Not that Easy...");
+        c.setSize(120, 25);
+        JLabel d = new JLabel("Push...Push...!");
+        d.setSize(120, 25);
+        JLabel e = new JLabel("One Step to Success...");
+        e.setSize(150, 25);
+        JLabel f = new JLabel("Ultimate Fantasy!");
+        f.setSize(120, 25);
+        a.setBounds(40, 30, 120, 25);
+        b.setBounds(40, 60, 120, 25);
+        c.setBounds(40, 90, 120, 25);
+        d.setBounds(40, 120, 120, 25);
+        e.setBounds(40, 150, 150, 25);
+        f.setBounds(40, 180, 120, 25);
+        targetSet.add(a);
+        targetSet.add(b);
+        targetSet.add(c);
+        targetSet.add(d);
+        targetSet.add(e);
+        targetSet.add(f);
+        targetSet.add(_64);
+        targetSet.add(_128);
+        targetSet.add(_256);
+        targetSet.add(_512);
+        targetSet.add(_1024);
+        targetSet.add(_2048);
+        targetSet.setVisible(true);
+    }
+
+    //进行重做操作
+    private void performUNDO() {
+        System.out.println("undo");
+        motion.UNDO(data);
+        setImages(ImagePath + "GameFrameBackground", data);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object obj = e.getSource();
+        if (obj == exit) {
+            System.exit(0);
+        } else if (obj == replay) {
+            System.out.println("Replay Game");
+            replayGame();
+        } else if (obj == load) {
+            System.out.println("Load Game");
+        } else if (obj == save) {
+            System.out.println("Save Game");
+        } else if (obj == sound) {
+            System.out.println("Sound Turn On/Off");
+        } else if (obj == login) {
+            System.out.println("Login");
+        } else if (obj == logout) {
+            System.out.println("Logout");
+        } else if (obj == music_1) {
+            System.out.println("Play Music 1");
+        } else if (obj == music_2) {
+            System.out.println("Play Music 2");
+        } else if (obj == music_3) {
+            System.out.println("Play Music 3");
+        } else if (obj == _64) {
+            System.out.println("target: 64");
+            motion.setTarget(64);
+            setImages(ImagePath + "GameFrameBackground", data);
+        } else if (obj == _128) {
+            System.out.println("target: 128");
+            motion.setTarget(128);
+            setImages(ImagePath + "GameFrameBackground", data);
+        } else if (obj == _256) {
+            System.out.println("target: 256");
+            motion.setTarget(256);
+            setImages(ImagePath + "GameFrameBackground", data);
+        } else if (obj == _512) {
+            System.out.println("target: 512");
+            motion.setTarget(512);
+            setImages(ImagePath + "GameFrameBackground", data);
+        } else if (obj == _1024) {
+            System.out.println("target: 1024");
+            motion.setTarget(1024);
+            setImages(ImagePath + "GameFrameBackground", data);
+        } else if (obj == _2048) {
+            System.out.println("target: 2048");
+            motion.setTarget(2048);
+            setImages(ImagePath + "GameFrameBackground", data);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        Object obj = e.getSource();
+        if (obj == undo) {
+            performUNDO();
+        } else if (obj == hammer) {
+            System.out.println("use prop hammer");
+        } else if (obj == ai) {
+            System.out.println("use AI");
+        } else if (obj == _2N) {
+            System.out.println("2^n mode");
+        } else if (obj == _3N) {
+            System.out.println("3^n mode");
+        } else if (obj == countdown) {
+            System.out.println("countdown mode");
+        } else if (obj == target) {
+            System.out.println("target select mode");
+            setTargetDialog();
+        } else if (obj == Default) {
+            System.out.println("Change theme to: default");
+        } else if (obj == forest) {
+            System.out.println("Change theme to: forest");
+        } else if (obj == ocean) {
+            System.out.println("Change theme to: ocean");
+        } else if (obj == flames) {
+            System.out.println("Change theme to: flames");
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        changeBackgroundImage(e);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        setImages(ImagePath + "GameFrameBackground", data);
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
-
 
     @Override
     public void keyPressed(KeyEvent e) {

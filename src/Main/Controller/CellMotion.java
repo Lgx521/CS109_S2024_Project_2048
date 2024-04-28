@@ -37,6 +37,8 @@ public class CellMotion extends JFrame {
 
     public int status = 0;
 
+    private int target = 2048;
+
     //获取步数
     public int getSteps() {
         int steps = undo.getSteps();
@@ -87,10 +89,8 @@ public class CellMotion extends JFrame {
         }
     }
 
-
     //在游戏结束之前调用，判断是否出现目标格点
     public void moveBeforeWin(int issue, int[][] data) {
-        isEnding(data);
         if (issue == RIGHT) {
             moveRight(data);
         } else if (issue == LEFT) {
@@ -100,6 +100,7 @@ public class CellMotion extends JFrame {
         } else if (issue == DOWN) {
             moveDown(data);
         }
+        isEnding(data);
     }
 
     //在游戏结束之后调用，不判断是否出现目标格点，只判断是否能继续移动
@@ -624,7 +625,7 @@ public class CellMotion extends JFrame {
 
     //判断是否胜利
     public boolean ifYouWin(int[][] data) {
-        int target = 2048;
+        int target = getTarget();
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
                 if (data[i][j] == target) {
@@ -633,6 +634,16 @@ public class CellMotion extends JFrame {
             }
         }
         return false;
+    }
+
+    //getter
+    public int getTarget() {
+        return target;
+    }
+
+    //setter
+    public void setTarget(int target) {
+        this.target = target;
     }
 
     //UNDO
@@ -665,9 +676,10 @@ public class CellMotion extends JFrame {
         String content = "initial";
         if (issue == YOU_WIN_CAN_PLAY) {
             content = "You Win!\n" +
-                    "Do you want to continue your play?";
+                    "Do you want to continue your play?\n" +
+                    "Choose \"Yes\" to Continue\n" +
+                    "Choose \"No\" to Restart game in next step";
             int option = JOptionPane.showConfirmDialog(null, content, "Notice", JOptionPane.YES_NO_OPTION);
-            System.out.println(option);
             if (option == 0) {
                 //继续游玩
                 status = 1;
