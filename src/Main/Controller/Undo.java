@@ -4,46 +4,38 @@ import javax.swing.*;
 
 public class Undo extends JFrame {
 
+    //步数统计
     private int steps = 0;
+
+    //回退次数，初始值为3，表示最多回退3次
     private int undoTimes = 3;
 
     private final int MAX_TIMES = 0;
     private final int START_PLACE = 1;
 
-    private int[] score = {0, 0, 0, 0};
+    //用于保存之前三步信息的矩阵
+    private int[][] temp_0 = new int[4][4];
+    private int[][] temp_1 = new int[4][4];
+    private int[][] temp_2 = new int[4][4];
+    private int[][] temp_3 = new int[4][4];
 
-    //getter and setter
-    public int getScore(int index) {
-        return score[index];
-    }
-
-    public void setScore(int score, int steps) {
-        this.score[(steps + 1) % 4] = this.score[(steps + 1) % 4] + score;
-        System.out.printf("index: %d, {%d, %d, %d, %d}\n",
-                (steps + 1) % 4, this.score[0], this.score[1],
-                this.score[2], this.score[3]);
-    }
-
-
+    //得到步数
     public int getSteps() {
         return steps;
     }
 
+    //设置步数
     public void setSteps(int steps) {
         this.steps = steps;
         System.out.println("Current Steps: " + this.steps);
     }
 
+    //恢复undo次数
     public void setUndoTimes() {
         if (this.undoTimes < 3) {
             this.undoTimes = this.undoTimes + 1;
         }
     }
-
-    private int[][] temp_0 = new int[4][4];
-    private int[][] temp_1 = new int[4][4];
-    private int[][] temp_2 = new int[4][4];
-    private int[][] temp_3 = new int[4][4];
 
     //保存某一步的状态
     public void saveStatus(int[][] data) {
@@ -74,23 +66,14 @@ public class Undo extends JFrame {
         }
     }
 
-    //控制台输出矩阵
-    private void printData(int[][] data) {
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[0].length; j++) {
-                System.out.printf("%-4d", data[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
     //核心方法
     public void UNDO(int[][] data) {
+        //初始位置，不可继续UNDO
         if (steps == 0) {
             setIssue(START_PLACE);
             return;
         }
+        //最多回退3次判断
         if (undoTimes > 0) {
             if (steps % 4 == 1) {
                 for (int i = 0; i < temp_1.length; i++) {
@@ -137,7 +120,19 @@ public class Undo extends JFrame {
             content = "This is the initial board configuration, \n" +
                     "You can't perform UNDO operation now!";
         }
-
         JOptionPane.showMessageDialog(null, content, "Caution", JOptionPane.WARNING_MESSAGE);
     }
+
+    //控制台输出矩阵
+    private void printData(int[][] data) {
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                System.out.printf("%-4d", data[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+
 }

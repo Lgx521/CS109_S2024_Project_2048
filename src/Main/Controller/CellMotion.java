@@ -1,12 +1,13 @@
 package Main.Controller;
 
+import Main.Frame.GameFrame;
+
+import javax.swing.*;
 import java.util.Random;
 
-public class CellMotion {
+public class CellMotion extends JFrame {
 
-
-    //To test the GameOver Validation
-
+/*
     public void test() {
         int[][] data = {
                 {0, 0, 0, 0},
@@ -18,39 +19,109 @@ public class CellMotion {
         System.out.println("Move");
         moveUp(data);
         System.out.println(ifEnding(data));
-
     }
-
-//    public void test() {
-//        int[][] data0 = {
-//                {16, 16, 16, 2},
-//                {0, 0, 0, 0},
-//                {0, 0, 0, 0},
-//                {0, 0, 0, 0}
-//        };
-//        moveUp(data0);
-//
-//        moveUp(data0);
-//
-//
-//    }
+*/
 
     Random r = new Random();
 
     Undo undo = new Undo();
 
+    public final int YOU_WIN_CAN_PLAY = 0;
+    public final int YOU_WIN_CANNOT_PLAY = 1;
+    public final int YOU_LOST = 2;
+
+    public final int RIGHT = 0;
+    public final int LEFT = 1;
+    public final int UP = 2;
+    public final int DOWN = 3;
+
+    public int status = 0;
+
+    //获取步数
     public int getSteps() {
         int steps = undo.getSteps();
         return steps;
     }
 
-    public int getScore(int steps) {
-        int score = undo.getScore(steps % 4);
-        return score;
+    //分数记录解释
+    /*
+    [0][0][2][2]  --->  [0][0][0][4]  分数 +4
+    每合成一次新的格子，分数增加这个新格子的大小
+     */
+    private int[] score = {0, 0, 0, 0};
+
+    //用于在出现有效格点融合后增加分数
+    private void setScore(int step, int scoreIncreasing) {
+        if (step % 4 == 0) {
+            score[0] = score[0] + scoreIncreasing;
+        } else if (step % 4 == 1) {
+            score[1] = score[1] + scoreIncreasing;
+        } else if (step % 4 == 2) {
+            score[2] = score[2] + scoreIncreasing;
+        } else if (step % 4 == 3) {
+            score[3] = score[3] + scoreIncreasing;
+        }
+    }
+
+    //用于获取上一步已得到的分数
+    private int getScoreByIndex(int step) {
+        if ((step - 1) % 4 >= 0) {
+            score[(step) % 4] = 0;
+            return score[(step - 1) % 4];
+        } else {
+            score[0] = 0;
+            return score[3];
+        }
+    }
+
+    //获取分数
+    public int getScore(int step) {
+        if (step % 4 == 0) {
+            return score[0];
+        } else if (step % 4 == 1) {
+            return score[1];
+        } else if (step % 4 == 2) {
+            return score[2];
+        } else {
+            return score[3];
+        }
     }
 
 
+    //在游戏结束之前调用，判断是否出现目标格点
+    public void moveBeforeWin(int issue, int[][] data) {
+        isEnding(data);
+        if (issue == RIGHT) {
+            moveRight(data);
+        } else if (issue == LEFT) {
+            moveLeft(data);
+        } else if (issue == UP) {
+            moveUp(data);
+        } else if (issue == DOWN) {
+            moveDown(data);
+        }
+    }
 
+    //在游戏结束之后调用，不判断是否出现目标格点，只判断是否能继续移动
+    public void moveAfterWin(int issue, int[][] data) {
+        if (isCanNotMovable(data)) {
+            JOptionPane.showMessageDialog(null, "Game Over!", "Notice", JOptionPane.NO_OPTION);
+        }
+        if (issue == RIGHT) {
+            moveRight(data);
+        } else if (issue == LEFT) {
+            moveLeft(data);
+        } else if (issue == UP) {
+            moveUp(data);
+        } else if (issue == DOWN) {
+            moveDown(data);
+        }
+        if (isCanNotMovable(data)) {
+            JOptionPane.showMessageDialog(null, "Game Over!", "Notice", JOptionPane.NO_OPTION);
+        }
+    }
+
+//移动方式解释
 /*
     每一次都进行移动，如果遇到相同的就进行融合
     最后把0过掉
@@ -75,20 +146,19 @@ public class CellMotion {
 
     //向右移动
     public void moveRight(int[][] data) {
-        if (ifEnding(data)) {
+        if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
         }
-        undo.setScore(0,undo.getSteps() - 1);
         boolean flag0 = isFlagRight(data);
         if (!flag0) {
             System.out.println("can't move right");
             return;
         }
         undo.saveStatus(data);
+        setScore(undo.getSteps() + 1, getScoreByIndex((undo.getSteps() + 1) % 4));
         for (int i = 0; i < data.length; i++) {
             while (isRightHaveZero(data[i])) {
-                undo.setScore(0, undo.getSteps());
                 if (data[i][3] == 0) {
                     data[i][3] = data[i][2];
                     data[i][2] = data[i][1];
@@ -110,7 +180,7 @@ public class CellMotion {
                 boolean flag = false;
                 if (data[i][2] == data[i][3] && data[i][2] != 0) {
                     data[i][3] = 2 * data[i][3];
-                    undo.setScore(data[i][3] * 2, undo.getSteps());
+                    setScore(undo.getSteps() + 1, data[i][3]);
                     data[i][2] = data[i][1];
                     data[i][1] = data[i][0];
                     data[i][0] = 0;
@@ -118,14 +188,14 @@ public class CellMotion {
                 }
                 if (data[i][2] == data[i][1] && data[i][1] != 0) {
                     data[i][2] = 2 * data[i][2];
-                    undo.setScore(data[i][2] * 2, undo.getSteps());
+                    setScore(undo.getSteps() + 1, data[i][2]);
                     data[i][1] = data[i][0];
                     data[i][0] = 0;
                     flag = true;
                 }
                 if (data[i][1] == data[i][0] && data[i][0] != 0) {
                     data[i][1] = 2 * data[i][1];
-                    undo.setScore(data[i][1] * 2, undo.getSteps());
+                    setScore(undo.getSteps() + 1, data[i][1]);
                     data[i][0] = 0;
                     flag = true;
                 }
@@ -136,7 +206,7 @@ public class CellMotion {
             }
         }
 
-        if (ifEnding(data)) {
+        if (isCanNotMovable(data)) {
             printData(data);
             System.out.println("Game Over!");
         } else {
@@ -148,23 +218,21 @@ public class CellMotion {
         }
     }
 
-
     //向左移动
     public void moveLeft(int[][] data) {
-        if (ifEnding(data)) {
+        if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
         }
-        undo.setScore(0,undo.getSteps() - 1);
         boolean flag0 = isFlagLeft(data);
         if (!flag0) {
             System.out.println("can't move left");
             return;
         }
         undo.saveStatus(data);
+        setScore(undo.getSteps() + 1, getScoreByIndex((undo.getSteps() + 1) % 4));
         for (int i = 0; i < data.length; i++) {
             while (isLeftHaveZero(data[i])) {
-                undo.setScore(0, undo.getSteps());
                 if (data[i][0] == 0) {
                     data[i][0] = data[i][1];
                     data[i][1] = data[i][2];
@@ -186,7 +254,7 @@ public class CellMotion {
                 boolean flag = false;
                 if (data[i][0] == data[i][1] && data[i][0] != 0) {
                     data[i][0] = 2 * data[i][0];
-                    undo.setScore(data[i][0], undo.getSteps());
+                    setScore(undo.getSteps() + 1, data[i][0]);
                     data[i][1] = data[i][2];
                     data[i][2] = data[i][3];
                     data[i][3] = 0;
@@ -194,14 +262,14 @@ public class CellMotion {
                 }
                 if (data[i][1] == data[i][2] && data[i][1] != 0) {
                     data[i][1] = 2 * data[i][1];
-                    undo.setScore(data[i][1], undo.getSteps());
+                    setScore(undo.getSteps() + 1, data[i][1]);
                     data[i][2] = data[i][3];
                     data[i][3] = 0;
                     flag = true;
                 }
                 if (data[i][2] == data[i][3] && data[i][2] != 0) {
                     data[i][2] = 2 * data[i][2];
-                    undo.setScore(data[i][2], undo.getSteps());
+                    setScore(undo.getSteps() + 1, data[i][2]);
                     data[i][3] = 0;
                     flag = true;
                 }
@@ -212,7 +280,7 @@ public class CellMotion {
             }
         }
 
-        if (ifEnding(data)) {
+        if (isCanNotMovable(data)) {
             printData(data);
             System.out.println("Game Over!");
         } else {
@@ -222,6 +290,168 @@ public class CellMotion {
             undo.setUndoTimes();
             printData(data);
         }
+    }
+
+    //上下移动调用上下移动的逻辑方式
+    /*
+   进行向上移动，我们只需要给矩阵取对称，然后利用向左移动逻辑，再进行逆变换即可
+   进行向下移动，我们只需要给矩阵取对称，然后利用向右移动逻辑，再进行逆变换即可
+    */
+
+    //向上移动
+    public void moveUp(int[][] data) {
+        if (isCanNotMovable(data)) {
+            System.out.println("Game Over!");
+            return;
+        }
+        boolean flag0 = isFlagLeft(SymmetryTransformation(data));
+        SymmetryTransformation(data);
+        if (!flag0) {
+            System.out.println("can't move up");
+            return;
+        }
+        undo.saveStatus(data);
+        setScore(undo.getSteps() + 1, getScoreByIndex((undo.getSteps() + 1) % 4));
+        SymmetryTransformation(data);
+        for (int i = 0; i < data.length; i++) {
+            while (isLeftHaveZero(data[i])) {
+                if (data[i][0] == 0) {
+                    data[i][0] = data[i][1];
+                    data[i][1] = data[i][2];
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                }
+                if (data[i][1] == 0) {
+                    data[i][1] = data[i][2];
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                }
+                if (data[i][2] == 0) {
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                }
+            }
+            loop:
+            while (isLeftMovable(data[i])) {
+                boolean flag = false;
+                if (data[i][0] == data[i][1] && data[i][0] != 0) {
+                    data[i][0] = 2 * data[i][0];
+                    setScore(undo.getSteps() + 1, data[i][0]);
+                    data[i][1] = data[i][2];
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                    flag = true;
+                }
+                if (data[i][1] == data[i][2] && data[i][1] != 0) {
+                    data[i][1] = 2 * data[i][1];
+                    setScore(undo.getSteps() + 1, data[i][1]);
+                    data[i][2] = data[i][3];
+                    data[i][3] = 0;
+                    flag = true;
+                }
+                if (data[i][2] == data[i][3] && data[i][2] != 0) {
+                    data[i][2] = 2 * data[i][2];
+                    setScore(undo.getSteps() + 1, data[i][2]);
+                    data[i][3] = 0;
+                    flag = true;
+                }
+                if (flag) {
+                    break loop;
+                }
+
+            }
+        }
+        SymmetryTransformation(data);
+
+        if (isCanNotMovable(data)) {
+            printData(data);
+            System.out.println("Game Over!");
+        } else {
+            RandomAddingCell(data);
+            undo.setSteps(undo.getSteps() + 1);
+            undo.saveStatus(data);
+            undo.setUndoTimes();
+            printData(data);
+        }
+
+    }
+
+    //向下移动
+    public void moveDown(int[][] data) {
+        if (isCanNotMovable(data)) {
+            System.out.println("Game Over!");
+            return;
+        }
+        boolean flag0 = isFlagRight(SymmetryTransformation(data));
+        SymmetryTransformation(data);
+        if (!flag0) {
+            System.out.println("can't move down");
+            return;
+        }
+        undo.saveStatus(data);
+        setScore(undo.getSteps() + 1, getScoreByIndex((undo.getSteps() + 1) % 4));
+        SymmetryTransformation(data);
+        for (int i = 0; i < data.length; i++) {
+            while (isRightHaveZero(data[i])) {
+                if (data[i][3] == 0) {
+                    data[i][3] = data[i][2];
+                    data[i][2] = data[i][1];
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                }
+                if (data[i][2] == 0) {
+                    data[i][2] = data[i][1];
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                }
+                if (data[i][1] == 0) {
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                }
+            }
+            loop:
+            while (isRightMovable(data[i])) {
+                boolean flag = false;
+                if (data[i][2] == data[i][3] && data[i][2] != 0) {
+                    data[i][3] = 2 * data[i][3];
+                    setScore(undo.getSteps() + 1, data[i][3]);
+                    data[i][2] = data[i][1];
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                    flag = true;
+                }
+                if (data[i][2] == data[i][1] && data[i][1] != 0) {
+                    data[i][2] = 2 * data[i][2];
+                    setScore(undo.getSteps() + 1, data[i][2]);
+                    data[i][1] = data[i][0];
+                    data[i][0] = 0;
+                    flag = true;
+                }
+                if (data[i][1] == data[i][0] && data[i][0] != 0) {
+                    data[i][1] = 2 * data[i][1];
+                    setScore(undo.getSteps() + 1, data[i][1]);
+                    data[i][0] = 0;
+                    flag = true;
+                }
+                if (flag) {
+                    break loop;
+                }
+
+            }
+        }
+        SymmetryTransformation(data);
+        if (isCanNotMovable(data)) {
+            printData(data);
+            System.out.println("Game Over!");
+        } else {
+            RandomAddingCell(data);
+            undo.setSteps(undo.getSteps() + 1);
+            undo.saveStatus(data);
+            undo.setUndoTimes();
+            printData(data);
+        }
+
+
     }
 
     //判断所有行能否向右移动
@@ -248,7 +478,7 @@ public class CellMotion {
         return flag0;
     }
 
-    //判断给定行能否向右移动
+    //判断给定行能否合并的向右移动
     private boolean isRightHaveZero(int[] dataLine) {
         //如果非零元素右边有0，return true
         for (int i = dataLine.length - 1; i > 0; i--) {
@@ -258,6 +488,8 @@ public class CellMotion {
         }
         return false;
     }
+
+    //判断给定行能否在右侧有零的情况下移动
     private boolean isRightMovable(int[] dataLine) {
         //如果存在相邻相等非零元素，return true
         boolean flag = false;
@@ -285,7 +517,7 @@ public class CellMotion {
         return flag;
     }
 
-    //判断给定行能否向左移动
+    //判断给定行能否合并的向左移动
     private boolean isLeftHaveZero(int[] dataLine) {
         //如果非零元素左边有0，return true
         for (int i = 0; i < dataLine.length - 1; i++) {
@@ -295,6 +527,8 @@ public class CellMotion {
         }
         return false;
     }
+
+    //判断给定行能否在左边有零的情况下移动
     private boolean isLeftMovable(int[] dataLine) {
         //如果存在相邻相等非零元素，return true
         boolean flag = false;
@@ -322,11 +556,6 @@ public class CellMotion {
         return flag;
     }
 
-    /*
-    进行向上移动，我们只需要给矩阵取对称，然后利用向左移动逻辑，再进行逆变换即可
-    进行向下移动，我们只需要给矩阵取对称，然后利用向右移动逻辑，再进行逆变换即可
-     */
-
     //取对称矩阵
     private int[][] SymmetryTransformation(int[][] data) {
         int[][] Transformed = new int[data[0].length][data.length];
@@ -343,165 +572,7 @@ public class CellMotion {
         return data;
     }
 
-    //向上移动
-    public void moveUp(int[][] data) {
-        if (ifEnding(data)) {
-            System.out.println("Game Over!");
-            return;
-        }
-        boolean flag0 = isFlagLeft(SymmetryTransformation(data));
-        undo.setScore(0,undo.getSteps() - 1);
-        SymmetryTransformation(data);
-        if (!flag0) {
-            System.out.println("can't move up");
-            return;
-        }
-        undo.saveStatus(data);
-        SymmetryTransformation(data);
-        for (int i = 0; i < data.length; i++) {
-            while (isLeftHaveZero(data[i])) {
-                undo.setScore(0, undo.getSteps());
-                if (data[i][0] == 0) {
-                    data[i][0] = data[i][1];
-                    data[i][1] = data[i][2];
-                    data[i][2] = data[i][3];
-                    data[i][3] = 0;
-                }
-                if (data[i][1] == 0) {
-                    data[i][1] = data[i][2];
-                    data[i][2] = data[i][3];
-                    data[i][3] = 0;
-                }
-                if (data[i][2] == 0) {
-                    data[i][2] = data[i][3];
-                    data[i][3] = 0;
-                }
-            }
-            loop:
-            while (isLeftMovable(data[i])) {
-                boolean flag = false;
-                if (data[i][0] == data[i][1] && data[i][0] != 0) {
-                    data[i][0] = 2 * data[i][0];
-                    undo.setScore(data[i][0], undo.getSteps());
-                    data[i][1] = data[i][2];
-                    data[i][2] = data[i][3];
-                    data[i][3] = 0;
-                    flag = true;
-                }
-                if (data[i][1] == data[i][2] && data[i][1] != 0) {
-                    data[i][1] = 2 * data[i][1];
-                    undo.setScore(data[i][1], undo.getSteps());
-                    data[i][2] = data[i][3];
-                    data[i][3] = 0;
-                    flag = true;
-                }
-                if (data[i][2] == data[i][3] && data[i][2] != 0) {
-                    data[i][2] = 2 * data[i][2];
-                    undo.setScore(data[i][2], undo.getSteps());
-                    data[i][3] = 0;
-                    flag = true;
-                }
-                if (flag) {
-                    break loop;
-                }
-
-            }
-        }
-        SymmetryTransformation(data);
-
-        if (ifEnding(data)) {
-            printData(data);
-            System.out.println("Game Over!");
-        } else {
-            RandomAddingCell(data);
-            undo.setSteps(undo.getSteps() + 1);
-            undo.saveStatus(data);
-            undo.setUndoTimes();
-            printData(data);
-        }
-
-    }
-
-    //向下移动
-    public void moveDown(int[][] data) {
-        if (ifEnding(data)) {
-            System.out.println("Game Over!");
-            return;
-        }
-        boolean flag0 = isFlagRight(SymmetryTransformation(data));
-        undo.setScore(0,undo.getSteps() - 1);
-        SymmetryTransformation(data);
-        if (!flag0) {
-            System.out.println("can't move down");
-            return;
-        }
-        undo.saveStatus(data);
-        SymmetryTransformation(data);
-        for (int i = 0; i < data.length; i++) {
-            while (isRightHaveZero(data[i])) {
-                undo.setScore(0, undo.getSteps());
-                if (data[i][3] == 0) {
-                    data[i][3] = data[i][2];
-                    data[i][2] = data[i][1];
-                    data[i][1] = data[i][0];
-                    data[i][0] = 0;
-                }
-                if (data[i][2] == 0) {
-                    data[i][2] = data[i][1];
-                    data[i][1] = data[i][0];
-                    data[i][0] = 0;
-                }
-                if (data[i][1] == 0) {
-                    data[i][1] = data[i][0];
-                    data[i][0] = 0;
-                }
-            }
-            loop:
-            while (isRightMovable(data[i])) {
-                boolean flag = false;
-                if (data[i][2] == data[i][3] && data[i][2] != 0) {
-                    data[i][3] = 2 * data[i][3];
-                    undo.setScore(data[i][3] * 2, undo.getSteps());
-                    data[i][2] = data[i][1];
-                    data[i][1] = data[i][0];
-                    data[i][0] = 0;
-                    flag = true;
-                }
-                if (data[i][2] == data[i][1] && data[i][1] != 0) {
-                    data[i][2] = 2 * data[i][2];
-                    undo.setScore(data[i][2] * 2, undo.getSteps());
-                    data[i][1] = data[i][0];
-                    data[i][0] = 0;
-                    flag = true;
-                }
-                if (data[i][1] == data[i][0] && data[i][0] != 0) {
-                    data[i][1] = 2 * data[i][1];
-                    undo.setScore(data[i][1] * 2, undo.getSteps());
-                    data[i][0] = 0;
-                    flag = true;
-                }
-                if (flag) {
-                    break loop;
-                }
-
-            }
-        }
-        SymmetryTransformation(data);
-        if (ifEnding(data)) {
-            printData(data);
-            System.out.println("Game Over!");
-        } else {
-            RandomAddingCell(data);
-            undo.setSteps(undo.getSteps() + 1);
-            undo.saveStatus(data);
-            undo.setUndoTimes();
-            printData(data);
-        }
-
-
-    }
-
-    //移动后在空白位置增加一个新的2
+    //移动后在空白位置增加一个新的2或4
     private void RandomAddingCell(int[][] data) {
         boolean flag = false;
         for (int i = 0; i < data.length; i++) {
@@ -530,19 +601,19 @@ public class CellMotion {
 
     }
 
-    //判断游戏是否结束
-    private boolean ifEnding(int[][] data) {
+    //判断游戏是否已经不能移动了
+    public boolean isCanNotMovable(int[][] data) {
         boolean flag = true;
         for (int i = 0; i < data.length; i++) {
             if (isLeftMovable(data[i]) || isRightMovable(data[i])
-                    ||isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
+                    || isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
                 return false;
             }
         }
-        int[][] temp = SymmetryTransformation(data);
+        SymmetryTransformation(data);
         for (int i = 0; i < data[0].length; i++) {
             if (isLeftMovable(data[i]) || isRightMovable(data[i])
-                    ||isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
+                    || isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
                 SymmetryTransformation(data);
                 return false;
             }
@@ -551,9 +622,67 @@ public class CellMotion {
         return true;
     }
 
+    //判断是否胜利
+    public boolean ifYouWin(int[][] data) {
+        int target = 2048;
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                if (data[i][j] == target) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     //UNDO
     public void UNDO(int[][] data) {
         undo.UNDO(data);
+    }
+
+    //判断游戏结束
+    public void isEnding(int[][] data) {
+        if (ifYouWin(data) && !isCanNotMovable(data)) {
+            //胜利：胜利并且可以继续游移动
+            System.out.println("Win and Can play");
+            EndingNotice(YOU_WIN_CAN_PLAY);
+        } else if (ifYouWin(data) && isCanNotMovable(data)) {
+            //胜利：胜利且不能继续游移动
+            System.out.println("Win and can't play");
+            EndingNotice(YOU_WIN_CANNOT_PLAY);
+        } else if (!ifYouWin(data) && !isCanNotMovable(data)) {
+            //游戏中：未胜利且可以继续移动
+            System.out.println("In progress");
+        } else if (!ifYouWin(data) && isCanNotMovable(data)) {
+            //失败：未胜利且不能继续移动
+            System.out.println("lost");
+            EndingNotice(YOU_LOST);
+        }
+    }
+
+    //调用提示框
+    private void EndingNotice(int issue) {
+        String content = "initial";
+        if (issue == YOU_WIN_CAN_PLAY) {
+            content = "You Win!\n" +
+                    "Do you want to continue your play?";
+            int option = JOptionPane.showConfirmDialog(null, content, "Notice", JOptionPane.YES_NO_OPTION);
+            System.out.println(option);
+            if (option == 0) {
+                //继续游玩
+                status = 1;
+            } else {
+                status = 2;
+            }
+        } else if (issue == YOU_WIN_CANNOT_PLAY) {
+            content = "You Win!\n" +
+                    "Game Over!";
+            JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.NO_OPTION);
+        } else if (issue == YOU_LOST) {
+            content = "You Lost,\n" +
+                    "Game Over!";
+            JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.NO_OPTION);
+        }
     }
 
     //在控制台输出当前棋盘

@@ -4,6 +4,15 @@ import java.util.Random;
 
 public class InitialGrids {
 
+    //测试
+//    int[][] data = {
+//            {16, 1024, 16, 2},
+//            {2, 1024, 32, 4},
+//            {16, 2, 8, 32},
+//            {2, 64, 32, 16}
+//    };
+
+    //测试
     public int[][] setup() {
         int[][] data = initialData();
         printData(data);

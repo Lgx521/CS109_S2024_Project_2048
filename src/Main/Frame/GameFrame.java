@@ -25,7 +25,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     CellMotion motion;
 
     //todo：改变主题后，以改变后的主题启动
-    private void replayGame() {
+    public void replayGame() {
         data = new InitialGrids().setup();
         motion = new CellMotion();
         setImages(ImagePath + "GameFrameBackground", data);
@@ -194,17 +194,16 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         //步数显示
         JLabel steplable = new JLabel(motion.getSteps() + "");
         steplable.setSize(60, 40);
-        steplable.setBounds(715, 200, 60, 40);
+        steplable.setBounds(710, 200, 60, 40);
         steplable.setFont(new Font("Console", Font.ITALIC, 18));
         steplable.setForeground(Color.WHITE);
 
         //分数显示
         JLabel scorelable = new JLabel(motion.getScore(motion.getSteps()) + "");
         scorelable.setSize(60, 40);
-        scorelable.setBounds(715, 168, 60, 40);
+        scorelable.setBounds(710, 168, 60, 40);
         scorelable.setFont(new Font("Console", Font.ITALIC, 18));
         scorelable.setForeground(Color.WHITE);
-
 
 
         this.ImageContainer.add(steplable);
@@ -335,19 +334,43 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         int code = e.getKeyCode();
         if (code == 37) {
             System.out.println("left");
-            motion.moveLeft(data);
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.LEFT, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.LEFT, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
             setImages(ImagePath + "GameFrameBackground", data);
         } else if (code == 38) {
             System.out.println("up");
-            motion.moveUp(data);
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.UP, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.UP, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
             setImages(ImagePath + "GameFrameBackground", data);
         } else if (code == 39) {
             System.out.println("right");
-            motion.moveRight(data);
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.RIGHT, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.RIGHT, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
             setImages(ImagePath + "GameFrameBackground", data);
         } else if (code == 40) {
             System.out.println("down");
-            motion.moveDown(data);
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.DOWN, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.DOWN, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
             setImages(ImagePath + "GameFrameBackground", data);
         }
     }
