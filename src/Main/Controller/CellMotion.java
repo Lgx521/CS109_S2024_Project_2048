@@ -2,6 +2,10 @@ package Main.Controller;
 
 import Main.Frame.GameFrame;
 
+import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.swing.*;
 import java.util.Random;
 
@@ -38,6 +42,7 @@ public class CellMotion extends JFrame {
     public int status = 0;
 
     private int target = 2048;
+
 
     //获取步数
     public int getSteps() {

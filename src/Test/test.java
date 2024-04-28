@@ -1,21 +1,40 @@
 package Test;
 
-import java.util.Random;
-import java.util.random.*;
+import javax.swing.*;
 
-public class test {
+public class test extends JFrame {
     public static void main(String[] args) {
-        int[] a = {1, 2, 3};
-        int[] b = a.clone();
 
-        a[0]= 5;
+        JFrame a = new JFrame();
+        a.setSize(600,300);
+        a.setLocationRelativeTo(null);
+        a.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        a.setVisible(true);
 
-        for (int i = 0; i < a.length; i++) {
-            System.out.print(a[i] + " ");
-        }
-        System.out.println();
-        for (int i = 0; i < b.length; i++) {
-            System.out.print(b[i] + " ");
-        }
+//        Time time = new Time();
+//        new Thread(time).start();
+
     }
+
 }
+
+
+//private Timer time;
+//
+////时间显示
+//private JLabel getTimelabel() {
+//    if (timelabel == null) {
+//        timelabel = new JLabel("");
+//        timelabel.setBounds(5, 65, 200, 20);
+//        timelabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
+//        timelabel.setForeground(new Color(182, 229, 248));
+//        time = new Timer(1000,new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent arg0) {
+//                timelabel.setText(new SimpleDateFormat("yyyy年MM月dd日 EEEE hh:mm:ss").format(new Date()));
+//            }
+//        }
+//        time.start();
+//    }
+//    return timelabel;
+//}

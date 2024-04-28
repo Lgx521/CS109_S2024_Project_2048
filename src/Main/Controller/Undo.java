@@ -14,10 +14,10 @@ public class Undo extends JFrame {
     private final int START_PLACE = 1;
 
     //用于保存之前三步信息的矩阵
-    private int[][] temp_0 = new int[4][4];
-    private int[][] temp_1 = new int[4][4];
-    private int[][] temp_2 = new int[4][4];
-    private int[][] temp_3 = new int[4][4];
+    private final int[][] temp_0 = new int[4][4];
+    private final int[][] temp_1 = new int[4][4];
+    private final int[][] temp_2 = new int[4][4];
+    private final int[][] temp_3 = new int[4][4];
 
     //得到步数
     public int getSteps() {
@@ -41,27 +41,19 @@ public class Undo extends JFrame {
     public void saveStatus(int[][] data) {
         if ((this.steps + 1) % 4 == 3) {
             for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[0].length; j++) {
-                    temp_3[i][j] = data[i][j];
-                }
+                System.arraycopy(data[i], 0, temp_3[i], 0, data[0].length);
             }
         } else if ((this.steps + 1) % 4 == 2) {
             for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[0].length; j++) {
-                    temp_2[i][j] = data[i][j];
-                }
+                System.arraycopy(data[i], 0, temp_2[i], 0, data[0].length);
             }
         } else if ((this.steps + 1) % 4 == 1) {
             for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[0].length; j++) {
-                    temp_1[i][j] = data[i][j];
-                }
+                System.arraycopy(data[i], 0, temp_1[i], 0, data[0].length);
             }
         } else if ((this.steps + 1) % 4 == 0) {
             for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[0].length; j++) {
-                    temp_0[i][j] = data[i][j];
-                }
+                System.arraycopy(data[i], 0, temp_0[i], 0, data[0].length);
             }
         }
     }
@@ -77,27 +69,19 @@ public class Undo extends JFrame {
         if (undoTimes > 0) {
             if (steps % 4 == 1) {
                 for (int i = 0; i < temp_1.length; i++) {
-                    for (int j = 0; j < temp_1[0].length; j++) {
-                        data[i][j] = temp_1[i][j];
-                    }
+                    System.arraycopy(temp_1[i], 0, data[i], 0, temp_1[0].length);
                 }
             } else if (steps % 4 == 2) {
                 for (int i = 0; i < temp_2.length; i++) {
-                    for (int j = 0; j < temp_2[0].length; j++) {
-                        data[i][j] = temp_2[i][j];
-                    }
+                    System.arraycopy(temp_2[i], 0, data[i], 0, temp_2[0].length);
                 }
             } else if (steps % 4 == 3) {
                 for (int i = 0; i < temp_3.length; i++) {
-                    for (int j = 0; j < temp_3[0].length; j++) {
-                        data[i][j] = temp_3[i][j];
-                    }
+                    System.arraycopy(temp_3[i], 0, data[i], 0, temp_3[0].length);
                 }
             } else if (steps % 4 == 0) {
                 for (int i = 0; i < temp_0.length; i++) {
-                    for (int j = 0; j < temp_0[0].length; j++) {
-                        data[i][j] = temp_0[i][j];
-                    }
+                    System.arraycopy(temp_0[i], 0, data[i], 0, temp_0[0].length);
                 }
             }
             this.steps = this.steps - 1;

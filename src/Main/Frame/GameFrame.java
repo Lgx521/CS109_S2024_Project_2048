@@ -67,11 +67,15 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     Container ImageContainer = new Container();
 
     private final String ImagePath = "src/Main/Resources/";
-    private final String NumImagePath = "src/Main/Resources/Cells/";
+
+    private String NumImagePath;
+    ImagePathEnum img;
 
 
     //重新加载游戏
     public void replayGame() {
+        img = ImagePathEnum.DEFAULT;
+        NumImagePath = img.getPath();
         data = new InitialGrids().setup();
         motion = new CellMotion();
         setImages(ImagePath + "GameFrameBackground", data);
@@ -193,7 +197,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 imageLable.setIcon(image);
                 imageLable.setSize(100, 100);
                 imageLable.setBounds(32 + 100 * j, 98 + 100 * i, 100, 100);
-                imageLable.setBorder(new BevelBorder(BevelBorder.LOWERED));
+                imageLable.setBorder(new BevelBorder(BevelBorder.RAISED));
                 this.ImageContainer.add(imageLable);
             }
         }
@@ -408,12 +412,24 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             setTargetDialog();
         } else if (obj == Default) {
             System.out.println("Change theme to: default");
+            img = ImagePathEnum.DEFAULT;
+            NumImagePath = img.getPath();
+            setImages(ImagePath + "GameFrameBackground", data);
         } else if (obj == forest) {
             System.out.println("Change theme to: forest");
+            img = ImagePathEnum.FOREST;
+            NumImagePath = img.getPath();
+            setImages(ImagePath + "GameFrameBackground", data);
         } else if (obj == ocean) {
             System.out.println("Change theme to: ocean");
+            img = ImagePathEnum.OCEAN;
+            NumImagePath = img.getPath();
+            setImages(ImagePath + "GameFrameBackground", data);
         } else if (obj == flames) {
             System.out.println("Change theme to: flames");
+            img = ImagePathEnum.FLAME;
+            NumImagePath = img.getPath();
+            setImages(ImagePath + "GameFrameBackground", data);
         }
     }
 
