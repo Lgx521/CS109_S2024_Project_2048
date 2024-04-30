@@ -163,7 +163,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
 
         if (passwordCommiting(userPassword.getPassword(), userPasswordCommit.getPassword())) {
-            System.out.println("Verify SignIn Successfully");
+            System.out.println("Sign In Password Verification Successfully");
             if (userOperation.isUserConsistent(loginUserName.getText()) >= 0) {
                 //该用户名已经存在
                 System.out.println("The UserName is already consistent!");

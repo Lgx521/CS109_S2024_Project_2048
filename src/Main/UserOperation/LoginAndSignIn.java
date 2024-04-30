@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class LoginAndSignIn {
 
+    //保存用户信息
     public void saveUserAccount(String userName, char[] password) throws IOException {
         StringBuilder password_str = new StringBuilder();
         for (int i = 0; i < password.length; i++) {
@@ -54,7 +55,7 @@ public class LoginAndSignIn {
         return -1;
     }
 
-
+    //读取文件查询用户
     public boolean loadUserAccount(int UserID, String userName, char[] userPassword) throws IOException {
 
         File UserData = new File("src/Main/Data/UserData.txt");
@@ -106,7 +107,6 @@ public class LoginAndSignIn {
             return false;
         }
     }
-
 
     //获得某行数据
     private String ReadAppointedLine(File file, int targetLine) throws IOException {

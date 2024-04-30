@@ -105,6 +105,7 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
 
     }
 
+    //提示常量
     private final int NONE_INPUT = 0;
     private final int NONE_PASSWORD = 1;
     private final int WRONG_PASSWORD = 2;
@@ -116,7 +117,7 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         if (issue == WRONG_PASSWORD) {
             content = "Wrong Password!";
         } else if (issue == INVALID_USERNAME) {
-            content = "This User doesn't exist.\nPlease Sign In!\nOr you can try Guest mode";
+            content = "This user doesn't exist.\nPlease sign in first!\nOr you can try Guest mode";
         } else if (issue == NONE_INPUT) {
             content = "Please input your Info!\nOr you can try Guest mode";
         } else if (issue == NONE_PASSWORD) {
@@ -125,55 +126,58 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         JOptionPane.showMessageDialog(null, content, "Caution", JOptionPane.ERROR_MESSAGE);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object obj = e.getSource();
-        if (obj == commitJbt) {
-            System.out.println("Log in");
-            //用户名以及密码输入测试
-            System.out.println("The User clicked the log in Button");
-            System.out.print("User Name: " + loginUserName.getText() + "\nUser Password: ");
-            for (int i = 0; i < userPassword.getPassword().length; i++) {
-                System.out.print(userPassword.getPassword()[i]);
-            }
-            System.out.println();
-            //密码验证逻辑
-            if (loginUserName.getText().isEmpty()) {
-                initialLoginFailure(NONE_INPUT);
-            } else {
-                //用户存在判断
-                int UserID = -1;
+    //用户名以及密码输入验证
+    private void LogInVerification() {
+        System.out.print("User Name: " + loginUserName.getText() + "\nUser Password: ");
+        for (int i = 0; i < userPassword.getPassword().length; i++) {
+            System.out.print(userPassword.getPassword()[i]);
+        }
+        System.out.println();
+        //密码验证逻辑
+        if (loginUserName.getText().isEmpty()) {
+            initialLoginFailure(NONE_INPUT);
+        } else {
+            //用户存在判断
+            int UserID = -1;
 
+            try {
+                if (userOpeartion.isUserConsistent(loginUserName.getText()) >= 0) {
+                    //存在
+                    UserID = userOpeartion.isUserConsistent(loginUserName.getText());
+                } else {
+                    //不存在
+                    initialLoginFailure(INVALID_USERNAME);
+                    return;
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            //密码判断
+            if (userPassword.getPassword().length == 0) {
+                initialLoginFailure(NONE_PASSWORD);
+            } else {
                 try {
-                    if (userOpeartion.isUserConsistent(loginUserName.getText()) >= 0) {
-                        //存在
-                        UserID = userOpeartion.isUserConsistent(loginUserName.getText());
+                    if (userOpeartion.loadUserAccount(UserID, loginUserName.getText(), userPassword.getPassword())) {
+                        //全部正确，进入游戏
+                        this.dispose();
+                        gameFrame.setup();
                     } else {
-                        //不存在
-                        initialLoginFailure(INVALID_USERNAME);
-                        return;
+                        initialLoginFailure(WRONG_PASSWORD);
                     }
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-
-                //密码判断
-                if (userPassword.getPassword().length == 0) {
-                    initialLoginFailure(NONE_PASSWORD);
-                } else {
-                    try {
-                        if (userOpeartion.loadUserAccount(UserID, loginUserName.getText(), userPassword.getPassword())) {
-                            //全部正确，进入游戏
-                            this.dispose();
-                            gameFrame.setup();
-                        } else {
-                            initialLoginFailure(WRONG_PASSWORD);
-                        }
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
             }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object obj = e.getSource();
+        if (obj == commitJbt) {
+            System.out.println("The User clicked the log in Button");
+            LogInVerification();
         } else if (obj == signinJtb) {
             System.out.println("Sign in");
             this.dispose();
