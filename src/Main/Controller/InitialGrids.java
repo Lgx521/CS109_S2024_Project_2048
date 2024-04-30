@@ -29,12 +29,22 @@ public class InitialGrids {
         }
         Random r = new Random();
 
-        int[] initialNumSet = {2, 4};
+//        int[] initialNumSet = {2, 4};
+//        int[] position = generateRandomPosition();
+//
+//        if (position[0] != position[2] || position[1] != position[3]) {
+//            data[position[0]][position[1]] = 2;
+//            data[position[2]][position[3]] = initialNumSet[r.nextInt(2)];
+//        } else {
+//            initialData();
+//        }
+//        return data;
+
         int[] position = generateRandomPosition();
 
         if (position[0] != position[2] || position[1] != position[3]) {
             data[position[0]][position[1]] = 2;
-            data[position[2]][position[3]] = initialNumSet[r.nextInt(2)];
+            data[position[2]][position[3]] = 4;
         } else {
             initialData();
         }
