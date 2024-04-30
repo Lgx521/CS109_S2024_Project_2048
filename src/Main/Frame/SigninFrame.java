@@ -22,7 +22,6 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
     LoginAndSignIn userOperation = new LoginAndSignIn();
 
-
     //创建setup方法供外界访问
     public void setup() {
         initialSigninFrame();
@@ -102,6 +101,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
     }
 
+    //提示常量
     private final int NOTICE = 0;
     private final int NO_USERNAME_INPUT = 1;
     private final int NO_PASSWORD_INPUT = 2;
@@ -109,35 +109,13 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
     private final int VERIFICATION_ERROR = 4;
     private final int USER_IS_ALREADY_IN = 5;
 
-
-    //notice提示初始化
-    private void initialNoticeDialog(int issue) {
-        String content = "initial";
-        if (issue == NOTICE) {
-            content = "Your User Name can only contains\n" +
-                    "English letters, Numbers and _";
-            JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.WARNING_MESSAGE);
-            return;
-        } else if (issue == NO_USERNAME_INPUT) {
-            content = "Please input your user name!";
-        } else if (issue == NO_PASSWORD_INPUT) {
-            content = "No password input!";
-        } else if (issue == NO_PASSWORD_VERIFICATION_INPUT) {
-            content = "Verify your password!";
-        } else if (issue == VERIFICATION_ERROR) {
-            content = "Verification Failed!\nYou must input same password";
-        } else if (issue == USER_IS_ALREADY_IN) {
-            content = "Thia user is already consistent!\n" +
-                    "Please use other user name.";
-        }
-        JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.ERROR_MESSAGE);
-    }
-
+    //验证用户名是否合法
     private boolean userNameValidation(String texts) {
         String regex = "\\w+";
         return texts.matches(regex);
     }
 
+    //密码二次验证确认
     private boolean passwordCommiting(char[] raw, char[] commit) {
         if (raw.length != commit.length) {
             return false;
@@ -150,6 +128,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
         return true;
     }
 
+    //注册验证
     private void SignInValidation() throws IOException {
         int passwordInputLength = userPassword.getPassword().length;
         int passwordCommitInputLength = userPasswordCommit.getPassword().length;
@@ -187,6 +166,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
             System.out.println("Verify SignIn Successfully");
             if (userOperation.isUserConsistent(loginUserName.getText()) >= 0) {
                 //该用户名已经存在
+                System.out.println("The UserName is already consistent!");
                 initialNoticeDialog(USER_IS_ALREADY_IN);
             } else {
                 userOperation.saveUserAccount(loginUserName.getText(), userPassword.getPassword());
@@ -200,6 +180,28 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
     }
 
+    //问题提示初始化
+    private void initialNoticeDialog(int issue) {
+        String content = "initial";
+        if (issue == NOTICE) {
+            content = "Your User Name can only contains\n" +
+                    "English letters, Numbers and _";
+            JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.WARNING_MESSAGE);
+            return;
+        } else if (issue == NO_USERNAME_INPUT) {
+            content = "Please input your user name!";
+        } else if (issue == NO_PASSWORD_INPUT) {
+            content = "No password input!";
+        } else if (issue == NO_PASSWORD_VERIFICATION_INPUT) {
+            content = "Verify your password!";
+        } else if (issue == VERIFICATION_ERROR) {
+            content = "Verification Failed!\nYou must input same password.";
+        } else if (issue == USER_IS_ALREADY_IN) {
+            content = "This user is already consistent!\n" +
+                    "Please use other user name.";
+        }
+        JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.ERROR_MESSAGE);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -213,7 +215,6 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
         }
     }
-
 
     @Override
     public void itemStateChanged(ItemEvent e) {
@@ -236,4 +237,5 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
             }
         }
     }
+
 }
