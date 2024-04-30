@@ -1,11 +1,14 @@
 package Main.Frame;
 
+import Main.UserOperation.LoginAndSignIn;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 
 public class SigninFrame extends JFrame implements ActionListener, ItemListener {
 
@@ -16,6 +19,8 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
     Checkbox showPwd2 = new Checkbox("Display");
     JButton signIn = new JButton("Sign in");
     JButton guest = new JButton("Guest Mode");
+
+    LoginAndSignIn userOperation = new LoginAndSignIn();
 
 
     //创建setup方法供外界访问
@@ -141,7 +146,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
         return true;
     }
 
-    private void SignInValidation() {
+    private void SignInValidation() throws IOException {
         int passwordInputLength = userPassword.getPassword().length;
         int passwordCommitInputLength = userPasswordCommit.getPassword().length;
         if (!loginUserName.getText().isEmpty()) {
@@ -151,9 +156,9 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
                     if (validation) {
                         if (passwordCommiting(userPassword.getPassword(), userPasswordCommit.getPassword())) {
                             System.out.println("Verify SignIn Successfully");
+                            userOperation.saveUserAccount(loginUserName.getText(), userPassword.getPassword());
                             this.dispose();
                             new LoginFrame().setup();
-                            //todo: 接入文件写入
                         } else {
                             initialNoticeDialog(VERIFICATION_ERROR);
                         }
@@ -181,7 +186,11 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         if (obj == signIn) {
-            SignInValidation();
+            try {
+                SignInValidation();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
 
         }
     }

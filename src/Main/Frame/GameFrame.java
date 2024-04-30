@@ -350,6 +350,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             System.out.println("Login");
         } else if (obj == logout) {
             System.out.println("Logout");
+            this.dispose();
+            new LoginFrame().setup();
         } else if (obj == music_1) {
             System.out.println("Play Music 1");
         } else if (obj == music_2) {

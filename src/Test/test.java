@@ -1,15 +1,37 @@
 package Test;
 
 import javax.swing.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class test extends JFrame {
     public static void main(String[] args) {
 
-        JFrame a = new JFrame();
-        a.setSize(600,300);
-        a.setLocationRelativeTo(null);
-        a.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        a.setVisible(true);
+        String DataOfThis = "UserID=0&UserName=gan&Password=123";
+
+        String DetectorRegex = "UserID=.+&UserName=\\w+&Password=.+";
+        String UserNameRegex = "UserName=\\w+";
+
+        Pattern overall = Pattern.compile(DetectorRegex);
+        Pattern name = Pattern.compile(UserNameRegex);
+
+        Matcher overallMatcher = overall.matcher(DataOfThis);
+        Matcher nameMatcher = name.matcher(DataOfThis);
+
+        System.out.println(overallMatcher.find());
+        if (nameMatcher.find()){
+            System.out.println(nameMatcher.group().substring(9));
+        }
+        System.out.println(overallMatcher.find());
+
+
+
+//
+//        JFrame a = new JFrame();
+//        a.setSize(600,300);
+//        a.setLocationRelativeTo(null);
+//        a.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        a.setVisible(true);
 
 //        Time time = new Time();
 //        new Thread(time).start();

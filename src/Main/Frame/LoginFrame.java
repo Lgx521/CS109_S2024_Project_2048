@@ -1,13 +1,19 @@
 package Main.Frame;
 
+import Main.UserOperation.LoginAndSignIn;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 
 public class LoginFrame extends JFrame implements ActionListener, ItemListener {
+
+    LoginAndSignIn userOpeartion = new LoginAndSignIn();
+    GameFrame gameFrame = new GameFrame();
 
     JTextField loginUserName = new JTextField();
     JPasswordField userPassword = new JPasswordField();
@@ -77,9 +83,9 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         guest.addActionListener(this);
 
         //跳转到注册界面
-        JLabel tips = new JLabel("Don't have a Account now?   -->");
-        tips.setSize(210, 25);
-        tips.setBounds(35, 250, 210, 25);
+        JLabel tips = new JLabel("Don't have an Account now?  -->");
+        tips.setSize(215, 25);
+        tips.setBounds(35, 250, 215, 25);
         signinJtb.setSize(80, 25);
         signinJtb.setBounds(247, 250, 80, 25);
         signinJtb.addActionListener(this);
@@ -135,21 +141,36 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
             if (loginUserName.getText().isEmpty()) {
                 initialLoginFailure(NONE_INPUT);
             } else {
-                //todo:用户存在
-                if (loginUserName.getText().equals("gan")) {
-                    //todo:用户存在逻辑
-                } else {
-                    initialLoginFailure(INVALID_USERNAME);
-                    return;
+                //用户存在判断
+                int UserID = -1;
+
+                try {
+                    if (userOpeartion.isUserConsistent(loginUserName.getText()) >= 0) {
+                        //存在
+                        UserID = userOpeartion.isUserConsistent(loginUserName.getText());
+                    } else {
+                        //不存在
+                        initialLoginFailure(INVALID_USERNAME);
+                        return;
+                    }
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
-                //todo:密码判断
+
+                //密码判断
                 if (userPassword.getPassword().length == 0) {
                     initialLoginFailure(NONE_PASSWORD);
                 } else {
-                    if (userPassword.getPassword()[0] != '0') {
-                        initialLoginFailure(WRONG_PASSWORD);
-                    } else {
-                        //todo: 开始游戏
+                    try {
+                        if (userOpeartion.loadUserAccount(UserID, loginUserName.getText(), userPassword.getPassword())) {
+                            //全部正确，进入游戏
+                            this.dispose();
+                            gameFrame.setup();
+                        } else {
+                            initialLoginFailure(WRONG_PASSWORD);
+                        }
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
                     }
                 }
             }
