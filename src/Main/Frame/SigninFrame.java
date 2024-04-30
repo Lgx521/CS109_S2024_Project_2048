@@ -153,41 +153,51 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
     private void SignInValidation() throws IOException {
         int passwordInputLength = userPassword.getPassword().length;
         int passwordCommitInputLength = userPasswordCommit.getPassword().length;
-        if (!loginUserName.getText().isEmpty()) {
-            boolean validation = userNameValidation(loginUserName.getText());
-            if (passwordInputLength != 0) {
-                if (passwordCommitInputLength != 0) {
-                    if (validation) {
-                        if (passwordCommiting(userPassword.getPassword(), userPasswordCommit.getPassword())) {
-                            System.out.println("Verify SignIn Successfully");
-                            userOperation.saveUserAccount(loginUserName.getText(), userPassword.getPassword());
-                            if (userOperation.isUserConsistent(loginUserName.getText()) >= 0) {
-                                //该用户名已经存在
-                                initialNoticeDialog(USER_IS_ALREADY_IN);
-                            } else {
-                                this.dispose();
-                                new LoginFrame().setup();
-                            }
-                        } else {
-                            initialNoticeDialog(VERIFICATION_ERROR);
-                        }
 
-                    } else {
-                        System.out.println("Invalid UserName");
-                        initialNoticeDialog(NOTICE);
-                    }
-                } else {
-                    System.out.println("No password Verification");
-                    initialNoticeDialog(NO_PASSWORD_VERIFICATION_INPUT);
-                }
+        //验证逻辑
+        boolean validation;
+        if (!loginUserName.getText().isEmpty()) {
+            validation = userNameValidation(loginUserName.getText());
+        } else {
+            System.out.println("No User Name Input");
+            initialNoticeDialog(NO_USERNAME_INPUT);
+            return;
+        }
+
+        if (!validation) {
+            System.out.println("Invalid UserName");
+            initialNoticeDialog(NOTICE);
+            return;
+        }
+
+        if (passwordInputLength == 0) {
+            System.out.println("No Password Input");
+            initialNoticeDialog(NO_PASSWORD_INPUT);
+            return;
+        }
+
+        if (passwordCommitInputLength == 0) {
+            System.out.println("No Password Verification");
+            initialNoticeDialog(NO_PASSWORD_VERIFICATION_INPUT);
+            return;
+        }
+
+
+        if (passwordCommiting(userPassword.getPassword(), userPasswordCommit.getPassword())) {
+            System.out.println("Verify SignIn Successfully");
+            if (userOperation.isUserConsistent(loginUserName.getText()) >= 0) {
+                //该用户名已经存在
+                initialNoticeDialog(USER_IS_ALREADY_IN);
             } else {
-                System.out.println("No password");
-                initialNoticeDialog(NO_PASSWORD_INPUT);
+                userOperation.saveUserAccount(loginUserName.getText(), userPassword.getPassword());
+                this.dispose();
+                new LoginFrame().setup();
             }
         } else {
-            System.out.println("No user name input");
-            initialNoticeDialog(NO_USERNAME_INPUT);
+            System.out.println("Wrong Password");
+            initialNoticeDialog(VERIFICATION_ERROR);
         }
+
     }
 
 

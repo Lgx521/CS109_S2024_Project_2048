@@ -91,7 +91,7 @@ public class LoginAndSignIn {
                 if (RealUserPassword.length != userPassword.length) {
                     return false;
                 }
-                for (int i = 0; i < RealUserName.length(); i++) {
+                for (int i = 0; i < RealUserPassword.length; i++) {
                     if (RealUserPassword[i] != userPassword[i]) {
                         return false;
                     }
