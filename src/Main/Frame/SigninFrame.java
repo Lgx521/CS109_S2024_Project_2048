@@ -107,6 +107,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
     private final int NO_PASSWORD_INPUT = 2;
     private final int NO_PASSWORD_VERIFICATION_INPUT = 3;
     private final int VERIFICATION_ERROR = 4;
+    private final int USER_IS_ALREADY_IN = 5;
 
 
     //notice提示初始化
@@ -125,6 +126,9 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
             content = "Verify your password!";
         } else if (issue == VERIFICATION_ERROR) {
             content = "Verification Failed!\nYou must input same password";
+        } else if (issue == USER_IS_ALREADY_IN) {
+            content = "Thia user is already consistent!\n" +
+                    "Please use other user name.";
         }
         JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.ERROR_MESSAGE);
     }
@@ -157,8 +161,13 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
                         if (passwordCommiting(userPassword.getPassword(), userPasswordCommit.getPassword())) {
                             System.out.println("Verify SignIn Successfully");
                             userOperation.saveUserAccount(loginUserName.getText(), userPassword.getPassword());
-                            this.dispose();
-                            new LoginFrame().setup();
+                            if (userOperation.isUserConsistent(loginUserName.getText()) >= 0) {
+                                //该用户名已经存在
+                                initialNoticeDialog(USER_IS_ALREADY_IN);
+                            } else {
+                                this.dispose();
+                                new LoginFrame().setup();
+                            }
                         } else {
                             initialNoticeDialog(VERIFICATION_ERROR);
                         }
