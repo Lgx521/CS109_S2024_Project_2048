@@ -13,14 +13,13 @@ public class LoginAndSignIn {
             password_str.append(password[i]);
         }
         int userID = getTotalLines(new File("src/Main/Data/UserData.txt"));
-        String saver = String.format("\nUserID=%s&UserName=%s&Password=%s",userID,userName, password_str.toString());
+        String saver = String.format("\nUserID=%s&UserName=%s&Password=%s", userID, userName, password_str.toString());
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("src/Main/Data/UserData.txt",true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("src/Main/Data/UserData.txt", true));
             writer.write(saver);
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            //todo:显示警告框
             System.out.println("File Save Failed");
         }
     }
@@ -81,7 +80,7 @@ public class LoginAndSignIn {
             String RealUserName = nameMatcher.group().substring(9);
             char[] RealUserPassword = pwdMatcher.group().substring(9).toCharArray();
 
-            System.out.println(RealUserName);
+            System.out.print("RealUserName: " + RealUserName + "\nRealUserPassword: ");
             for (int i = 0; i < RealUserPassword.length; i++) {
                 System.out.print(RealUserPassword[i]);
             }
@@ -89,15 +88,15 @@ public class LoginAndSignIn {
 
             if (RealUserName.equals(userName)) {
                 //用户存在
+                if (RealUserPassword.length != userPassword.length) {
+                    return false;
+                }
                 for (int i = 0; i < RealUserName.length(); i++) {
-                    if (RealUserPassword.length != userPassword.length) {
-                        return false;
-                    }
                     if (RealUserPassword[i] != userPassword[i]) {
                         return false;
                     }
-                    return true;
                 }
+                return true;
             } else {
                 //用户不存在
                 return false;
@@ -106,10 +105,7 @@ public class LoginAndSignIn {
             //文件损坏
             return false;
         }
-        return false;
     }
-
-
 
 
     //获得某行数据
@@ -139,8 +135,6 @@ public class LoginAndSignIn {
         lineReader.close();
         return totalLine;
     }
-
-
 
 
 }
