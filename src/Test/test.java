@@ -3,26 +3,54 @@ package Test;
 import javax.swing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import Main.UserOperation.encrypt;
 
 public class test extends JFrame {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        String DataOfThis = "UserID=0&UserName=gan&Password=123";
+        String a = "abc123456";
 
-        String DetectorRegex = "UserID=.+&UserName=\\w+&Password=.+";
-        String UserNameRegex = "UserName=\\w+";
+        encrypt er = new encrypt();
+        String b = er.encryptBASE64(a);
 
-        Pattern overall = Pattern.compile(DetectorRegex);
-        Pattern name = Pattern.compile(UserNameRegex);
+        System.out.println(b);
 
-        Matcher overallMatcher = overall.matcher(DataOfThis);
-        Matcher nameMatcher = name.matcher(DataOfThis);
+        String c = er.decryptBASE64("MTIzNDU2");
+        String d = er.decryptBASE64("WzEsIDIsIDMsIDQsIDUsIDZd");
 
-        System.out.println(overallMatcher.find());
-        if (nameMatcher.find()){
-            System.out.println(nameMatcher.group().substring(9));
-        }
-        System.out.println(overallMatcher.find());
+        System.out.println(c);
+        System.out.println(d);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//        String DataOfThis = "UserID=0&UserName=gan&Password=123";
+//
+//        String DetectorRegex = "UserID=.+&UserName=\\w+&Password=.+";
+//        String UserNameRegex = "UserName=\\w+";
+//
+//        Pattern overall = Pattern.compile(DetectorRegex);
+//        Pattern name = Pattern.compile(UserNameRegex);
+//
+//        Matcher overallMatcher = overall.matcher(DataOfThis);
+//        Matcher nameMatcher = name.matcher(DataOfThis);
+//
+//        System.out.println(overallMatcher.find());
+//        if (nameMatcher.find()){
+//            System.out.println(nameMatcher.group().substring(9));
+//        }
+//        System.out.println(overallMatcher.find());
 
 
 

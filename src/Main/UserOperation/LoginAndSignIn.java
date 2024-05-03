@@ -1,11 +1,15 @@
 package Main.UserOperation;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import Main.UserOperation.encrypt;
 
 public class LoginAndSignIn {
+
+    encrypt encoder = new encrypt();
 
     //保存用户信息
     public void saveUserAccount(String userName, char[] password) throws IOException {
@@ -13,8 +17,14 @@ public class LoginAndSignIn {
         for (int i = 0; i < password.length; i++) {
             password_str.append(password[i]);
         }
+        String passwordEncrypted;
+        try {
+            passwordEncrypted = encoder.encryptBASE64(password_str.toString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         int userID = getTotalLines(new File("src/Main/Data/UserData.txt"));
-        String saver = String.format("\nUserID=%s&UserName=%s&Password=%s", userID, userName, password_str.toString());
+        String saver = String.format("\nUserID=%s&UserName=%s&Password=%s", userID, userName, passwordEncrypted);
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("src/Main/Data/UserData.txt", true));
             writer.write(saver);
@@ -56,7 +66,7 @@ public class LoginAndSignIn {
     }
 
     //读取文件查询用户
-    public boolean loadUserAccount(int UserID, String userName, char[] userPassword) throws IOException {
+    public boolean loadUserAccount(int UserID, String userName, char[] userPassword) throws Exception {
 
         File UserData = new File("src/Main/Data/UserData.txt");
 
@@ -89,11 +99,19 @@ public class LoginAndSignIn {
 
             if (RealUserName.equals(userName)) {
                 //用户存在
-                if (RealUserPassword.length != userPassword.length) {
+                StringBuilder sb_pswd = new StringBuilder();
+                for (int i = 0; i < userPassword.length; i++) {
+                    sb_pswd.append(userPassword[i]);
+                }
+                //对输入密码进行加密操作
+                String userPasswordEncrypted_str = encoder.encryptBASE64(sb_pswd.toString());
+                System.out.println(userPasswordEncrypted_str);
+                char[] userPasswordEncrypted = userPasswordEncrypted_str.toCharArray();
+                if (RealUserPassword.length != userPasswordEncrypted.length) {
                     return false;
                 }
                 for (int i = 0; i < RealUserPassword.length; i++) {
-                    if (RealUserPassword[i] != userPassword[i]) {
+                    if (RealUserPassword[i] != userPasswordEncrypted[i]) {
                         return false;
                     }
                 }

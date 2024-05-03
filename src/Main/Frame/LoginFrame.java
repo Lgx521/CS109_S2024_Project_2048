@@ -127,7 +127,7 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
     }
 
     //用户名以及密码输入验证
-    private void LogInVerification() {
+    private void LogInVerification() throws Exception {
         System.out.print("User Name: " + loginUserName.getText() + "\nUser Password: ");
         for (int i = 0; i < userPassword.getPassword().length; i++) {
             System.out.print(userPassword.getPassword()[i]);
@@ -177,7 +177,11 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         Object obj = e.getSource();
         if (obj == commitJbt) {
             System.out.println("The User clicked the log in Button");
-            LogInVerification();
+            try {
+                LogInVerification();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (obj == signinJtb) {
             System.out.println("Sign in");
             this.dispose();
