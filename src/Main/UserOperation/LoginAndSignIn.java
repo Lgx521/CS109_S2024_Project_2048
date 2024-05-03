@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import Main.UserOperation.encrypt;
 
 public class LoginAndSignIn {
@@ -91,11 +92,7 @@ public class LoginAndSignIn {
             String RealUserName = nameMatcher.group().substring(9);
             char[] RealUserPassword = pwdMatcher.group().substring(9).toCharArray();
 
-            System.out.print("RealUserName: " + RealUserName + "\nRealUserPassword: ");
-            for (int i = 0; i < RealUserPassword.length; i++) {
-                System.out.print(RealUserPassword[i]);
-            }
-            System.out.println();
+            System.out.println("RealUserName: " + RealUserName);
 
             if (RealUserName.equals(userName)) {
                 //用户存在
@@ -105,7 +102,7 @@ public class LoginAndSignIn {
                 }
                 //对输入密码进行加密操作
                 String userPasswordEncrypted_str = encoder.encryptBASE64(sb_pswd.toString());
-                System.out.println(userPasswordEncrypted_str);
+                System.out.println("RealUserPassword_Encrypted: " + userPasswordEncrypted_str);
                 char[] userPasswordEncrypted = userPasswordEncrypted_str.toCharArray();
                 if (RealUserPassword.length != userPasswordEncrypted.length) {
                     return false;
