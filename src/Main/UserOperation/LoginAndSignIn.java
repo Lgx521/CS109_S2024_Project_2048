@@ -6,8 +6,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Main.UserOperation.encrypt;
-
 public class LoginAndSignIn {
 
     encrypt encoder = new encrypt();
@@ -38,8 +36,9 @@ public class LoginAndSignIn {
 
     //查询用户是否存在
     /* 存在：返回其UserID
-       不存在：返回-1
-       文件损坏：返回-2 */
+     * 不存在：返回-1
+     * 文件损坏：返回-2
+     * */
     public int isUserConsistent(String userName) throws IOException {
         File UserData = new File("src/Main/Data/UserData.txt");
 

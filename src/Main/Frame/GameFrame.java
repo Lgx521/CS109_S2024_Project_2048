@@ -7,15 +7,51 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serializable;
 
-public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
+public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener, Serializable {
 
     private int[][] data;
 
+    private int status;
+
+    private int STATUS;
+
+    private int USER_ID;
+
+    //设置游戏运行时的用户
+    public void setID(int userID) {
+        this.USER_ID = userID;
+    }
+
+    //设置当前游戏运行模式
+    /*
+    * STATUS == 0: LOG_IN.
+    * STATUS == 1: GUEST;
+     */
+    public void setStatus(int status) {
+        this.STATUS = status;
+    }
+
     //创建setup方法供外界访问
     public void setup() {
+        game.add(load);
+        game.add(save);
         initialGameFrame();
+        users.add(logout);
         replayGame();
+        addMouseListener(this);
+        addKeyListener(this);
+        this.setVisible(true);
+    }
+
+    public void setupInGuestMode() {
+
+        initialGameFrame();
+        users.add(login);
+        users.add(signIn);
+        replayGame();
+
         addMouseListener(this);
         addKeyListener(this);
         this.setVisible(true);
@@ -40,6 +76,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     JMenuItem login = new JMenuItem("Log in");
     JMenuItem logout = new JMenuItem("Log out");
+    JMenuItem signIn = new JMenuItem("Sign In");
 
     //图形变化处理
     JLabel undo = new JLabel();
@@ -85,7 +122,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private void initialGameFrame() {
         this.getContentPane().removeAll();
         this.setTitle("2048");
-        this.setSize(800, 630);
+        this.setSize(800, 650);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
@@ -98,8 +135,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         jMenuBar.add(game);
         jMenuBar.add(users);
 
-        game.add(load);
-        game.add(save);
+//        game.add(load);
+//        game.add(save);
         game.add(replay);
         game.add(sound);
         game.add(music);
@@ -109,8 +146,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         music.add(music_2);
         music.add(music_3);
 
-        users.add(login);
-        users.add(logout);
+//        users.add(login);
+//        users.add(logout);
 
         //图形变化
         undo.setSize(140, 40);
@@ -144,6 +181,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         save.addActionListener(this);
         login.addActionListener(this);
         logout.addActionListener(this);
+        signIn.addActionListener(this);
         sound.addActionListener(this);
         music_1.addActionListener(this);
         music_2.addActionListener(this);
@@ -201,6 +239,17 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 this.ImageContainer.add(imageLable);
             }
         }
+
+        //若在GUEST模式中，显示注册提示
+        if (this.STATUS == 0) {
+            JLabel tips = new JLabel("Tips: Sign your own Account to Save your game!");
+            tips.setSize(500,25);
+            tips.setForeground(Color.WHITE);
+            tips.setBounds(464, 555, 500, 25);
+            this.ImageContainer.add(tips);
+        }
+
+
         //背景图
         ImageIcon Image = new ImageIcon(ImagePath + ".png");
         backgroundImage.setIcon(Image);
@@ -231,8 +280,23 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         //背景图片
         ImageIcon ImageBack = new ImageIcon("src/Main/Resources/ImageBack.png");
         JLabel backImage = new JLabel(ImageBack);
-        backImage.setSize(800, 580);
-        backImage.setBounds(0, 0, 800, 580);
+        backImage.setSize(800, 600);
+        backImage.setBounds(0, 0, 800, 600);
+
+        //计时
+//        Date d_0 = new Date();
+//        Long time_0 = d_0.getTime();
+//
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+//        String formated = sdf.format(date);
+//        String formated_0 = sdf.format(d_0);
+//
+//        JLabel timeLabel = new JLabel(formated);
+//
+//        timeLabel.setSize(150, 30);
+//        timeLabel.setBounds(0,0,150,30);
+//        this.ImageContainer.add(timeLabel);
 
         this.ImageContainer.add(steplable);
         this.ImageContainer.add(scorelable);
@@ -348,6 +412,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             System.out.println("Sound Turn On/Off");
         } else if (obj == login) {
             System.out.println("Login");
+            this.dispose();
+            new LoginFrame().setup();
         } else if (obj == logout) {
             System.out.println("Logout");
             this.dispose();
@@ -382,6 +448,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             System.out.println("target: 2048");
             motion.setTarget(2048);
             setImages(ImagePath + "GameFrameBackground", data);
+        } else if (obj == signIn) {
+            this.dispose();
+            new SigninFrame().setup();
         }
     }
 

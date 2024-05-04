@@ -15,6 +15,9 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
     LoginAndSignIn userOpeartion = new LoginAndSignIn();
     GameFrame gameFrame = new GameFrame();
 
+    private final int GUSET_MODE = 0;
+    private final int LOG_IN = 1;
+
     JTextField loginUserName = new JTextField();
     JPasswordField userPassword = new JPasswordField();
     Checkbox showPwd = new Checkbox("Display");
@@ -161,6 +164,8 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
                     if (userOpeartion.loadUserAccount(UserID, loginUserName.getText(), userPassword.getPassword())) {
                         //全部正确，进入游戏
                         this.dispose();
+                        gameFrame.setID(UserID);
+                        gameFrame.setStatus(LOG_IN);
                         gameFrame.setup();
                     } else {
                         initialLoginFailure(WRONG_PASSWORD);
@@ -171,6 +176,7 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
             }
         }
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -188,6 +194,9 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
             new SigninFrame().setup();
         } else if (obj == guest) {
             System.out.println("Try Guest Mode");
+            this.dispose();
+            gameFrame.setStatus(GUSET_MODE);
+            gameFrame.setupInGuestMode();
         }
     }
 
