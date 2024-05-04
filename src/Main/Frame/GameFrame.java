@@ -2,6 +2,7 @@ package Main.Frame;
 
 import Main.Controller.CellMotion;
 import Main.Controller.InitialGrids;
+import Main.Features.bgmPlayer;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -45,6 +46,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.setVisible(true);
     }
 
+    //用于访客模式的外界访问
     public void setupInGuestMode() {
 
         initialGameFrame();
@@ -57,18 +59,22 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.setVisible(true);
     }
 
+    //背景音乐播放对象
+    bgmPlayer musicObject = new bgmPlayer();
+
     //产生motion对象，实现每次重启游戏步数清零重计
     CellMotion motion;
 
     JMenu game = new JMenu("GamePlay");
     JMenu users = new JMenu("Users");
-    JMenu music = new JMenu("Select Music");
+    JMenu music = new JMenu("Select BGM");
     JMenuItem exit = new JMenuItem("Exit");
 
     JMenuItem replay = new JMenuItem("Replay Game");
     JMenuItem load = new JMenuItem("Load Game");
     JMenuItem save = new JMenuItem("Save Game");
-    JMenuItem sound = new JMenuItem("Sound On/Off");
+    JMenuItem sound = new JMenuItem("Background Music Off");
+    JMenuItem effectOff = new JMenuItem("Effect Sound On/Off");
 
     JMenuItem music_1 = new JMenuItem("Music 1");
     JMenuItem music_2 = new JMenuItem("Music 2");
@@ -139,6 +145,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 //        game.add(save);
         game.add(replay);
         game.add(sound);
+        game.add(effectOff);
         game.add(music);
         game.add(exit);
 
@@ -186,6 +193,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         music_1.addActionListener(this);
         music_2.addActionListener(this);
         music_3.addActionListener(this);
+        effectOff.addActionListener(this);
 
         undo.addMouseListener(this);
         hammer.addMouseListener(this);
@@ -396,6 +404,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         setImages(ImagePath + "GameFrameBackground", data);
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
@@ -409,7 +418,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == save) {
             System.out.println("Save Game");
         } else if (obj == sound) {
-            System.out.println("Sound Turn On/Off");
+            System.out.println("Music Turn Off");
+            musicObject.stopMusic();
         } else if (obj == login) {
             System.out.println("Login");
             this.dispose();
@@ -420,10 +430,19 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             new LoginFrame().setup();
         } else if (obj == music_1) {
             System.out.println("Play Music 1");
+            musicObject.stopMusic();
+            String path = "src/Main/Resources/Music/pure_imagination.wav";
+            musicObject.playMusic(path);
         } else if (obj == music_2) {
             System.out.println("Play Music 2");
+            String path = "src/Main/Resources/Music/Body_Pillow.wav";
+            musicObject.stopMusic();
+            musicObject.playMusic(path);
         } else if (obj == music_3) {
             System.out.println("Play Music 3");
+            String path = "src/Main/Resources/Music/Garten.wav";
+            musicObject.stopMusic();
+            musicObject.playMusic(path);
         } else if (obj == _64) {
             System.out.println("target: 64");
             motion.setTarget(64);
@@ -451,6 +470,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == signIn) {
             this.dispose();
             new SigninFrame().setup();
+        } else if (obj == effectOff) {
+            motion.setEffectMusicStatus();
         }
     }
 

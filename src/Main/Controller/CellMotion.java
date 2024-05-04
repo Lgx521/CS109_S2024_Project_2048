@@ -1,10 +1,6 @@
 package Main.Controller;
 
-import Main.Frame.GameFrame;
-
-import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import Main.Features.EffectMusicPalyer;
 
 import javax.swing.*;
 import java.util.Random;
@@ -42,6 +38,14 @@ public class CellMotion extends JFrame {
     public int status = 0;
 
     private int target = 2048;
+
+    EffectMusicPalyer effectMusicPalyer = new EffectMusicPalyer();
+
+    private int EffectMusicStatus = 2;
+
+    public void setEffectMusicStatus() {
+        EffectMusicStatus++;
+    }
 
 
     //获取步数
@@ -126,6 +130,35 @@ public class CellMotion extends JFrame {
             JOptionPane.showMessageDialog(null, "Game Over!", "Notice", JOptionPane.NO_OPTION);
         }
     }
+
+    //移动效果音播放
+    private void playMotionEffectMusic() {
+        if (EffectMusicStatus % 2 == 0) {
+            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_1_motion.wav");
+        }
+    }
+
+    //胜利效果音播放
+    private void playVictoryEffectMusic() {
+        if (EffectMusicStatus % 2 == 0) {
+            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_2_Victory.wav");
+        }
+    }
+
+    //失败效果音效
+    private void playLostEffectMusic() {
+        if (EffectMusicStatus % 2 == 0) {
+            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_3_lost.wav");
+        }
+    }
+
+    //undo效果音效
+    private void playUndoEffectMusic() {
+        if (EffectMusicStatus % 2 == 0) {
+            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_6_undo.wav");
+        }
+    }
+
 
 //移动方式解释
 /*
@@ -217,6 +250,7 @@ public class CellMotion extends JFrame {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
+            playMotionEffectMusic();
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -291,6 +325,7 @@ public class CellMotion extends JFrame {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
+            playMotionEffectMusic();
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -374,6 +409,7 @@ public class CellMotion extends JFrame {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
+            playMotionEffectMusic();
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -451,6 +487,7 @@ public class CellMotion extends JFrame {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
+            playMotionEffectMusic();
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -653,18 +690,21 @@ public class CellMotion extends JFrame {
 
     //UNDO
     public void UNDO(int[][] data) {
+        playUndoEffectMusic();
         undo.UNDO(data);
     }
 
     //判断游戏结束
     public void isEnding(int[][] data) {
         if (ifYouWin(data) && !isCanNotMovable(data)) {
-            //胜利：胜利并且可以继续游移动
+            //胜利：胜利并且可以继续移动
             System.out.println("Win and Can play");
+            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_2_Victory.wav");
             EndingNotice(YOU_WIN_CAN_PLAY);
         } else if (ifYouWin(data) && isCanNotMovable(data)) {
-            //胜利：胜利且不能继续游移动
+            //胜利：胜利且不能继续移动
             System.out.println("Win and can't play");
+            playVictoryEffectMusic();
             EndingNotice(YOU_WIN_CANNOT_PLAY);
         } else if (!ifYouWin(data) && !isCanNotMovable(data)) {
             //游戏中：未胜利且可以继续移动
@@ -672,6 +712,7 @@ public class CellMotion extends JFrame {
         } else if (!ifYouWin(data) && isCanNotMovable(data)) {
             //失败：未胜利且不能继续移动
             System.out.println("lost");
+            playLostEffectMusic();
             EndingNotice(YOU_LOST);
         }
     }

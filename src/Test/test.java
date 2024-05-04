@@ -1,30 +1,78 @@
 package Test;
 
-import javax.swing.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import Main.UserOperation.encrypt;
+import Main.Features.bgmPlayer;
+
+
+import javax.swing.JFrame;
 
 public class test extends JFrame {
-    public static void main(String[] args) throws Exception {
+//    public static void main(String[] args) throws Exception {
 
-        String a = "abc123456";
-
-        encrypt er = new encrypt();
-        String b = er.encryptBASE64(a);
-
-        System.out.println(b);
-
-        String c = er.decryptBASE64("MTIzNDU2");
-        String d = er.decryptBASE64("WzEsIDIsIDMsIDQsIDUsIDZd");
-
-        System.out.println(c);
-        System.out.println(d);
-
-
+//        String a = "abc123456";
+//
+//        encrypt er = new encrypt();
+//        String b = er.encryptBASE64(a);
+//
+//        System.out.println(b);
+//
+//        String c = er.decryptBASE64("MTIzNDU2");
+//        String d = er.decryptBASE64("WzEsIDIsIDMsIDQsIDUsIDZd");
+//
+//        System.out.println(c);
+//        System.out.println(d);
 
 
+//
+//            private static final JPanel square = new JPanel();
+//            private static int x = 20;
+//
+//            public static void createAndShowGUI(){
+//                JFrame frame = new JFrame();
+//                frame.getContentPane().setLayout(null);
+//                frame.setSize(500,500);
+//                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//                frame.add(square);
+//                square.setBounds(20,200,100,100);
+//                square.setBackground(Color.RED);
+//
+//                Timer timer = new Timer(2,new MyActionListener());
+//                timer.start();
+//                frame.setVisible(true);
+//            }
+//
+//            public static class MyActionListener implements ActionListener {
+//
+//                @Override
+//                public void actionPerformed(ActionEvent arg0) {
+//                    square.setLocation(x++, 200);
+//
+//                }
+//
+//            }
 
+//            public static void main(String[] args) {
+//                javax.swing.SwingUtilities.invokeLater(new Runnable(){
+//                    @Override
+//                    public void run(){
+//                        createAndShowGUI();
+//
+//                    }
+//                });
+
+
+    public static void main(String[] args) {
+
+        String path = "src/Main/Resources/Music/pure_imagination.wav";
+        bgmPlayer musicObject = new bgmPlayer();
+        musicObject.playMusic(path);
+        int i = 0;
+        while(true) {
+            System.out.println(i);
+            i++;
+        }
+
+    }
 
 
 
@@ -64,7 +112,7 @@ public class test extends JFrame {
 //        Time time = new Time();
 //        new Thread(time).start();
 
-    }
+
 
 }
 
