@@ -13,8 +13,8 @@ public class EffectMusicPalyer {
 
     Clip clip;
 
-    private int EffectSoundStatus = 2;
-
+    //效果声开关
+    public int EffectSoundStatus = 2;
 
     {
         try {
@@ -41,10 +41,6 @@ public class EffectMusicPalyer {
         }
     }
 
-    //效果声开关
-    public void setEffectSoundStatus() {
-        EffectSoundStatus++;
-    }
 
     //效果声常数
     public final int MOTION_SOUND = 0;

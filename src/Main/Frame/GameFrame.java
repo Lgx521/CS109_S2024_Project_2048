@@ -14,8 +14,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     private int[][] data;
 
-    private int status;
-
+    //表示是否为登陆用户，用于显示Tips
     private int STATUS;
 
     private int USER_ID;
@@ -23,6 +22,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //设置游戏运行时的用户
     public void setID(int userID) {
         this.USER_ID = userID;
+        System.out.println("Current user's ID: " + USER_ID);
     }
 
     //设置当前游戏运行模式
@@ -62,8 +62,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //背景音乐播放对象
     bgmPlayer musicObject = new bgmPlayer();
 
-    //效果声播放对象
-    EffectMusicPalyer effectMusicPalyer = new EffectMusicPalyer();
 
     //产生motion对象，实现每次重启游戏步数清零重计
     CellMotion motion;
@@ -125,7 +123,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         data = new InitialGrids().setup();
         motion = new CellMotion();
         setImages(ImagePath + "GameFrameBackground", data);
-        effectMusicPalyer.playEffectSound(effectMusicPalyer.REPLAY_SOUND);
+        motion.EffectSoundPlayer(4);
     }
 
     //初始化界面
@@ -483,7 +481,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             this.dispose();
             new SigninFrame().setup();
         } else if (obj == effectOff) {
-            effectMusicPalyer.setEffectSoundStatus();
+            //效果声status自增
+            motion.setEffectSoundStatus();
         }
     }
 

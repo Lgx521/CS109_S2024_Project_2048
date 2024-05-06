@@ -130,6 +130,19 @@ public class CellMotion extends JFrame implements Serializable {
         }
     }
 
+    //在GameFrame中调用的声音播放
+    public void EffectSoundPlayer(int soundConstant) {
+        effectMusicPalyer.playEffectSound(soundConstant);
+    }
+
+    //在GameFrame中开关效果声
+    public void setEffectSoundStatus() {
+        effectMusicPalyer.EffectSoundStatus++;
+        String[] arr = {"ON", "OFF"};
+        System.out.printf("Effect Sound Status is %s\n", arr[effectMusicPalyer.EffectSoundStatus % 2]);
+    }
+
+
 
 //移动方式解释
 /*

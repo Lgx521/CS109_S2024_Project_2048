@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 public class GameDataStock implements Serializable {
+
     @Serial
     private static final long serialVersionUID = -2087760755088145753L;
 
@@ -18,6 +19,8 @@ public class GameDataStock implements Serializable {
     *
     *
     * */
+
+
 
 
 
