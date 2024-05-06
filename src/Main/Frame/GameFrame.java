@@ -2,15 +2,15 @@ package Main.Frame;
 
 import Main.Controller.CellMotion;
 import Main.Controller.InitialGrids;
+import Main.Features.EffectMusicPalyer;
 import Main.Features.bgmPlayer;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serializable;
 
-public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener, Serializable {
+public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
     private int[][] data;
 
@@ -27,9 +27,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //设置当前游戏运行模式
     /*
-    * STATUS == 0: LOG_IN.
-    * STATUS == 1: GUEST;
-     */
+     * STATUS == 0: LOG_IN.
+     * STATUS == 1: GUEST;
+     * */
     public void setStatus(int status) {
         this.STATUS = status;
     }
@@ -61,6 +61,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //背景音乐播放对象
     bgmPlayer musicObject = new bgmPlayer();
+
+    //效果声播放对象
+    EffectMusicPalyer effectMusicPalyer = new EffectMusicPalyer();
 
     //产生motion对象，实现每次重启游戏步数清零重计
     CellMotion motion;
@@ -122,6 +125,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         data = new InitialGrids().setup();
         motion = new CellMotion();
         setImages(ImagePath + "GameFrameBackground", data);
+        effectMusicPalyer.playEffectSound(effectMusicPalyer.REPLAY_SOUND);
     }
 
     //初始化界面
@@ -251,7 +255,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         //若在GUEST模式中，显示注册提示
         if (this.STATUS == 0) {
             JLabel tips = new JLabel("Tips: Sign your own Account to Save your game!");
-            tips.setSize(500,25);
+            tips.setSize(500, 25);
             tips.setForeground(Color.WHITE);
             tips.setBounds(464, 555, 500, 25);
             this.ImageContainer.add(tips);
@@ -312,8 +316,16 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.add(backgroundImage);
         this.ImageContainer.add(backImage);
         this.setContentPane(ImageContainer);
+
         this.ImageContainer.repaint();
 
+    }
+
+    //判断显示游戏结束对话框
+    private void gameOverDialog() {
+        if (motion.flagOfIsMovable != motion.IN_PROGRESS) {
+            motion.EndingNotice(motion.flagOfIsMovable);
+        }
     }
 
     //实现按钮鼠标进入效果
@@ -431,16 +443,16 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == music_1) {
             System.out.println("Play Music 1");
             musicObject.stopMusic();
-            String path = "src/Main/Resources/Music/pure_imagination.wav";
+            String path = "src/Main/Resources/Music/Background/pure_imagination.wav";
             musicObject.playMusic(path);
         } else if (obj == music_2) {
             System.out.println("Play Music 2");
-            String path = "src/Main/Resources/Music/Body_Pillow.wav";
+            String path = "src/Main/Resources/Music/Background/Body_Pillow.wav";
             musicObject.stopMusic();
             musicObject.playMusic(path);
         } else if (obj == music_3) {
             System.out.println("Play Music 3");
-            String path = "src/Main/Resources/Music/Garten.wav";
+            String path = "src/Main/Resources/Music/Background/Garten.wav";
             musicObject.stopMusic();
             musicObject.playMusic(path);
         } else if (obj == _64) {
@@ -471,7 +483,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             this.dispose();
             new SigninFrame().setup();
         } else if (obj == effectOff) {
-            motion.setEffectMusicStatus();
+            effectMusicPalyer.setEffectSoundStatus();
         }
     }
 
@@ -553,6 +565,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 replayGame();
             }
             setImages(ImagePath + "GameFrameBackground", data);
+            gameOverDialog();
         } else if (code == 38) {
             System.out.println("up");
             if (motion.status == 0) {
@@ -563,6 +576,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 replayGame();
             }
             setImages(ImagePath + "GameFrameBackground", data);
+            gameOverDialog();
         } else if (code == 39) {
             System.out.println("right");
             if (motion.status == 0) {
@@ -573,6 +587,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 replayGame();
             }
             setImages(ImagePath + "GameFrameBackground", data);
+            gameOverDialog();
         } else if (code == 40) {
             System.out.println("down");
             if (motion.status == 0) {
@@ -583,6 +598,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 replayGame();
             }
             setImages(ImagePath + "GameFrameBackground", data);
+            gameOverDialog();
         }
     }
 

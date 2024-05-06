@@ -13,6 +13,7 @@ public class bgmPlayer {
 
     Clip clip;
 
+
     {
         try {
             clip = AudioSystem.getClip();
@@ -20,7 +21,6 @@ public class bgmPlayer {
             throw new RuntimeException(e);
         }
     }
-
 
     public void playMusic(String musicLocation) {
         try {
@@ -43,5 +43,7 @@ public class bgmPlayer {
     public void stopMusic() {
         clip.stop();
     }
+
+
 
 }

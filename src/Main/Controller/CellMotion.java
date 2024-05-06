@@ -3,9 +3,10 @@ package Main.Controller;
 import Main.Features.EffectMusicPalyer;
 
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.Random;
 
-public class CellMotion extends JFrame {
+public class CellMotion extends JFrame implements Serializable {
 
 /*
     public void test() {
@@ -26,27 +27,28 @@ public class CellMotion extends JFrame {
 
     Undo undo = new Undo();
 
+    EffectMusicPalyer effectMusicPalyer = new EffectMusicPalyer();
+
+    //游戏进程常量
+    public final int IN_PROGRESS = -1;
     public final int YOU_WIN_CAN_PLAY = 0;
     public final int YOU_WIN_CANNOT_PLAY = 1;
     public final int YOU_LOST = 2;
 
+    //移动方向常量
     public final int RIGHT = 0;
     public final int LEFT = 1;
     public final int UP = 2;
     public final int DOWN = 3;
 
+    //游戏状态常量
+    /* status == 0: 正常游戏
+     * status == 1: 胜利后继续游玩
+     * status == 2: 胜利后重新开始游戏 */
     public int status = 0;
 
+    //当前游戏目标
     private int target = 2048;
-
-    EffectMusicPalyer effectMusicPalyer = new EffectMusicPalyer();
-
-    private int EffectMusicStatus = 2;
-
-    public void setEffectMusicStatus() {
-        EffectMusicStatus++;
-    }
-
 
     //获取步数
     public int getSteps() {
@@ -56,9 +58,9 @@ public class CellMotion extends JFrame {
 
     //分数记录解释
     /*
-    [0][0][2][2]  --->  [0][0][0][4]  分数 +4
-    每合成一次新的格子，分数增加这个新格子的大小
-     */
+     * [0][0][2][2]  --->  [0][0][0][4]  分数 +4
+     * 每合成一次新的格子，分数增加这个新格子的大小
+     * */
     private int[] score = {0, 0, 0, 0};
 
     //用于在出现有效格点融合后增加分数
@@ -114,9 +116,6 @@ public class CellMotion extends JFrame {
 
     //在游戏结束之后调用，不判断是否出现目标格点，只判断是否能继续移动
     public void moveAfterWin(int issue, int[][] data) {
-        if (isCanNotMovable(data)) {
-            JOptionPane.showMessageDialog(null, "Game Over!", "Notice", JOptionPane.NO_OPTION);
-        }
         if (issue == RIGHT) {
             moveRight(data);
         } else if (issue == LEFT) {
@@ -127,35 +126,7 @@ public class CellMotion extends JFrame {
             moveDown(data);
         }
         if (isCanNotMovable(data)) {
-            JOptionPane.showMessageDialog(null, "Game Over!", "Notice", JOptionPane.NO_OPTION);
-        }
-    }
-
-    //移动效果音播放
-    private void playMotionEffectMusic() {
-        if (EffectMusicStatus % 2 == 0) {
-            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_1_motion.wav");
-        }
-    }
-
-    //胜利效果音播放
-    private void playVictoryEffectMusic() {
-        if (EffectMusicStatus % 2 == 0) {
-            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_2_Victory.wav");
-        }
-    }
-
-    //失败效果音效
-    private void playLostEffectMusic() {
-        if (EffectMusicStatus % 2 == 0) {
-            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_3_lost.wav");
-        }
-    }
-
-    //undo效果音效
-    private void playUndoEffectMusic() {
-        if (EffectMusicStatus % 2 == 0) {
-            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_6_undo.wav");
+            JOptionPane.showMessageDialog(null, "Game Over!", "Notice", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -250,7 +221,7 @@ public class CellMotion extends JFrame {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
-            playMotionEffectMusic();
+            effectMusicPalyer.playEffectSound(effectMusicPalyer.MOTION_SOUND);
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -325,7 +296,7 @@ public class CellMotion extends JFrame {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
-            playMotionEffectMusic();
+            effectMusicPalyer.playEffectSound(effectMusicPalyer.MOTION_SOUND);
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -335,9 +306,9 @@ public class CellMotion extends JFrame {
 
     //上下移动调用上下移动的逻辑方式
     /*
-   进行向上移动，我们只需要给矩阵取对称，然后利用向左移动逻辑，再进行逆变换即可
-   进行向下移动，我们只需要给矩阵取对称，然后利用向右移动逻辑，再进行逆变换即可
-    */
+     *进行向上移动，我们只需要给矩阵取对称，然后利用向左移动逻辑，再进行逆变换即可
+     *进行向下移动，我们只需要给矩阵取对称，然后利用向右移动逻辑，再进行逆变换即可
+     * */
 
     //向上移动
     public void moveUp(int[][] data) {
@@ -409,7 +380,7 @@ public class CellMotion extends JFrame {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
-            playMotionEffectMusic();
+            effectMusicPalyer.playEffectSound(effectMusicPalyer.MOTION_SOUND);
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -487,7 +458,7 @@ public class CellMotion extends JFrame {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
-            playMotionEffectMusic();
+            effectMusicPalyer.playEffectSound(effectMusicPalyer.MOTION_SOUND);
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -678,65 +649,74 @@ public class CellMotion extends JFrame {
         return false;
     }
 
-    //getter
+    //目标getter
     public int getTarget() {
         return target;
     }
 
-    //setter
+    //目标值setter
     public void setTarget(int target) {
         this.target = target;
     }
 
     //UNDO
     public void UNDO(int[][] data) {
-        playUndoEffectMusic();
+        effectMusicPalyer.playEffectSound(effectMusicPalyer.UNDO_SOUND);
         undo.UNDO(data);
     }
+
+    public int flagOfIsMovable = IN_PROGRESS;
 
     //判断游戏结束
     public void isEnding(int[][] data) {
         if (ifYouWin(data) && !isCanNotMovable(data)) {
             //胜利：胜利并且可以继续移动
             System.out.println("Win and Can play");
-            effectMusicPalyer.playEffectMusic("src/Main/Resources/Music/Effect/effect_2_Victory.wav");
-            EndingNotice(YOU_WIN_CAN_PLAY);
+            effectMusicPalyer.playEffectSound(effectMusicPalyer.VICTORY_SOUND);
+            flagOfIsMovable = YOU_WIN_CAN_PLAY;
         } else if (ifYouWin(data) && isCanNotMovable(data)) {
             //胜利：胜利且不能继续移动
             System.out.println("Win and can't play");
-            playVictoryEffectMusic();
-            EndingNotice(YOU_WIN_CANNOT_PLAY);
+            effectMusicPalyer.playEffectSound(effectMusicPalyer.VICTORY_SOUND);
+            flagOfIsMovable = YOU_WIN_CANNOT_PLAY;
         } else if (!ifYouWin(data) && !isCanNotMovable(data)) {
             //游戏中：未胜利且可以继续移动
             System.out.println("In progress");
+            flagOfIsMovable = IN_PROGRESS;
         } else if (!ifYouWin(data) && isCanNotMovable(data)) {
             //失败：未胜利且不能继续移动
             System.out.println("lost");
-            playLostEffectMusic();
-            EndingNotice(YOU_LOST);
+            effectMusicPalyer.playEffectSound(effectMusicPalyer.LOST_SOUND);
+            flagOfIsMovable = YOU_LOST;
         }
     }
 
     //调用提示框
-    private void EndingNotice(int issue) {
+    public void EndingNotice(int issue) {
         String content = "initial";
-        if (issue == YOU_WIN_CAN_PLAY) {
-            content = "You Win!\n" +
-                    "Do you want to continue your play?\n" +
-                    "Choose \"Yes\" to Continue\n" +
-                    "Choose \"No\" to Restart game in next step";
-            int option = JOptionPane.showConfirmDialog(null, content, "Notice", JOptionPane.YES_NO_OPTION);
-            if (option == 0) {
-                //继续游玩
-                status = 1;
-            } else {
-                status = 2;
+        if (status != 1) {
+            if (issue == YOU_WIN_CAN_PLAY) {
+                content = """
+                        You Win!
+                        Do you want to continue your play?
+                        Choose "Yes" to Continue
+                        Choose "No" to Restart game in next step""";
+                int option = JOptionPane.showConfirmDialog(null, content, "Notice", JOptionPane.YES_NO_OPTION);
+                if (option == 0) {
+                    //继续游玩
+                    status = 1;
+                } else {
+                    //重新开始游戏
+                    status = 2;
+                }
             }
-        } else if (issue == YOU_WIN_CANNOT_PLAY) {
+        }
+        if (issue == YOU_WIN_CANNOT_PLAY) {
             content = "You Win!\n" +
                     "Game Over!";
             JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.NO_OPTION);
-        } else if (issue == YOU_LOST) {
+        }
+        if (issue == YOU_LOST) {
             content = "You Lost,\n" +
                     "Game Over!";
             JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.NO_OPTION);
