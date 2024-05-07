@@ -6,22 +6,17 @@ import javax.swing.*;
 import java.io.Serializable;
 import java.util.Random;
 
-public class CellMotion extends JFrame implements Serializable {
+public class CellMotion extends JFrame {
 
-/*
-    public void test() {
-        int[][] data = {
-                {0, 0, 0, 0},
-                {0, 0, 0, 0},
-                {0, 0, 0, 0},
-                {16, 4, 2, 4}
-        };
-        printData(data);
-        System.out.println("Move");
-        moveUp(data);
-        System.out.println(ifEnding(data));
+    public CellMotion(int steps,int[] score, int status, int target) {
+        this.status = status;
+        this.target = target;
+        undo.setSteps(steps);
+        undo.setZeroUndoTime();
+        setScoreArr(score);
     }
-*/
+
+    public CellMotion() {}
 
     Random r = new Random();
 
@@ -100,6 +95,16 @@ public class CellMotion extends JFrame implements Serializable {
         }
     }
 
+    //获取分数数组
+    public int[] getScoreArr() {
+        return score;
+    }
+
+    //设置分数数组
+    public void setScoreArr(int[] score) {
+        System.arraycopy(score, 0, this.score, 0, score.length);
+    }
+
     //在游戏结束之前调用，判断是否出现目标格点
     public void moveBeforeWin(int issue, int[][] data) {
         if (issue == RIGHT) {
@@ -139,33 +144,30 @@ public class CellMotion extends JFrame implements Serializable {
     public void setEffectSoundStatus() {
         effectMusicPalyer.EffectSoundStatus++;
         String[] arr = {"ON", "OFF"};
-        System.out.printf("Effect Sound Status is %s\n", arr[effectMusicPalyer.EffectSoundStatus % 2]);
+        System.out.printf("Effect Sound Status is %s.\n", arr[effectMusicPalyer.EffectSoundStatus % 2]);
     }
 
 
-
-//移动方式解释
-/*
-    每一次都进行移动，如果遇到相同的就进行融合
-    最后把0过掉
-    以向右移动为例，从右侧开始扫描，左边前三个数同时开始向右移动，
-    若2处元素能与3处融合，则移动成功，0索引处补0
-    然后再使左边两个数同时开始向右移动，
-    如果1索引处能与2索引处融合，则移动成功，0索引处补0
-    然后再使左边第一个数向右移动
-    如果0索引处能与1索引处融合，则移动成功，0索引处补0
-
-    step1:
-    [4][4][8][8]  -->  [0][4][4][16]
-
-    step2:
-    [0][4][4][16]  --> [0][0][8][16]
-
-    step3:
-    (Only Valid for both of the steps above can't operate)
-    [2][2][4][8]  -->  [0][4][4][8]
-
- */
+    /*  移动方式解释
+     *  每一次都进行移动，如果遇到相同的就进行融合
+     *  最后把0过掉
+     *  以向右移动为例，从右侧开始扫描，左边前三个数同时开始向右移动，
+     *  若2处元素能与3处融合，则移动成功，0索引处补0
+     *  然后再使左边两个数同时开始向右移动，
+     *  如果1索引处能与2索引处融合，则移动成功，0索引处补0
+     *  然后再使左边第一个数向右移动
+     *  如果0索引处能与1索引处融合，则移动成功，0索引处补0
+     *
+     *  step1:
+     *  [4][4][8][8]  -->  [0][4][4][16]
+     *
+     *  step2:
+     *  [0][4][4][16]  --> [0][0][8][16]
+     *
+     *  step3:
+     *  (Only Valid for both of the steps above can't operate)
+     *  [2][2][4][8]  -->  [0][4][4][8]
+     * */
 
     //向右移动
     public void moveRight(int[][] data) {
@@ -198,7 +200,6 @@ public class CellMotion extends JFrame implements Serializable {
                     data[i][0] = 0;
                 }
             }
-            loop:
             while (isRightMovable(data[i])) {
                 boolean flag = false;
                 if (data[i][2] == data[i][3] && data[i][2] != 0) {
@@ -223,7 +224,7 @@ public class CellMotion extends JFrame implements Serializable {
                     flag = true;
                 }
                 if (flag) {
-                    break loop;
+                    break;
                 }
 
             }
@@ -273,7 +274,6 @@ public class CellMotion extends JFrame implements Serializable {
                     data[i][3] = 0;
                 }
             }
-            loop:
             while (isLeftMovable(data[i])) {
                 boolean flag = false;
                 if (data[i][0] == data[i][1] && data[i][0] != 0) {
@@ -298,7 +298,7 @@ public class CellMotion extends JFrame implements Serializable {
                     flag = true;
                 }
                 if (flag) {
-                    break loop;
+                    break;
                 }
 
             }
@@ -356,7 +356,6 @@ public class CellMotion extends JFrame implements Serializable {
                     data[i][3] = 0;
                 }
             }
-            loop:
             while (isLeftMovable(data[i])) {
                 boolean flag = false;
                 if (data[i][0] == data[i][1] && data[i][0] != 0) {
@@ -381,7 +380,7 @@ public class CellMotion extends JFrame implements Serializable {
                     flag = true;
                 }
                 if (flag) {
-                    break loop;
+                    break;
                 }
 
             }
@@ -435,7 +434,6 @@ public class CellMotion extends JFrame implements Serializable {
                     data[i][0] = 0;
                 }
             }
-            loop:
             while (isRightMovable(data[i])) {
                 boolean flag = false;
                 if (data[i][2] == data[i][3] && data[i][2] != 0) {
@@ -460,7 +458,7 @@ public class CellMotion extends JFrame implements Serializable {
                     flag = true;
                 }
                 if (flag) {
-                    break loop;
+                    break;
                 }
 
             }

@@ -2,7 +2,7 @@ package Main.Frame;
 
 import Main.Controller.CellMotion;
 import Main.Controller.InitialGrids;
-import Main.Features.EffectMusicPalyer;
+import Main.Data.GameDataStock;
 import Main.Features.bgmPlayer;
 
 import javax.swing.*;
@@ -14,15 +14,25 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     private int[][] data;
 
+    public void setData(int[][] data) {
+        this.data = data;
+    }
+
     //表示是否为登陆用户，用于显示Tips
     private int STATUS;
 
+    //当前游戏玩家ID
     private int USER_ID;
 
     //设置游戏运行时的用户
     public void setID(int userID) {
         this.USER_ID = userID;
         System.out.println("Current user's ID: " + USER_ID);
+    }
+
+    //获得游戏运行时的用户
+    public int getID() {
+        return this.USER_ID;
     }
 
     //设置当前游戏运行模式
@@ -46,6 +56,20 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.setVisible(true);
     }
 
+    public void loadSetUp() {
+        game.add(load);
+        game.add(save);
+        initialGameFrame();
+        users.add(logout);
+        img = ImagePathEnum.DEFAULT;
+        NumImagePath = img.getPath();
+        setImages(ImagePath + "GameFrameBackground", data);
+        motion.EffectSoundPlayer(4);
+        addMouseListener(this);
+        addKeyListener(this);
+        this.setVisible(true);
+    }
+
     //用于访客模式的外界访问
     public void setupInGuestMode() {
 
@@ -62,6 +86,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //背景音乐播放对象
     bgmPlayer musicObject = new bgmPlayer();
 
+    //游戏数据同步，便于保存
+    GameDataStock syncer = new GameDataStock();
+    SaveAndLoad saverAndLoader;
 
     //产生motion对象，实现每次重启游戏步数清零重计
     CellMotion motion;
@@ -134,6 +161,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
+        saverAndLoader = new SaveAndLoad(syncer);
 
 
         //设置菜单栏
@@ -308,6 +336,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 //        timeLabel.setBounds(0,0,150,30);
 //        this.ImageContainer.add(timeLabel);
 
+
+        //添加到图层
         this.ImageContainer.add(steplable);
         this.ImageContainer.add(scorelable);
         this.ImageContainer.add(targetLable);
@@ -315,6 +345,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.add(backImage);
         this.setContentPane(ImageContainer);
 
+        //刷新图层
         this.ImageContainer.repaint();
 
     }
@@ -425,8 +456,14 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             replayGame();
         } else if (obj == load) {
             System.out.println("Load Game");
+            saverAndLoader.LOAD();
+            this.dispose();
         } else if (obj == save) {
             System.out.println("Save Game");
+            //同步数据
+            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status);
+            //保存
+            saverAndLoader.SAVE();
         } else if (obj == sound) {
             System.out.println("Music Turn Off");
             musicObject.stopMusic();

@@ -37,6 +37,11 @@ public class Undo extends JFrame {
         }
     }
 
+    //undo次数设为0
+    public void setZeroUndoTime() {
+        this.undoTimes = 0;
+    }
+
     //保存某一步的状态
     public void saveStatus(int[][] data) {
         if ((this.steps + 1) % 4 == 3) {
