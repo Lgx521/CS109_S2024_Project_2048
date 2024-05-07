@@ -93,6 +93,9 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
         if (status == STATUS_LOAD) {
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            browser.setText("File Browser");
+            browser.setSize(100, 25);
+            browser.setBounds(350, 270, 100, 25);
         }
 
         //背景图片
@@ -116,10 +119,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         label3.setBounds(110, 193, 100, 30);
         label4.setBounds(110, 237, 150, 30);
 
-        browser.setText("File Browser");
-        browser.setSize(100, 25);
-        browser.setBounds(350, 270, 100, 25);
-
         this.getContentPane().add(browser);
 
         this.getContentPane().add(slot_1);
@@ -136,7 +135,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         this.getContentPane().repaint();
     }
 
-
+    //保存
     private void saveFile(int slotNum) {
 
         try {
@@ -155,6 +154,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         }
     }
 
+    //按路径加载
     private GameDataStock loadFileWithPath(String path) {
         File data = new File(path);
         GameDataStock gameDataStock_load;
@@ -176,6 +176,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         return gameDataStock_load;
     }
 
+    //按文件加载并开始游戏
     private void loadFileAndStartGame(File file) {
         GameDataStock gameDataStock_load;
         try {
@@ -220,6 +221,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         }
     };
 
+    //文件浏览器
     private void addFileBrowser() {
         browserPanel.setDialogTitle("Please choose game data storage file (*.2048)");
         browserPanel.setVisible(true);
@@ -228,7 +230,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         browserPanel.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         browserPanel.showDialog(null, "Commit");
         File selected = browserPanel.getSelectedFile();
-        //todo
         loadFileAndStartGame(selected);
     }
 
