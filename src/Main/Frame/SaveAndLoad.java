@@ -329,7 +329,16 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_1.2048"));
             } else {
                 System.out.println("slot_1 is clicked when status == 0(SAVE)");
-                saveFile(1);
+                if (!isSlotEmpty(1)) {
+                    int choice = JOptionPane.showConfirmDialog(null,"Caution!\nThis will cover the previous slot,\nDo you want to continue?");
+                    if (choice == 0) {
+                        saveFile(1);
+                    } else {
+                        System.out.println("Canceled");
+                    }
+                } else {
+                    saveFile(1);
+                }
             }
         } else if (obj == slot_2) {
             if (status == STATUS_LOAD) {
@@ -338,7 +347,16 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_2.2048"));
             } else {
                 System.out.println("slot_2 is clicked when status = 0(SAVE)");
-                saveFile(2);
+                if (!isSlotEmpty(2)) {
+                    int choice = JOptionPane.showConfirmDialog(null,"Caution!\nThis will cover the previous slot,\nDo you want to continue?");
+                    if (choice == 0) {
+                        saveFile(2);
+                    } else {
+                        System.out.println("Canceled");
+                    }
+                } else {
+                    saveFile(2);
+                }
             }
         } else if (obj == slot_3) {
             if (status == STATUS_LOAD) {
@@ -347,7 +365,16 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_3.2048"));
             } else {
                 System.out.println("slot_3 is clicked when status = 0(SAVE)");
-                saveFile(3);
+                if (!isSlotEmpty(3)) {
+                    int choice = JOptionPane.showConfirmDialog(null,"Caution!\nThis will cover the previous slot,\nDo you want to continue?");
+                    if (choice == 0) {
+                        saveFile(3);
+                    } else {
+                        System.out.println("Canceled");
+                    }
+                } else {
+                    saveFile(3);
+                }
             }
         } else if (obj == slot_4) {
             if (status == STATUS_LOAD) {
