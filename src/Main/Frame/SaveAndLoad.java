@@ -5,6 +5,7 @@ import Main.Data.GameDataStock;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -30,7 +31,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         this.gameDataStock = gameDataStock;
     }
 
-    //保存与加载方法
+    //外界访问的保存与加载方法
     public void SAVE() {
         this.status = STATUS_SAVE;
         setImage(BACKGROUND_0);
@@ -38,7 +39,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         addMouseListener(this);
         this.setVisible(true);
     }
-
     public void LOAD() {
         this.status = STATUS_LOAD;
         setImage(BACKGROUND_0);
@@ -96,6 +96,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             browser.setText("File Browser");
             browser.setSize(100, 25);
             browser.setBounds(350, 270, 100, 25);
+            this.getContentPane().add(browser);
         }
 
         //背景图片
@@ -119,7 +120,36 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         label3.setBounds(110, 193, 100, 30);
         label4.setBounds(110, 237, 150, 30);
 
-        this.getContentPane().add(browser);
+        if (isSlotEmpty(1)) {
+            JLabel label_empty = new JLabel("This slot is empty");
+            Font font = new Font("Arial", Font.ITALIC, 12);
+            label_empty.setFont(font);
+            label_empty.setForeground(Color.GRAY);
+            label_empty.setSize(130, 30);
+            label_empty.setBounds(210, 107, 130, 30);
+            this.getContentPane().add(label_empty);
+        }
+
+        if (isSlotEmpty(2)) {
+            JLabel label_empty = new JLabel("This slot is empty");
+            Font font = new Font("Arial", Font.ITALIC, 12);
+            label_empty.setFont(font);
+            label_empty.setForeground(Color.GRAY);
+            label_empty.setSize(130, 30);
+            label_empty.setBounds(210, 150, 130, 30);
+            this.getContentPane().add(label_empty);
+        }
+
+        if (isSlotEmpty(3)) {
+            JLabel label_empty = new JLabel("This slot is empty");
+            Font font = new Font("Arial", Font.ITALIC, 12);
+            label_empty.setFont(font);
+            label_empty.setForeground(Color.GRAY);
+            label_empty.setSize(130, 30);
+            label_empty.setBounds(210, 194, 130, 30);
+            this.getContentPane().add(label_empty);
+        }
+
 
         this.getContentPane().add(slot_1);
         this.getContentPane().add(slot_2);
@@ -215,6 +245,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             }
             return false;
         }
+
         @Override
         public String getDescription() {
             return ".2048(Game Data File)";
@@ -265,6 +296,13 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         this.dispose();
     }
 
+    //存档槽是否为空
+    private boolean isSlotEmpty(int slotNum) {
+        String path = FilePath + thisUserID + "_" + slotNum + ".2048";
+        File file = new File(path);
+        return !file.exists();
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -287,6 +325,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         if (obj == slot_1) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_1 is clicked when status == 1(LOAD)");
+                if (isSlotEmpty(1)) {return;}
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_1.2048"));
             } else {
                 System.out.println("slot_1 is clicked when status == 0(SAVE)");
@@ -295,6 +334,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_2) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_2 is clicked when status = 1(LOAD)");
+                if (isSlotEmpty(2)) {return;}
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_2.2048"));
             } else {
                 System.out.println("slot_2 is clicked when status = 0(SAVE)");
@@ -303,6 +343,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_3) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_3 is clicked when status = 1(LOAD)");
+                if (isSlotEmpty(3)) {return;}
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_3.2048"));
             } else {
                 System.out.println("slot_3 is clicked when status = 0(SAVE)");
@@ -311,12 +352,12 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_4) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_4 is clicked when status = 1(LOAD)");
+                if (isSlotEmpty(4)) {return;}
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_autoSave.2048"));
             } else {
                 System.out.println("slot_4 is clicked when status = 0(SAVE)");
             }
         } else if (obj == browser) {
-            //todo
             System.out.println("browser");
             addFileBrowser();
         }
@@ -325,19 +366,27 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     @Override
     public void mouseEntered(MouseEvent e) {
         Object obj = e.getSource();
-        if (obj == slot_1) {
-            setImage(BACKGROUND_1);
-//            System.out.println("1");
-        } else if (obj == slot_2) {
-            setImage(BACKGROUND_2);
-//            System.out.println("2");
-        } else if (obj == slot_3) {
-            setImage(BACKGROUND_3);
-//            System.out.println("3");
-        } else if (obj == slot_4) {
-            if (status == 1) {
-                setImage(BACKGROUND_4);
-//                System.out.println("4");
+        if (status == STATUS_SAVE) {
+            if (obj == slot_1) {
+                setImage(BACKGROUND_1);
+            } else if (obj == slot_2) {
+                setImage(BACKGROUND_2);
+            } else if (obj == slot_3) {
+                setImage(BACKGROUND_3);
+            }
+        } else if (status ==STATUS_LOAD) {
+            if (obj == slot_1) {
+                if(isSlotEmpty(1)){return;}
+                setImage(BACKGROUND_1);
+            } else if (obj == slot_2) {
+                if(isSlotEmpty(2)){return;}
+                setImage(BACKGROUND_2);
+            } else if (obj == slot_3) {
+                if(isSlotEmpty(3)){return;}
+                setImage(BACKGROUND_3);
+            } else if (obj == slot_4) {
+                if(isSlotEmpty(4)){return;}
+                setImage(BACKGROUND_3);
             }
         }
 
