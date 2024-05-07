@@ -31,7 +31,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         this.gameDataStock = gameDataStock;
     }
 
-    //外界访问的保存与加载方法
+    //外界访问的保存方法
     public void SAVE() {
         this.status = STATUS_SAVE;
         setImage(BACKGROUND_0);
@@ -39,6 +39,8 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         addMouseListener(this);
         this.setVisible(true);
     }
+
+    //外界访问的加载方法
     public void LOAD() {
         this.status = STATUS_LOAD;
         setImage(BACKGROUND_0);
@@ -86,7 +88,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     private final int STATUS_LOAD = 1;
     private int status = 0;
 
-    //设置背景图
+    //设置界面元素
     private void setImage(int number) {
         this.getContentPane().removeAll();
         this.setLayout(null);
@@ -167,7 +169,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
     //保存
     private void saveFile(int slotNum) {
-
         try {
             String fileName = FilePath + gameDataStock.getUserID() + "_" + slotNum + ".2048";
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
@@ -264,7 +265,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         loadFileAndStartGame(selected);
     }
 
-
     //显示保存信息
     private void toString(GameDataStock gameDataStock) {
         int fileID = gameDataStock.getUserID();
@@ -273,7 +273,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         int fileTarget = gameDataStock.getTarget();
         System.out.printf("ID: %s, Steps: %s, Score: {%s, %s, %s, %s}, Target: %s\n", fileID, fileSteps, fileScore[0], fileScore[1], fileScore[2], fileScore[3], fileTarget);
     }
-
 
     //读取数据开始新游戏
     private void newGameSetUp(GameDataStock gameDataStock) {
@@ -325,12 +324,14 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         if (obj == slot_1) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_1 is clicked when status == 1(LOAD)");
-                if (isSlotEmpty(1)) {return;}
+                if (isSlotEmpty(1)) {
+                    return;
+                }
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_1.2048"));
             } else {
                 System.out.println("slot_1 is clicked when status == 0(SAVE)");
                 if (!isSlotEmpty(1)) {
-                    int choice = JOptionPane.showConfirmDialog(null,"Caution!\nThis will cover the previous slot,\nDo you want to continue?");
+                    int choice = JOptionPane.showConfirmDialog(null, "Caution!\nThis will cover the previous slot,\nDo you want to continue?");
                     if (choice == 0) {
                         saveFile(1);
                     } else {
@@ -343,12 +344,14 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_2) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_2 is clicked when status = 1(LOAD)");
-                if (isSlotEmpty(2)) {return;}
+                if (isSlotEmpty(2)) {
+                    return;
+                }
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_2.2048"));
             } else {
                 System.out.println("slot_2 is clicked when status = 0(SAVE)");
                 if (!isSlotEmpty(2)) {
-                    int choice = JOptionPane.showConfirmDialog(null,"Caution!\nThis will cover the previous slot,\nDo you want to continue?");
+                    int choice = JOptionPane.showConfirmDialog(null, "Caution!\nThis will cover the previous slot,\nDo you want to continue?");
                     if (choice == 0) {
                         saveFile(2);
                     } else {
@@ -361,12 +364,14 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_3) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_3 is clicked when status = 1(LOAD)");
-                if (isSlotEmpty(3)) {return;}
+                if (isSlotEmpty(3)) {
+                    return;
+                }
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_3.2048"));
             } else {
                 System.out.println("slot_3 is clicked when status = 0(SAVE)");
                 if (!isSlotEmpty(3)) {
-                    int choice = JOptionPane.showConfirmDialog(null,"Caution!\nThis will cover the previous slot,\nDo you want to continue?");
+                    int choice = JOptionPane.showConfirmDialog(null, "Caution!\nThis will cover the previous slot,\nDo you want to continue?");
                     if (choice == 0) {
                         saveFile(3);
                     } else {
@@ -379,7 +384,9 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_4) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_4 is clicked when status = 1(LOAD)");
-                if (isSlotEmpty(4)) {return;}
+                if (isSlotEmpty(4)) {
+                    return;
+                }
                 newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_autoSave.2048"));
             } else {
                 System.out.println("slot_4 is clicked when status = 0(SAVE)");
@@ -401,19 +408,27 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             } else if (obj == slot_3) {
                 setImage(BACKGROUND_3);
             }
-        } else if (status ==STATUS_LOAD) {
+        } else if (status == STATUS_LOAD) {
             if (obj == slot_1) {
-                if(isSlotEmpty(1)){return;}
+                if (isSlotEmpty(1)) {
+                    return;
+                }
                 setImage(BACKGROUND_1);
             } else if (obj == slot_2) {
-                if(isSlotEmpty(2)){return;}
+                if (isSlotEmpty(2)) {
+                    return;
+                }
                 setImage(BACKGROUND_2);
             } else if (obj == slot_3) {
-                if(isSlotEmpty(3)){return;}
+                if (isSlotEmpty(3)) {
+                    return;
+                }
                 setImage(BACKGROUND_3);
             } else if (obj == slot_4) {
-                if(isSlotEmpty(4)){return;}
-                setImage(BACKGROUND_3);
+                if (isSlotEmpty(4)) {
+                    return;
+                }
+                setImage(BACKGROUND_4);
             }
         }
 
