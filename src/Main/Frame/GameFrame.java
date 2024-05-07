@@ -22,7 +22,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private int STATUS;
 
     //当前游戏玩家ID
-    private int USER_ID;
+    private static int USER_ID;
 
     //设置游戏运行时的用户
     public void setID(int userID) {

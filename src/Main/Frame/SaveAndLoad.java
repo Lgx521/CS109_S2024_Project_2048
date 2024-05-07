@@ -4,6 +4,7 @@ import Main.Controller.CellMotion;
 import Main.Data.GameDataStock;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -12,9 +13,16 @@ import java.io.*;
 
 public class SaveAndLoad extends JFrame implements ActionListener, MouseListener {
 
-    private final String FilePath = "src/Main/Data/GameData/";
+    private final String FilePath = "src/Main/Data/GameData/User";
 
     private GameDataStock gameDataStock;
+
+    private int thisUserID = new GameFrame().getID();
+
+    JLabel slot_1 = new JLabel();
+    JLabel slot_2 = new JLabel();
+    JLabel slot_3 = new JLabel();
+    JLabel slot_4 = new JLabel();
 
     //构造器
     SaveAndLoad(GameDataStock gameDataStock) {
@@ -30,6 +38,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         addMouseListener(this);
         this.setVisible(true);
     }
+
     public void LOAD() {
         this.status = STATUS_LOAD;
         setImage(BACKGROUND_0);
@@ -38,13 +47,9 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         this.setVisible(true);
     }
 
-    JLabel slot_1 = new JLabel();
-    JLabel slot_2 = new JLabel();
-    JLabel slot_3 = new JLabel();
-    JLabel slot_4 = new JLabel();
-
     //文件浏览器
-//    JButton browser = new JButton();
+    JButton browser = new JButton();
+    JFileChooser browserPanel = new JFileChooser("src/Main/Data/GameData");
 
     private void initialFrame() {
         this.setSize(450, 330);
@@ -66,9 +71,9 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         slot_2.addMouseListener(this);
         slot_3.addMouseListener(this);
         slot_4.addMouseListener(this);
-    }
 
-    private final String ImagePath = "src/Main/Resources/SaveAndLoad/background_";
+        browser.addMouseListener(this);
+    }
 
     private final int BACKGROUND_0 = 0;
     private final int BACKGROUND_1 = 1;
@@ -76,7 +81,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     private final int BACKGROUND_3 = 3;
     private final int BACKGROUND_4 = 4;
 
-    //当为保存页面时，status == 0，第四条无法被点击
+    //当为保存页面时，status == 0(STATUS_SAVE)，第四条无法被点击
     private final int STATUS_SAVE = 0;
     private final int STATUS_LOAD = 1;
     private int status = 0;
@@ -86,8 +91,13 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         this.getContentPane().removeAll();
         this.setLayout(null);
 
+        if (status == STATUS_LOAD) {
+            this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        }
+
         //背景图片
-        ImageIcon backgroundImage = new ImageIcon(ImagePath + number + ".png");
+        String imagePath = "src/Main/Resources/SaveAndLoad/background_";
+        ImageIcon backgroundImage = new ImageIcon(imagePath + number + ".png");
         JLabel background = new JLabel(backgroundImage);
         background.setSize(450, 330);
         background.setBounds(0, -20, 450, 330);
@@ -106,12 +116,11 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         label3.setBounds(110, 193, 100, 30);
         label4.setBounds(110, 237, 150, 30);
 
-//        JLabel FileBrowser = new JLabel("Load your game from file?");
-//
-//        browser.setSize(100,25);
-//        browser.setBounds(350, 270,100,25);
-//        browser.setText("File Browser");
-//        this.getContentPane().add(browser);
+        browser.setText("File Browser");
+        browser.setSize(100, 25);
+        browser.setBounds(350, 270, 100, 25);
+
+        this.getContentPane().add(browser);
 
         this.getContentPane().add(slot_1);
         this.getContentPane().add(slot_2);
@@ -131,13 +140,14 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     private void saveFile(int slotNum) {
 
         try {
-            String fileName = FilePath + slotNum + ".2048";
+            String fileName = FilePath + gameDataStock.getUserID() + "_" + slotNum + ".2048";
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
             oos.writeObject(gameDataStock);
             oos.close();
             JOptionPane.showMessageDialog(null, "Game Saved Successfully", "Notice", JOptionPane.INFORMATION_MESSAGE);
             toString(gameDataStock);
-            System.out.println("slot_" + slotNum + "is saved");
+            System.out.println("slot_" + slotNum + " is saved");
+            this.dispose();
         } catch (IOException e) {
             System.out.println("Save failed");
             JOptionPane.showMessageDialog(null, "File save failed!", "Caution", JOptionPane.INFORMATION_MESSAGE);
@@ -145,7 +155,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         }
     }
 
-    private GameDataStock loadFile(String path) {
+    private GameDataStock loadFileWithPath(String path) {
         File data = new File(path);
         GameDataStock gameDataStock_load;
         try {
@@ -163,11 +173,67 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             JOptionPane.showMessageDialog(null, "File load failed!\nPlease choose proper file", "Caution", JOptionPane.INFORMATION_MESSAGE);
             throw new RuntimeException(e);
         }
-
         return gameDataStock_load;
-
     }
 
+    private void loadFileAndStartGame(File file) {
+        GameDataStock gameDataStock_load;
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+            gameDataStock_load = (GameDataStock) ois.readObject();
+            toString(gameDataStock_load);
+            ois.close();
+            System.out.println("loaded");
+        } catch (IOException e) {
+            System.out.println("This isn't the correct game data storage file");
+            JOptionPane.showMessageDialog(null, "This isn't the correct game data storage file!\n" +
+                    "Please choose proper file (*.2048)", "Caution", JOptionPane.INFORMATION_MESSAGE);
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            System.out.println("File can't be read");
+            JOptionPane.showMessageDialog(null, "File load failed!\nPlease choose proper file", "Caution", JOptionPane.INFORMATION_MESSAGE);
+            throw new RuntimeException(e);
+        }
+
+        //需要添加判断是否是当前用户读取该文件
+        if (gameDataStock_load.getUserID() != thisUserID) {
+            System.out.println("This file does NOT Belong to this User!");
+            JOptionPane.showMessageDialog(null, "File load failed!\nThis file does NOT Belong to YOU!", "Caution", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            this.dispose();
+            newGameSetUp(gameDataStock_load);
+        }
+    }
+
+    //文件过滤器
+    FileFilter filter = new FileFilter() {
+        @Override
+        public boolean accept(File f) {
+            if (f.getName().endsWith(".2048")) {
+                return true;
+            }
+            return false;
+        }
+        @Override
+        public String getDescription() {
+            return ".2048(Game Data File)";
+        }
+    };
+
+    private void addFileBrowser() {
+        browserPanel.setDialogTitle("Please choose game data storage file (*.2048)");
+        browserPanel.setVisible(true);
+        browserPanel.addChoosableFileFilter(filter);
+        browserPanel.setFileFilter(filter);
+        browserPanel.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        browserPanel.showDialog(null, "Commit");
+        File selected = browserPanel.getSelectedFile();
+        //todo
+        loadFileAndStartGame(selected);
+    }
+
+
+    //显示保存信息
     private void toString(GameDataStock gameDataStock) {
         int fileID = gameDataStock.getUserID();
         int fileSteps = gameDataStock.getSteps();
@@ -177,6 +243,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     }
 
 
+    //读取数据开始新游戏
     private void newGameSetUp(GameDataStock gameDataStock) {
         int[][] gameData = gameDataStock.getGameData();
         int[] score = gameDataStock.getScore();
@@ -219,8 +286,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         if (obj == slot_1) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_1 is clicked when status == 1(LOAD)");
-                newGameSetUp(loadFile(FilePath + "1.2048"));
-
+                newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_1.2048"));
             } else {
                 System.out.println("slot_1 is clicked when status == 0(SAVE)");
                 saveFile(1);
@@ -228,7 +294,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_2) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_2 is clicked when status = 1(LOAD)");
-                newGameSetUp(loadFile(FilePath + "2.2048"));
+                newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_2.2048"));
             } else {
                 System.out.println("slot_2 is clicked when status = 0(SAVE)");
                 saveFile(2);
@@ -236,7 +302,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_3) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_3 is clicked when status = 1(LOAD)");
-                newGameSetUp(loadFile(FilePath + "3.2048"));
+                newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_3.2048"));
             } else {
                 System.out.println("slot_3 is clicked when status = 0(SAVE)");
                 saveFile(3);
@@ -244,10 +310,14 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == slot_4) {
             if (status == STATUS_LOAD) {
                 System.out.println("slot_4 is clicked when status = 1(LOAD)");
-                newGameSetUp(loadFile(FilePath + "autoSave.2048"));
+                newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_autoSave.2048"));
             } else {
                 System.out.println("slot_4 is clicked when status = 0(SAVE)");
             }
+        } else if (obj == browser) {
+            //todo
+            System.out.println("browser");
+            addFileBrowser();
         }
     }
 
