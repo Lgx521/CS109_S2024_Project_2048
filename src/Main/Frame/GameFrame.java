@@ -3,6 +3,7 @@ package Main.Frame;
 import Main.Controller.CellMotion;
 import Main.Controller.InitialGrids;
 import Main.Data.GameDataStock;
+import Main.Features.Props;
 import Main.Features.bgmPlayer;
 
 import javax.swing.*;
@@ -48,6 +49,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     public void setup() {
         game.add(load);
         game.add(save);
+        users.add(statistics);
         initialGameFrame();
         users.add(logout);
         replayGame();
@@ -59,6 +61,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     public void loadSetUp() {
         game.add(load);
         game.add(save);
+        users.add(statistics);
         initialGameFrame();
         users.add(logout);
         img = ImagePathEnum.DEFAULT;
@@ -111,6 +114,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JMenuItem login = new JMenuItem("Log in");
     JMenuItem logout = new JMenuItem("Log out");
     JMenuItem signIn = new JMenuItem("Sign In");
+
+    JMenuItem statistics = new JMenuItem("Game Statistics");
 
     //图形变化处理
     JLabel undo = new JLabel();
@@ -210,6 +215,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         flames.setSize(70, 40);
         flames.setBounds(695, 505, 70, 40);
 
+        for (JLabel label : labels) {
+            label.addMouseListener(this);
+        }
 
         //添加监听
         exit.addActionListener(this);
@@ -224,6 +232,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         music_2.addActionListener(this);
         music_3.addActionListener(this);
         effectOff.addActionListener(this);
+
+        statistics.addActionListener(this);
 
         undo.addMouseListener(this);
         hammer.addMouseListener(this);
@@ -246,7 +256,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
         this.setJMenuBar(jMenuBar);
 
+
     }
+
+    private boolean isHammerAvailable = false;
 
     //搭建图片
     private void setImages(String ImagePath, int[][] data) {
@@ -326,6 +339,18 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status);
         }
 
+        //hammer选择图层
+        if (isHammerAvailable) {
+            for (int i = 0; i < labels.length; i++) {
+                labels[i].setSize(100, 100);
+            }
+            for (int i = 0; i < labels.length; i++) {
+                labels[i].setBounds(32 + (i % 4) * 100, 98 + (i / 4) * 100, 100, 100);
+                this.ImageContainer.add(labels[i]);
+            }
+        }
+
+
         //计时
 //        Date d_0 = new Date();
 //        Long time_0 = d_0.getTime();
@@ -354,6 +379,25 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.repaint();
 
     }
+
+    //创建Hammer选择图层
+    JLabel a1 = new JLabel();
+    JLabel a2 = new JLabel();
+    JLabel a3 = new JLabel();
+    JLabel a4 = new JLabel();
+    JLabel b1 = new JLabel();
+    JLabel b2 = new JLabel();
+    JLabel b3 = new JLabel();
+    JLabel b4 = new JLabel();
+    JLabel c1 = new JLabel();
+    JLabel c2 = new JLabel();
+    JLabel c3 = new JLabel();
+    JLabel c4 = new JLabel();
+    JLabel d1 = new JLabel();
+    JLabel d2 = new JLabel();
+    JLabel d3 = new JLabel();
+    JLabel d4 = new JLabel();
+    private JLabel[] labels = {a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4};
 
     //判断显示游戏结束对话框
     private void gameOverDialog() {
@@ -450,6 +494,56 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         setImages(ImagePath + "GameFrameBackground", data);
     }
 
+    //Hammer
+    private void HammerProp(int row, int col) {
+        Props props = new Props();
+
+        String content = """
+                Prop: Hammer
+                Please input a valid number which is in the range
+                of 2 ~ 2048, to change that tile to this number.
+                You can also input 0 to dispose that tile.
+                """;
+
+        String inputText = JOptionPane.showInputDialog(this, content, "Hammer", JOptionPane.QUESTION_MESSAGE);
+
+        if (!inputText.isEmpty()) {
+
+            char[] input = inputText.toCharArray();
+
+            int[] arr = {0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384};
+
+            //检验输入是否为数字
+            String regex = "[0-9]+";
+            if (!inputText.matches(regex)) {
+                return;
+            }
+
+            for (int i = 0; i < arr.length; i++) {
+                if (toInteger(input) == arr[i]) {
+                    props.Hammer(this.data, row, col, arr[i]);
+                    setImages(ImagePath + "GameFrameBackground", data);
+                    motion.isEnding(data);
+                    gameOverDialog();
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(this, "Invalid Input!\nYou can only input 0 or powers of 2", "Caution", JOptionPane.WARNING_MESSAGE);
+            isHammerAvailable = false;
+        }
+
+    }
+
+    //hammer输入值转为int类型
+    private int toInteger(char[] str) {
+        int ans = 0;
+        int base = 1;
+        for (int i = str.length - 1; i >= 0; i--) {
+            ans = ans + ((int) str[i] - 48) * base;
+            base *= 10;
+        }
+        return ans;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -525,6 +619,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == effectOff) {
             //效果声status自增
             motion.setEffectSoundStatus();
+        } else if (obj == statistics) {
+            System.out.println("Game Statistics");
         }
     }
 
@@ -544,6 +640,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             performUNDO();
         } else if (obj == hammer) {
             System.out.println("use prop hammer");
+            isHammerAvailable = true;
+            setImages(ImagePath + "GameFrameBackground", data);
         } else if (obj == ai) {
             System.out.println("use AI");
         } else if (obj == _2N) {
@@ -575,6 +673,54 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             img = ImagePathEnum.FLAME;
             NumImagePath = img.getPath();
             setImages(ImagePath + "GameFrameBackground", data);
+        } else if (obj == a1) {
+            System.out.println("a1");
+            HammerProp(0,0);
+        } else if (obj == a2) {
+            System.out.println("a2");
+            HammerProp(0,1);
+        } else if (obj == a3) {
+            System.out.println("a3");
+            HammerProp(0,2);
+        } else if (obj == a4) {
+            System.out.println("a4");
+            HammerProp(0,3);
+        } else if (obj == b1) {
+            System.out.println("b1");
+            HammerProp(1,0);
+        } else if (obj == b2) {
+            System.out.println("b2");
+            HammerProp(1,1);
+        } else if (obj == b3) {
+            System.out.println("b3");
+            HammerProp(1,2);
+        } else if (obj == b4) {
+            System.out.println("b4");
+            HammerProp(1,3);
+        } else if (obj == c1) {
+            System.out.println("c1");
+            HammerProp(2,0);
+        } else if (obj == c2) {
+            System.out.println("c2");
+            HammerProp(2,1);
+        } else if (obj == c3) {
+            System.out.println("c3");
+            HammerProp(2,2);
+        } else if (obj == c4) {
+            System.out.println("c4");
+            HammerProp(2,3);
+        } else if (obj == d1) {
+            System.out.println("d1");
+            HammerProp(3,0);
+        } else if (obj == d2) {
+            System.out.println("d2");
+            HammerProp(3,1);
+        } else if (obj == d3) {
+            System.out.println("d3");
+            HammerProp(3,2);
+        } else if (obj == d4) {
+            System.out.println("d4");
+            HammerProp(3,3);
         }
     }
 

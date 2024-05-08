@@ -712,7 +712,7 @@ public class CellMotion extends JFrame {
                         Do you want to continue your play?
                         Choose "Yes" to Continue
                         Choose "No" to Restart game in next step""";
-                int option = JOptionPane.showConfirmDialog(null, content, "Notice", JOptionPane.YES_NO_OPTION);
+                int option = JOptionPane.showConfirmDialog(this, content, "Notice", JOptionPane.YES_NO_OPTION);
                 if (option == 0) {
                     //继续游玩
                     status = 1;
@@ -725,12 +725,12 @@ public class CellMotion extends JFrame {
         if (issue == YOU_WIN_CANNOT_PLAY) {
             content = "You Win!\n" +
                     "Game Over!";
-            JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.NO_OPTION);
+            JOptionPane.showMessageDialog(this, content, "Notice", JOptionPane.NO_OPTION);
         }
         if (issue == YOU_LOST) {
             content = "You Lost,\n" +
                     "Game Over!";
-            JOptionPane.showMessageDialog(null, content, "Notice", JOptionPane.NO_OPTION);
+            JOptionPane.showMessageDialog(this, content, "Notice", JOptionPane.NO_OPTION);
         }
     }
 
