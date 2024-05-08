@@ -168,7 +168,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.setLayout(null);
         saverAndLoader = new SaveAndLoad(syncer);
 
-
         //设置菜单栏
         JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.setSize(800, 25);
@@ -260,6 +259,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
     private boolean isHammerAvailable = false;
+    private int cellIndex;
 
     //搭建图片
     private void setImages(String ImagePath, int[][] data) {
@@ -277,6 +277,22 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.add(forest);
         this.ImageContainer.add(ocean);
         this.ImageContainer.add(flames);
+
+        //hammer选择图层
+        if (isHammerAvailable) {
+            String SelectPath = "src/Main/Resources/Click/selector.png";
+            ImageIcon selectImg = new ImageIcon(SelectPath);
+            for (int i = 0; i < labels.length; i++) {
+                labels[i].setSize(100, 100);
+            }
+            if (cellIndex != -1) {
+                labels[cellIndex].setIcon(selectImg);
+            }
+            for (int i = 0; i < labels.length; i++) {
+                labels[i].setBounds(32 + (i % 4) * 100, 98 + (i / 4) * 100, 100, 100);
+                this.ImageContainer.add(labels[i]);
+            }
+        }
 
         //添加数字图片
         for (int i = 0; i < data.length; i++) {
@@ -299,7 +315,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             tips.setBounds(464, 555, 500, 25);
             this.ImageContainer.add(tips);
         }
-
 
         //背景图
         ImageIcon Image = new ImageIcon(ImagePath + ".png");
@@ -339,34 +354,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status);
         }
 
-        //hammer选择图层
-        if (isHammerAvailable) {
-            for (int i = 0; i < labels.length; i++) {
-                labels[i].setSize(100, 100);
-            }
-            for (int i = 0; i < labels.length; i++) {
-                labels[i].setBounds(32 + (i % 4) * 100, 98 + (i / 4) * 100, 100, 100);
-                this.ImageContainer.add(labels[i]);
-            }
-        }
-
-
-        //计时
-//        Date d_0 = new Date();
-//        Long time_0 = d_0.getTime();
-//
-//        Date date = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-//        String formated = sdf.format(date);
-//        String formated_0 = sdf.format(d_0);
-//
-//        JLabel timeLabel = new JLabel(formated);
-//
-//        timeLabel.setSize(150, 30);
-//        timeLabel.setBounds(0,0,150,30);
-//        this.ImageContainer.add(timeLabel);
-
-
         //添加到图层
         this.ImageContainer.add(steplable);
         this.ImageContainer.add(scorelable);
@@ -404,6 +391,19 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         if (motion.flagOfIsMovable != motion.IN_PROGRESS) {
             motion.EndingNotice(motion.flagOfIsMovable);
         }
+    }
+
+    //实现当时鼠标进入所在的cell的效果
+    private int getSelectedVisible(MouseEvent e) {
+        Object obj = e.getSource();
+        int result = -1;
+        for (int i = 0; i < labels.length; i++) {
+            if (obj == labels[i]) {
+                result = i;
+                break;
+            }
+        }
+        return result;
     }
 
     //实现按钮鼠标进入效果
@@ -497,41 +497,42 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //Hammer
     private void HammerProp(int row, int col) {
         Props props = new Props();
-
         String content = """
                 Prop: Hammer
                 Please input a valid number which is in the range
                 of 2 ~ 2048, to change that tile to this number.
                 You can also input 0 to dispose that tile.
                 """;
-
-        String inputText = JOptionPane.showInputDialog(this, content, "Hammer", JOptionPane.QUESTION_MESSAGE);
-
-        if (!inputText.isEmpty()) {
-
-            char[] input = inputText.toCharArray();
-
-            int[] arr = {0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384};
-
-            //检验输入是否为数字
-            String regex = "[0-9]+";
-            if (!inputText.matches(regex)) {
-                return;
-            }
-
-            for (int i = 0; i < arr.length; i++) {
-                if (toInteger(input) == arr[i]) {
-                    props.Hammer(this.data, row, col, arr[i]);
-                    setImages(ImagePath + "GameFrameBackground", data);
-                    motion.isEnding(data);
-                    gameOverDialog();
-                    return;
-                }
-            }
-            JOptionPane.showMessageDialog(this, "Invalid Input!\nYou can only input 0 or powers of 2", "Caution", JOptionPane.WARNING_MESSAGE);
+        String inputText;
+        char[] input;
+        try {
+            inputText = JOptionPane.showInputDialog(this, content, "Hammer", JOptionPane.QUESTION_MESSAGE);
+            input = inputText.toCharArray();
+        } catch (NullPointerException e) {
+            System.out.println("Clear Input");
             isHammerAvailable = false;
+            return;
         }
 
+        int[] arr = {0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384};
+
+        //检验输入是否为数字
+        String regex = "[0-9]+";
+        if (!inputText.matches(regex)) {
+            return;
+        }
+
+        for (int i = 0; i < arr.length; i++) {
+            if (toInteger(input) == arr[i]) {
+                props.Hammer(this.data, row, col, arr[i]);
+                setImages(ImagePath + "GameFrameBackground", data);
+                motion.isEnding(data);
+                gameOverDialog();
+                isHammerAvailable = false;
+                return;
+            }
+        }
+        JOptionPane.showMessageDialog(this, "Invalid Input!\nYou can only input 0 or powers of 2", "Caution", JOptionPane.WARNING_MESSAGE);
     }
 
     //hammer输入值转为int类型
@@ -675,62 +676,68 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             setImages(ImagePath + "GameFrameBackground", data);
         } else if (obj == a1) {
             System.out.println("a1");
-            HammerProp(0,0);
+            HammerProp(0, 0);
         } else if (obj == a2) {
             System.out.println("a2");
-            HammerProp(0,1);
+            HammerProp(0, 1);
         } else if (obj == a3) {
             System.out.println("a3");
-            HammerProp(0,2);
+            HammerProp(0, 2);
         } else if (obj == a4) {
             System.out.println("a4");
-            HammerProp(0,3);
+            HammerProp(0, 3);
         } else if (obj == b1) {
             System.out.println("b1");
-            HammerProp(1,0);
+            HammerProp(1, 0);
         } else if (obj == b2) {
             System.out.println("b2");
-            HammerProp(1,1);
+            HammerProp(1, 1);
         } else if (obj == b3) {
             System.out.println("b3");
-            HammerProp(1,2);
+            HammerProp(1, 2);
         } else if (obj == b4) {
             System.out.println("b4");
-            HammerProp(1,3);
+            HammerProp(1, 3);
         } else if (obj == c1) {
             System.out.println("c1");
-            HammerProp(2,0);
+            HammerProp(2, 0);
         } else if (obj == c2) {
             System.out.println("c2");
-            HammerProp(2,1);
+            HammerProp(2, 1);
         } else if (obj == c3) {
             System.out.println("c3");
-            HammerProp(2,2);
+            HammerProp(2, 2);
         } else if (obj == c4) {
             System.out.println("c4");
-            HammerProp(2,3);
+            HammerProp(2, 3);
         } else if (obj == d1) {
             System.out.println("d1");
-            HammerProp(3,0);
+            HammerProp(3, 0);
         } else if (obj == d2) {
             System.out.println("d2");
-            HammerProp(3,1);
+            HammerProp(3, 1);
         } else if (obj == d3) {
             System.out.println("d3");
-            HammerProp(3,2);
+            HammerProp(3, 2);
         } else if (obj == d4) {
             System.out.println("d4");
-            HammerProp(3,3);
+            HammerProp(3, 3);
         }
     }
+
 
     @Override
     public void mouseEntered(MouseEvent e) {
         changeBackgroundImage(e);
+        cellIndex = getSelectedVisible(e);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        if (cellIndex != -1) {
+            this.ImageContainer.remove(labels[cellIndex]);
+        }
+        cellIndex = -1;
         setImages(ImagePath + "GameFrameBackground", data);
     }
 
