@@ -14,6 +14,7 @@ import java.awt.event.*;
 public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
     private int[][] data;
+    private ActionEvent e;
 
     public void setData(int[][] data) {
         this.data = data;
@@ -532,7 +533,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 return;
             }
         }
-        JOptionPane.showMessageDialog(this, "Invalid Input!\nYou can only input 0 or powers of 2", "Caution", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Invalid Input!\n" +
+                "You can only input 0 or powers of 2,\n" +
+                "Please select again!", "Caution", JOptionPane.WARNING_MESSAGE);
     }
 
     //hammer输入值转为int类型
@@ -730,12 +733,13 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     public void mouseEntered(MouseEvent e) {
         changeBackgroundImage(e);
         cellIndex = getSelectedVisible(e);
+        setImages(ImagePath + "GameFrameBackground", data);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         if (cellIndex != -1) {
-            this.ImageContainer.remove(labels[cellIndex]);
+            this.labels[cellIndex].setIcon(null);
         }
         cellIndex = -1;
         setImages(ImagePath + "GameFrameBackground", data);
