@@ -321,6 +321,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         backImage.setSize(800, 600);
         backImage.setBounds(0, 0, 800, 600);
 
+        //自动同步--当图形改变时就同步
+        if (motion.getScore(motion.getSteps() - 1) < motion.getScore(motion.getSteps())) {
+            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status);
+        }
+
         //计时
 //        Date d_0 = new Date();
 //        Long time_0 = d_0.getTime();

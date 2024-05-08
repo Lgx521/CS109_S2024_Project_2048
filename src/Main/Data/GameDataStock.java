@@ -54,6 +54,18 @@ public class GameDataStock implements Serializable {
         return motionStatus;
     }
 
+    public int getCurrentScore() {
+        if (steps % 4 == 0) {
+            return score[0];
+        } else if (steps % 4 == 1) {
+            return score[1];
+        } else if (steps % 4 == 2) {
+            return score[2];
+        } else {
+            return score[3];
+        }
+    }
+
     //同步数据
     public void sync(int userID, int[][] gameData, int steps, int[] score, int target, int motionStatus) {
         this.userID = userID;

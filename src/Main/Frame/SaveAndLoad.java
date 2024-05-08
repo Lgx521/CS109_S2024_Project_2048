@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SaveAndLoad extends JFrame implements ActionListener, MouseListener {
 
@@ -40,7 +42,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         this.setVisible(true);
     }
 
-    //外界访问的加载方法
+    //外界访问的载入方法
     public void LOAD() {
         this.status = STATUS_LOAD;
         setImage(BACKGROUND_0);
@@ -53,6 +55,10 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     JButton browser = new JButton();
     JFileChooser browserPanel = new JFileChooser("src/Main/Data/GameData");
 
+    //选择保存文件夹
+    JButton saveToDirectory = new JButton();
+
+    //初始化界面
     private void initialFrame() {
         this.setSize(450, 330);
         this.setLocationRelativeTo(null);
@@ -75,6 +81,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         slot_4.addMouseListener(this);
 
         browser.addMouseListener(this);
+        saveToDirectory.addMouseListener(this);
     }
 
     private final int BACKGROUND_0 = 0;
@@ -88,17 +95,34 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     private final int STATUS_LOAD = 1;
     private int status = 0;
 
+    private int maxScore = 0;
+
+    //todo: debug
+    private int getMaxScore() {
+        int maxScore = 0;
+        if (gameDataStock.getCurrentScore() > maxScore) {
+            maxScore = gameDataStock.getCurrentScore();
+            AutoSave();
+            System.out.println("Auto saved");
+        }
+        return maxScore;
+    }
+
     //设置界面元素
     private void setImage(int number) {
         this.getContentPane().removeAll();
         this.setLayout(null);
-
         if (status == STATUS_LOAD) {
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             browser.setText("File Browser");
             browser.setSize(100, 25);
             browser.setBounds(350, 270, 100, 25);
             this.getContentPane().add(browser);
+        } else {
+            saveToDirectory.setText("Directory");
+            saveToDirectory.setSize(100,25);
+            saveToDirectory.setBounds(350,270,100,25);
+            this.getContentPane().add(saveToDirectory);
         }
 
         //背景图片
@@ -152,6 +176,16 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             this.getContentPane().add(label_empty);
         }
 
+        if (!isSlotEmpty(4)) {
+            JLabel label_saved = new JLabel();
+            String content = String.format("Auto Saved When Score is %d.", getMaxScore());
+            label_saved.setText(content);
+            label_saved.setForeground(Color.WHITE);
+            label_saved.setSize(200, 30);
+            label_saved.setBounds(110, 267, 200, 30);
+            this.getContentPane().add(label_saved);
+        }
+
 
         this.getContentPane().add(slot_1);
         this.getContentPane().add(slot_2);
@@ -167,7 +201,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         this.getContentPane().repaint();
     }
 
-    //保存
+    //按存档槽保存
     private void saveFile(int slotNum) {
         try {
             String fileName = FilePath + gameDataStock.getUserID() + "_" + slotNum + ".2048";
@@ -185,7 +219,56 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         }
     }
 
-    //按路径加载
+    //存储到选定文件夹
+    private void saveToAppointedDictionary() {
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Game"); // 设置对话框标题
+
+        // 设置默认文件名
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
+        Date now = new Date();
+        String timeStamp = formatter.format(now);
+        String defaultFileName = "game_" + timeStamp + ".2048";
+        fileChooser.setSelectedFile(new File(defaultFileName));
+
+        int userSelection = fileChooser.showSaveDialog(null);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            try (FileOutputStream fileOut = new FileOutputStream(fileToSave);
+                 ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+                objectOut.writeObject(gameDataStock);
+                System.out.println("Game has been saved to: " + fileToSave.getAbsolutePath());
+                JOptionPane.showMessageDialog(null, "Game Saved Successfully", "Notice", JOptionPane.INFORMATION_MESSAGE);
+                toString(gameDataStock);
+                this.dispose();
+            } catch (IOException e) {
+                System.out.println("file save failed");
+                JOptionPane.showMessageDialog(null, "Game Save Failed", "Caution", JOptionPane.WARNING_MESSAGE);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //自动保存
+    //todo
+    public void AutoSave() {
+        try {
+            String fileName = FilePath + gameDataStock.getUserID() + "_AutoSave.2048";
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+            oos.writeObject(gameDataStock);
+            oos.close();
+//            toString(gameDataStock);
+//            System.out.println("Auto saved");
+        } catch (IOException e) {
+            System.out.println("Auto save failed");
+            JOptionPane.showMessageDialog(null, "Auto save failed!", "Caution", JOptionPane.INFORMATION_MESSAGE);
+            throw new RuntimeException(e);
+        }
+    }
+
+    //按路径加载游戏
     private GameDataStock loadFileWithPath(String path) {
         File data = new File(path);
         GameDataStock gameDataStock_load;
@@ -297,9 +380,15 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
     //存档槽是否为空
     private boolean isSlotEmpty(int slotNum) {
-        String path = FilePath + thisUserID + "_" + slotNum + ".2048";
-        File file = new File(path);
-        return !file.exists();
+        if (slotNum == 4) {
+            String path = FilePath + thisUserID + "_AutoSave.2048";
+            File file = new File(path);
+            return !file.exists();
+        } else {
+            String path = FilePath + thisUserID + "_" + slotNum + ".2048";
+            File file = new File(path);
+            return !file.exists();
+        }
     }
 
 
@@ -331,7 +420,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             } else {
                 System.out.println("slot_1 is clicked when status == 0(SAVE)");
                 if (!isSlotEmpty(1)) {
-                    int choice = JOptionPane.showConfirmDialog(null, "Caution!\nThis will cover the previous slot,\nDo you want to continue?");
+                    int choice = JOptionPane.showConfirmDialog(null, "This will cover the previous slot,\nDo you want to continue?", "Caution", JOptionPane.WARNING_MESSAGE);
                     if (choice == 0) {
                         saveFile(1);
                     } else {
@@ -394,6 +483,8 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         } else if (obj == browser) {
             System.out.println("browser");
             addFileBrowser();
+        } else if (obj == saveToDirectory) {
+            saveToAppointedDictionary();
         }
     }
 
