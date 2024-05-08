@@ -139,15 +139,39 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JButton _1024 = new JButton("1024");
     JButton _2048 = new JButton("2048");
 
+    //创建Hammer选择图层
+    JLabel a1 = new JLabel();
+    JLabel a2 = new JLabel();
+    JLabel a3 = new JLabel();
+    JLabel a4 = new JLabel();
+    JLabel b1 = new JLabel();
+    JLabel b2 = new JLabel();
+    JLabel b3 = new JLabel();
+    JLabel b4 = new JLabel();
+    JLabel c1 = new JLabel();
+    JLabel c2 = new JLabel();
+    JLabel c3 = new JLabel();
+    JLabel c4 = new JLabel();
+    JLabel d1 = new JLabel();
+    JLabel d2 = new JLabel();
+    JLabel d3 = new JLabel();
+    JLabel d4 = new JLabel();
+
+    //创建数组容器便于阅读
+    private JLabel[] labels = {a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4};
+
+    //背景图
     JLabel backgroundImage = new JLabel();
 
+    //内容图层版
     Container ImageContainer = new Container();
 
+    //图片基础路径
     private final String ImagePath = "src/Main/Resources/";
 
+    //枚举类：设置主题
     private String NumImagePath;
     ImagePathEnum img;
-
 
     //重新加载游戏
     public void replayGame() {
@@ -259,7 +283,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+    //表示Hammer是否开启
     private boolean isHammerAvailable = false;
+
+    //当前鼠标所在块位置索引
     private int cellIndex;
 
     //搭建图片
@@ -368,25 +395,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     }
 
-    //创建Hammer选择图层
-    JLabel a1 = new JLabel();
-    JLabel a2 = new JLabel();
-    JLabel a3 = new JLabel();
-    JLabel a4 = new JLabel();
-    JLabel b1 = new JLabel();
-    JLabel b2 = new JLabel();
-    JLabel b3 = new JLabel();
-    JLabel b4 = new JLabel();
-    JLabel c1 = new JLabel();
-    JLabel c2 = new JLabel();
-    JLabel c3 = new JLabel();
-    JLabel c4 = new JLabel();
-    JLabel d1 = new JLabel();
-    JLabel d2 = new JLabel();
-    JLabel d3 = new JLabel();
-    JLabel d4 = new JLabel();
-    private JLabel[] labels = {a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4};
-
     //判断显示游戏结束对话框
     private void gameOverDialog() {
         if (motion.flagOfIsMovable != motion.IN_PROGRESS) {
@@ -407,7 +415,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         return result;
     }
 
-    //实现按钮鼠标进入效果
+    //实现按钮鼠标进入右侧按钮效果
     private void changeBackgroundImage(MouseEvent e) {
         Object obj = e.getSource();
         if (obj == undo) {
@@ -635,6 +643,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     @Override
     public void mousePressed(MouseEvent e) {
+
     }
 
     @Override
@@ -728,12 +737,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
-
     @Override
     public void mouseEntered(MouseEvent e) {
-        changeBackgroundImage(e);
         cellIndex = getSelectedVisible(e);
         setImages(ImagePath + "GameFrameBackground", data);
+        changeBackgroundImage(e);
     }
 
     @Override
@@ -804,4 +812,5 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     public void keyReleased(KeyEvent e) {
 
     }
+
 }
