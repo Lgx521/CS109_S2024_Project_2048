@@ -59,7 +59,7 @@ public class CellMotion extends JFrame {
     private int[] score = {0, 0, 0, 0};
 
     //用于在出现有效格点融合后增加分数
-    private void setScore(int step, int scoreIncreasing) {
+    protected void setScore(int step, int scoreIncreasing) {
         if (step % 4 == 0) {
             score[0] = score[0] + scoreIncreasing;
         } else if (step % 4 == 1) {
@@ -480,7 +480,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断所有行能否向右移动
-    private boolean isFlagRight(int[][] data) {
+    protected boolean isFlagRight(int[][] data) {
         boolean flag0 = false;
         for (int i = 0; i < data.length; i++) {
             if (isRightMovable(data[i]) || isRightHaveZero(data[i])) {
@@ -492,7 +492,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断所有行能否向左移动
-    private boolean isFlagLeft(int[][] data) {
+    protected boolean isFlagLeft(int[][] data) {
         boolean flag0 = false;
         for (int i = 0; i < data.length; i++) {
             if (isLeftMovable(data[i]) || isLeftHaveZero(data[i])) {
@@ -504,7 +504,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断给定行能否合并的向右移动
-    private boolean isRightHaveZero(int[] dataLine) {
+    protected boolean isRightHaveZero(int[] dataLine) {
         //如果非零元素右边有0，return true
         for (int i = dataLine.length - 1; i > 0; i--) {
             if (dataLine[i] == 0 && dataLine[i - 1] != 0) {
@@ -515,7 +515,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断给定行能否在右侧有零的情况下移动
-    private boolean isRightMovable(int[] dataLine) {
+    protected boolean isRightMovable(int[] dataLine) {
         //如果存在相邻相等非零元素，return true
         boolean flag = false;
         for (int i = 0; i < dataLine.length - 1; i++) {
@@ -543,7 +543,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断给定行能否合并的向左移动
-    private boolean isLeftHaveZero(int[] dataLine) {
+    protected boolean isLeftHaveZero(int[] dataLine) {
         //如果非零元素左边有0，return true
         for (int i = 0; i < dataLine.length - 1; i++) {
             if (dataLine[i] == 0 && dataLine[i + 1] != 0) {
@@ -554,7 +554,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断给定行能否在左边有零的情况下移动
-    private boolean isLeftMovable(int[] dataLine) {
+    protected boolean isLeftMovable(int[] dataLine) {
         //如果存在相邻相等非零元素，return true
         boolean flag = false;
         for (int i = 0; i < dataLine.length - 1; i++) {
@@ -582,7 +582,7 @@ public class CellMotion extends JFrame {
     }
 
     //取对称矩阵
-    private int[][] SymmetryTransformation(int[][] data) {
+    protected int[][] SymmetryTransformation(int[][] data) {
         int[][] Transformed = new int[data[0].length][data.length];
         for (int i = 0; i < data[0].length; i++) {
             for (int j = 0; j < data.length; j++) {
@@ -598,7 +598,7 @@ public class CellMotion extends JFrame {
     }
 
     //移动后在空白位置增加一个新的2或4
-    private void RandomAddingCell(int[][] data) {
+    protected void RandomAddingCell(int[][] data) {
         boolean flag = false;
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
@@ -628,7 +628,6 @@ public class CellMotion extends JFrame {
 
     //判断游戏是否已经不能移动了
     public boolean isCanNotMovable(int[][] data) {
-        boolean flag = true;
         for (int i = 0; i < data.length; i++) {
             if (isLeftMovable(data[i]) || isRightMovable(data[i])
                     || isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {

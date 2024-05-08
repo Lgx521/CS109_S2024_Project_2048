@@ -14,7 +14,6 @@ import java.awt.event.*;
 public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
     private int[][] data;
-    private ActionEvent e;
 
     public void setData(int[][] data) {
         this.data = data;
@@ -633,6 +632,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             motion.setEffectSoundStatus();
         } else if (obj == statistics) {
             System.out.println("Game Statistics");
+            new GameStatics().setUpGameStatics();
         }
     }
 
