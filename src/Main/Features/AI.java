@@ -1,6 +1,7 @@
 package Main.Features;
 
 import Main.Controller.CellMotion;
+import Main.Frame.GameFrame;
 
 import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
@@ -8,13 +9,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 
-public class AI extends CellMotion {
+public class AI {
+
+    //最高迭代训练次数
+    private final int N = 350;
 
     //原始数组，不予改动
     int[][] data;
 
     //测试数组
-//    int[][] initialData = new int[4][4];
     int[][] TempData = new int[4][4];
 
     public void setData(int[][] data) {
@@ -33,9 +36,6 @@ public class AI extends CellMotion {
 
     //当前分数
     private int SimulateScore = 0;
-
-    //最高训练次数
-    private final int N = 1000;
 
     //N次模拟结果集
     int[] scoreResult = new int[N];
@@ -65,7 +65,7 @@ public class AI extends CellMotion {
 
     //模拟计算N步，返回最高分数
     private int RandomMoving(int[][] TempData) {
-        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+        for (int i = 0; i < N; i++) {
             int nextDirection = r.nextInt(4);
             if (!isCanNotMovable(TempData)) {
                 if (nextDirection == 0) {
@@ -86,7 +86,6 @@ public class AI extends CellMotion {
                     scoreResult[i] += SimulateScore;
                 }
             } else {
-//                scoreResult[i] += SimulateScore;
                 break;
             }
         }
@@ -126,7 +125,6 @@ public class AI extends CellMotion {
         //开始模拟计算
         NextStepPrediction();
 
-
         //返回期望最高者
         int temp = 0;
         int direction = 0;
@@ -137,9 +135,9 @@ public class AI extends CellMotion {
             }
         }
 
-        System.out.printf("R = %-4d, L = %-4d, U = %-4d, D = %-4d\n",
-                nextStepScore[0], nextStepScore[1],
-                nextStepScore[2], nextStepScore[3]);
+//        System.out.printf("R = %-6d, L = %-6d, U = %-6d, D = %-6d\n",
+//                nextStepScore[0], nextStepScore[1],
+//                nextStepScore[2], nextStepScore[3]);
 
         //恢复nextStepScore数组
         Arrays.fill(nextStepScore, 0);
@@ -170,6 +168,7 @@ public class AI extends CellMotion {
         }
     }
 
+    //AI不停操作
     public void AIMovingNonStop(int[][] Data) {
         int step = 0;
         while (true) {
@@ -442,6 +441,164 @@ public class AI extends CellMotion {
         }
 
 
+    }
+
+    protected boolean isFlagRight(int[][] data) {
+        boolean flag0 = false;
+        for (int i = 0; i < data.length; i++) {
+            if (isRightMovable(data[i]) || isRightHaveZero(data[i])) {
+                flag0 = true;
+                break;
+            }
+        }
+        return flag0;
+    }
+
+    protected boolean isFlagLeft(int[][] data) {
+        boolean flag0 = false;
+        for (int i = 0; i < data.length; i++) {
+            if (isLeftMovable(data[i]) || isLeftHaveZero(data[i])) {
+                flag0 = true;
+                break;
+            }
+        }
+        return flag0;
+    }
+
+    protected boolean isRightHaveZero(int[] dataLine) {
+        //如果非零元素右边有0，return true
+        for (int i = dataLine.length - 1; i > 0; i--) {
+            if (dataLine[i] == 0 && dataLine[i - 1] != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isRightMovable(int[] dataLine) {
+        //如果存在相邻相等非零元素，return true
+        boolean flag = false;
+        for (int i = 0; i < dataLine.length - 1; i++) {
+            for (int j = i + 1; j < dataLine.length; j++) {
+                if (dataLine[i] == dataLine[j] && dataLine[i] != 0) {
+                    if (j == i + 1) {
+                        return true;
+                    } else if (j == i + 2) {
+                        if (dataLine[j - 1] == 0) {
+                            return true;
+                        } else {
+                            flag = false;
+                        }
+                    } else if (j == i + 3) {
+                        if (dataLine[i + 1] == 0 && dataLine[j - 1] == 0) {
+                            return true;
+                        } else {
+                            flag = false;
+                        }
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
+    protected boolean isLeftHaveZero(int[] dataLine) {
+        //如果非零元素左边有0，return true
+        for (int i = 0; i < dataLine.length - 1; i++) {
+            if (dataLine[i] == 0 && dataLine[i + 1] != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isLeftMovable(int[] dataLine) {
+        //如果存在相邻相等非零元素，return true
+        boolean flag = false;
+        for (int i = 0; i < dataLine.length - 1; i++) {
+            for (int j = i + 1; j < dataLine.length; j++) {
+                if (dataLine[i] == dataLine[j] && dataLine[i] != 0) {
+                    if (j == i + 1) {
+                        return true;
+                    } else if (j == i + 2) {
+                        if (dataLine[j - 1] == 0) {
+                            return true;
+                        } else {
+                            flag = false;
+                        }
+                    } else if (j == i + 3) {
+                        if (dataLine[i + 1] == 0 && dataLine[j - 1] == 0) {
+                            return true;
+                        } else {
+                            flag = false;
+                        }
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
+    protected int[][] SymmetryTransformation(int[][] data) {
+        int[][] Transformed = new int[data[0].length][data.length];
+        for (int i = 0; i < data[0].length; i++) {
+            for (int j = 0; j < data.length; j++) {
+                Transformed[i][j] = data[j][i];
+            }
+        }
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                data[i][j] = Transformed[i][j];
+            }
+        }
+        return data;
+    }
+
+    protected void RandomAddingCell(int[][] data) {
+        boolean flag = false;
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
+                if (data[i][j] == 0) {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+
+        if (flag) {
+            int[] selectable = {2, 4};
+            int newCell = r.nextInt(0, 2);
+            int i = r.nextInt(data.length);
+            int j = r.nextInt(data[0].length);
+            if (data[i][j] == 0) {
+                data[i][j] = selectable[newCell];
+            } else {
+                RandomAddingCell(data);
+            }
+        } else {
+            return;
+        }
+
+
+    }
+
+    public boolean isCanNotMovable(int[][] data) {
+        for (int i = 0; i < data.length; i++) {
+            if (isLeftMovable(data[i]) || isRightMovable(data[i])
+                    || isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
+                return false;
+            }
+        }
+        SymmetryTransformation(data);
+        for (int i = 0; i < data[0].length; i++) {
+            if (isLeftMovable(data[i]) || isRightMovable(data[i])
+                    || isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
+                SymmetryTransformation(data);
+                return false;
+            }
+        }
+        SymmetryTransformation(data);
+        return true;
     }
 
 

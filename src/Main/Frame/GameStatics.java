@@ -77,15 +77,15 @@ public class GameStatics extends JFrame {
                             "                                           Next Page --> Game Props",
 
                     "---> Game Props\n" +
-                            "  Hammer:\n" +
+                            " > Hammer:\n" +
                             "   Hammer allow players clear a tile or change the \n" +
                             "chosen tile's number.\n" +
                             "   You can perform this prop by clicking the button\n" +
                             "'Hammer' on game panel and choose a tile on the game\n" +
                             "board, the input a valid number to operate.\n\n" +
-                            "  Artificial Intelligence:\n" +
+                            " > Artificial Intelligence:\n" +
                             "   AI is based on Monte Carlo's algorithm, which can\n" +
-                            "automatically move the tiles until the game is over.\n" +
+                            "automatically move the tiles before the game is over.\n" +
                             "   You can click button 'AI' to perform this prop.\n\n" +
                             "                                           Next Page --> Game Modes",
                     "---> Game Modes\n" +

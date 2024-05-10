@@ -3,6 +3,7 @@ package Main.Frame;
 import Main.Controller.CellMotion;
 import Main.Controller.InitialGrids;
 import Main.Data.GameDataStock;
+import Main.Features.AI;
 import Main.Features.Props;
 import Main.Features.bgmPlayer;
 
@@ -10,8 +11,10 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
 
-public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
+public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener, Runnable {
 
     private int[][] data;
 
@@ -66,7 +69,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         users.add(logout);
         img = ImagePathEnum.DEFAULT;
         NumImagePath = img.getPath();
-        setImages(ImagePath + "GameFrameBackground", data);
+        setImages();
         motion.EffectSoundPlayer(4);
         addMouseListener(this);
         addKeyListener(this);
@@ -95,6 +98,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //产生motion对象，实现每次重启游戏步数清零重计
     CellMotion motion;
+
+    //产生AI对象
+    AI ai_prop = new AI();
 
     JMenu game = new JMenu("GamePlay");
     JMenu users = new JMenu("Users");
@@ -166,20 +172,33 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     Container ImageContainer = new Container();
 
     //图片基础路径
-    private final String ImagePath = "src/Main/Resources/";
+    protected final String ImagePath = "src/Main/Resources/";
 
     //枚举类：设置主题
-    private String NumImagePath;
+    protected String NumImagePath;
     ImagePathEnum img;
 
     //重新加载游戏
     public void replayGame() {
         img = ImagePathEnum.DEFAULT;
         NumImagePath = img.getPath();
+
+        //@test
+//        int[][] data_0 = {
+//                {0,1,0,0},
+//                {0,2,0,0},
+//                {0,0,0,4},
+//                {0,0,0,0}
+//        };
+//
+//        data = data_0;
+
         data = new InitialGrids().setup();
         motion = new CellMotion();
-        setImages(ImagePath + "GameFrameBackground", data);
+        setImages();
         motion.EffectSoundPlayer(4);
+        isAiAvailable = false;
+        isHammerAvailable = false;
     }
 
     //初始化界面
@@ -288,8 +307,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //当前鼠标所在块位置索引
     private int cellIndex;
 
-    //搭建图片
-    private void setImages(String ImagePath, int[][] data) {
+    //搭建元素
+    private void setComponents() {
         this.ImageContainer.removeAll();
         this.setLayout(null);
 
@@ -343,23 +362,17 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             this.ImageContainer.add(tips);
         }
 
-        //背景图
-        ImageIcon Image = new ImageIcon(ImagePath + ".png");
-        backgroundImage.setIcon(Image);
-        backgroundImage.setSize(800, 550);
-        backgroundImage.setBounds(0, 23, 800, 550);
-
         //步数显示
         JLabel steplable = new JLabel(motion.getSteps() + "");
         steplable.setSize(60, 40);
-        steplable.setBounds(710, 200, 60, 40);
+        steplable.setBounds(705, 200, 60, 40);
         steplable.setFont(new Font("Console", Font.ITALIC, 18));
         steplable.setForeground(Color.WHITE);
 
         //分数显示
         JLabel scorelable = new JLabel(motion.getScore(motion.getSteps()) + "");
         scorelable.setSize(60, 40);
-        scorelable.setBounds(710, 168, 60, 40);
+        scorelable.setBounds(705, 168, 60, 40);
         scorelable.setFont(new Font("Console", Font.ITALIC, 18));
         scorelable.setForeground(Color.WHITE);
 
@@ -388,6 +401,26 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.add(backgroundImage);
         this.ImageContainer.add(backImage);
         this.setContentPane(ImageContainer);
+    }
+
+    //搭建图片
+    protected void setImages() {
+        setComponents();
+        //背景图
+        ImageIcon Image = new ImageIcon(ImagePath + "GameFrameBackground.png");
+        backgroundImage.setIcon(Image);
+        backgroundImage.setSize(800, 550);
+        backgroundImage.setBounds(0, 23, 800, 550);
+        //刷新图层
+        this.ImageContainer.repaint();
+    }
+    protected void setImagesClicked(String name) {
+        setComponents();
+        //背景图
+        ImageIcon Image = new ImageIcon(ImagePath + name + ".png");
+        backgroundImage.setIcon(Image);
+        backgroundImage.setSize(800, 550);
+        backgroundImage.setBounds(0, 23, 800, 550);
 
         //刷新图层
         this.ImageContainer.repaint();
@@ -418,27 +451,27 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private void changeBackgroundImage(MouseEvent e) {
         Object obj = e.getSource();
         if (obj == undo) {
-            setImages(ImagePath + "Click/GameFrameBackground_UNDO", data);
+            setImagesClicked("Click/GameFrameBackground_UNDO");
         } else if (obj == hammer) {
-            setImages(ImagePath + "Click/GameFrameBackground_HAMMER", data);
+            setImagesClicked("Click/GameFrameBackground_HAMMER");
         } else if (obj == ai) {
-            setImages(ImagePath + "Click/GameFrameBackground_AI", data);
+            setImagesClicked("Click/GameFrameBackground_AI");
         } else if (obj == _2N) {
-            setImages(ImagePath + "Click/GameFrameBackground_2n", data);
+            setImagesClicked("Click/GameFrameBackground_2N");
         } else if (obj == _3N) {
-            setImages(ImagePath + "Click/GameFrameBackground_3n", data);
+            setImagesClicked("Click/GameFrameBackground_3N");
         } else if (obj == countdown) {
-            setImages(ImagePath + "Click/GameFrameBackground_COUNTDOWN", data);
+            setImagesClicked("Click/GameFrameBackground_COUNTDOWN");
         } else if (obj == target) {
-            setImages(ImagePath + "Click/GameFrameBackground_TARGET", data);
+            setImagesClicked("Click/GameFrameBackground_TARGET");
         } else if (obj == Default) {
-            setImages(ImagePath + "Click/GameFrameBackground_DEFAULT", data);
+            setImagesClicked("Click/GameFrameBackground_DEFAULT");
         } else if (obj == forest) {
-            setImages(ImagePath + "Click/GameFrameBackground_FOREST", data);
+            setImagesClicked("Click/GameFrameBackground_FOREST");
         } else if (obj == ocean) {
-            setImages(ImagePath + "Click/GameFrameBackground_OCEAN", data);
+            setImagesClicked("Click/GameFrameBackground_OCEAN");
         } else if (obj == flames) {
-            setImages(ImagePath + "Click/GameFrameBackground_FLAMES", data);
+            setImagesClicked("Click/GameFrameBackground_FLAMES");
         }
         this.getContentPane().repaint();
     }
@@ -499,7 +532,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private void performUNDO() {
         System.out.println("undo");
         motion.UNDO(data);
-        setImages(ImagePath + "GameFrameBackground", data);
+        setImages();
     }
 
     //Hammer
@@ -533,7 +566,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         for (int i = 0; i < arr.length; i++) {
             if (toInteger(input) == arr[i]) {
                 props.Hammer(this.data, row, col, arr[i]);
-                setImages(ImagePath + "GameFrameBackground", data);
+                setImages();
                 motion.isEnding(data);
                 gameOverDialog();
                 isHammerAvailable = false;
@@ -554,6 +587,24 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             base *= 10;
         }
         return ans;
+    }
+
+
+    private boolean isAiAvailable = false;
+
+    //AI
+    private void AIRunning() {
+        int direction = ai_prop.MonteCarlo(data);
+        if (direction == 0) {
+            motion.moveBeforeWin(motion.RIGHT, data);
+        } else if (direction == 1) {
+            motion.moveBeforeWin(motion.LEFT, data);
+        } else if (direction == 2) {
+            motion.moveBeforeWin(motion.UP, data);
+        } else if (direction == 3) {
+            motion.moveBeforeWin(motion.DOWN, data);
+        }
+        setImages();
     }
 
     @Override
@@ -603,27 +654,27 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == _64) {
             System.out.println("target: 64");
             motion.setTarget(64);
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == _128) {
             System.out.println("target: 128");
             motion.setTarget(128);
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == _256) {
             System.out.println("target: 256");
             motion.setTarget(256);
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == _512) {
             System.out.println("target: 512");
             motion.setTarget(512);
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == _1024) {
             System.out.println("target: 1024");
             motion.setTarget(1024);
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == _2048) {
             System.out.println("target: 2048");
             motion.setTarget(2048);
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == signIn) {
             this.dispose();
             new SigninFrame().setup();
@@ -654,11 +705,22 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == hammer) {
             System.out.println("use prop hammer");
             isHammerAvailable = true;
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == ai) {
-            System.out.println("use AI");
+            int ans = JOptionPane.showConfirmDialog(this, "Prop: AI\n" +
+                    " > This AI prop is based on Monte Carlo's algorithm. \n" +
+                    " > Every time you press 'space', AI will help you move\n" +
+                    "automatically with the best predicted direction.\n" +
+                    " > Once you performed AI to move even only one step,\n" +
+                    "this game's score won't be noted to statistics data!\n" +
+                    "   Press 'OK' to confirm using the prop.", "Prop: AI", JOptionPane.OK_CANCEL_OPTION);
+            if (ans == 0) {
+                System.out.println("Confirm to use AI");
+                isAiAvailable = true;
+            }
         } else if (obj == _2N) {
             System.out.println("2^n mode");
+            replayGame();
         } else if (obj == _3N) {
             System.out.println("3^n mode");
         } else if (obj == countdown) {
@@ -670,22 +732,22 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             System.out.println("Change theme to: default");
             img = ImagePathEnum.DEFAULT;
             NumImagePath = img.getPath();
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == forest) {
             System.out.println("Change theme to: forest");
             img = ImagePathEnum.FOREST;
             NumImagePath = img.getPath();
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == ocean) {
             System.out.println("Change theme to: ocean");
             img = ImagePathEnum.OCEAN;
             NumImagePath = img.getPath();
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == flames) {
             System.out.println("Change theme to: flames");
             img = ImagePathEnum.FLAME;
             NumImagePath = img.getPath();
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
         } else if (obj == a1) {
             System.out.println("a1");
             HammerProp(0, 0);
@@ -740,7 +802,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     @Override
     public void mouseEntered(MouseEvent e) {
         cellIndex = getSelectedVisible(e);
-        setImages(ImagePath + "GameFrameBackground", data);
+        setImages();
         changeBackgroundImage(e);
     }
 
@@ -750,7 +812,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             this.labels[cellIndex].setIcon(null);
         }
         cellIndex = -1;
-        setImages(ImagePath + "GameFrameBackground", data);
+        setImages();
     }
 
     @Override
@@ -770,7 +832,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             } else if (motion.status == 2) {
                 replayGame();
             }
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
             gameOverDialog();
         } else if (code == 38) {
             System.out.println("up");
@@ -781,7 +843,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             } else if (motion.status == 2) {
                 replayGame();
             }
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
             gameOverDialog();
         } else if (code == 39) {
             System.out.println("right");
@@ -792,7 +854,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             } else if (motion.status == 2) {
                 replayGame();
             }
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
             gameOverDialog();
         } else if (code == 40) {
             System.out.println("down");
@@ -803,7 +865,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             } else if (motion.status == 2) {
                 replayGame();
             }
-            setImages(ImagePath + "GameFrameBackground", data);
+            setImages();
+            gameOverDialog();
+        } else if (code == 32 && isAiAvailable) {
+            AIRunning();
             gameOverDialog();
         }
     }
@@ -813,4 +878,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+    @Override
+    public void run() {
+        setImages();
+    }
 }

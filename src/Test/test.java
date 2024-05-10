@@ -6,26 +6,37 @@ import Main.Frame.GameFrame;
 import Main.Frame.SaveAndLoad;
 
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.util.Random;
 
-public class test extends JFrame {
+public class test extends JFrame implements Runnable {
+    static AI ai = new AI();
+
+    static int[][] data = {
+            {2, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 4, 0, 0},
+            {0, 0, 0, 0}
+    };
+
+
+    static int flag = 1;
+
     public static void main(String[] args) {
-
-        AI ai = new AI();
-
-        int[][] data = {
-                {0,0,0,0},
-                {0,4,0,0},
-                {0,0,0,0},
-                {0,0,0,2}
-        };
-
-        ai.AIMovingNonStop(data);
-
-        printData(data);
-
-
+        int k = 1;
+        while (k <= 40) {
+            System.out.println("次数：" + k);
+            int[][] data = {
+                    {2, 0, 0, 0},
+                    {0, 0, 0, 0},
+                    {0, 4, 0, 0},
+                    {0, 0, 0, 0}
+            };
+            ai.AIMoving(2500, data);
+            printData(data);
+            System.out.println("------------------");
+            k++;
+        }
     }
 
     public static void printData(int[][] data) {
@@ -38,5 +49,8 @@ public class test extends JFrame {
         System.out.println();
     }
 
-
+    @Override
+    public void run() {
+        System.out.println("run?");
+    }
 }
