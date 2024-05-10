@@ -517,7 +517,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断给定行能否合并的向右移动
-    protected boolean isRightMovable(int[] dataLine) {
+    private boolean isRightMovable(int[] dataLine) {
         //如果存在相邻相等非零元素，return true
         for (int i = 0; i < dataLine.length - 1; i++) {
             for (int j = i + 1; j < dataLine.length; j++) {
@@ -540,7 +540,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断给定行能否在左边有零的情况下移动
-    protected boolean isLeftHaveZero(int[] dataLine) {
+    private boolean isLeftHaveZero(int[] dataLine) {
         //如果非零元素左边有0，return true
         for (int i = 0; i < dataLine.length - 1; i++) {
             if (dataLine[i] == 0 && dataLine[i + 1] != 0) {
@@ -551,7 +551,7 @@ public class CellMotion extends JFrame {
     }
 
     //判断给定行能否合并的向左移动
-    protected boolean isLeftMovable(int[] dataLine) {
+    private boolean isLeftMovable(int[] dataLine) {
         //如果存在相邻相等非零元素，return true
         for (int i = 0; i < dataLine.length - 1; i++) {
             for (int j = i + 1; j < dataLine.length; j++) {
@@ -574,7 +574,7 @@ public class CellMotion extends JFrame {
     }
 
     //取对称矩阵
-    protected int[][] SymmetryTransformation(int[][] data) {
+    private int[][] SymmetryTransformation(int[][] data) {
         int[][] Transformed = new int[data[0].length][data.length];
         for (int i = 0; i < data[0].length; i++) {
             for (int j = 0; j < data.length; j++) {
@@ -590,7 +590,7 @@ public class CellMotion extends JFrame {
     }
 
     //移动后在空白位置增加一个新的2或4
-    protected void RandomAddingCell(int[][] data) {
+    private void RandomAddingCell(int[][] data) {
         boolean flag = false;
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
@@ -670,7 +670,7 @@ public class CellMotion extends JFrame {
     public int flagOfIsMovable = IN_PROGRESS;
 
     //判断游戏结束
-    private void isEnding(int[][] data) {
+    public void isEnding(int[][] data) {
         if (ifYouWin(data) && !isCanNotMovable(data)) {
             //胜利：胜利并且可以继续移动
             System.out.println("Win and Can play");

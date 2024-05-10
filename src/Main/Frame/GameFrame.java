@@ -14,7 +14,7 @@ import java.awt.event.*;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
 
-public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener, Runnable {
+public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
     private int[][] data;
 
@@ -172,10 +172,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     Container ImageContainer = new Container();
 
     //图片基础路径
-    protected final String ImagePath = "src/Main/Resources/";
+    private final String ImagePath = "src/Main/Resources/";
 
     //枚举类：设置主题
-    protected String NumImagePath;
+    private String NumImagePath;
     ImagePathEnum img;
 
     //重新加载游戏
@@ -404,7 +404,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
     //搭建图片
-    protected void setImages() {
+    private void setImages() {
         setComponents();
         //背景图
         ImageIcon Image = new ImageIcon(ImagePath + "GameFrameBackground.png");
@@ -414,7 +414,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         //刷新图层
         this.ImageContainer.repaint();
     }
-    protected void setImagesClicked(String name) {
+    private void setImagesClicked(String name) {
         setComponents();
         //背景图
         ImageIcon Image = new ImageIcon(ImagePath + name + ".png");
@@ -878,8 +878,4 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     }
 
-    @Override
-    public void run() {
-        setImages();
-    }
 }
