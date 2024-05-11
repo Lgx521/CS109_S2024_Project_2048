@@ -167,12 +167,12 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JLabel flames = new JLabel();
 
     //模式选择
-    JButton _64 = new JButton("64");
-    JButton _128 = new JButton("128");
-    JButton _256 = new JButton("256");
-    JButton _512 = new JButton("512");
-    JButton _1024 = new JButton("1024");
-    JButton _2048 = new JButton("2048");
+    JButton _64 = new JButton();
+    JButton _128 = new JButton();
+    JButton _256 = new JButton();
+    JButton _512 = new JButton();
+    JButton _1024 = new JButton();
+    JButton _2048 = new JButton();
 
     //创建Hammer选择图层
     JLabel a1 = new JLabel();
@@ -488,8 +488,36 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         JDialog targetSet = new JDialog();
         targetSet.setLayout(null);
         targetSet.setLocationRelativeTo(null);
-        targetSet.setSize(280, 270);
         targetSet.setTitle("Set Your Target");
+        if (gameModeSelector == POWER_OF_2) {
+            targetSet.setSize(280, 270);
+            _64.setText("64");
+            _128.setText("128");
+            _256.setText("256");
+            _512.setText("512");
+            _1024.setText("1024");
+            _2048.setText("2048");
+            targetSet.add(_2048);
+            JLabel e = new JLabel("One Step to Success...");
+            e.setSize(150, 25);
+            JLabel f = new JLabel("Ultimate Fantasy!");
+            f.setSize(120, 25);
+            e.setBounds(40, 150, 150, 25);
+            f.setBounds(40, 180, 120, 25);
+            targetSet.add(e);
+            targetSet.add(f);
+        } else {
+            targetSet.setSize(280, 220);
+            _64.setText("9");
+            _128.setText("27");
+            _256.setText("81");
+            _512.setText("243");
+            _1024.setText("729");
+            JLabel e = new JLabel("Ultimate Fantasy!");
+            e.setSize(150, 25);
+            e.setBounds(40, 150, 150, 25);
+            targetSet.add(e);
+        }
         _64.setSize(60, 25);
         _128.setSize(60, 25);
         _256.setSize(60, 25);
@@ -510,28 +538,24 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         c.setSize(120, 25);
         JLabel d = new JLabel("Push...Push...!");
         d.setSize(120, 25);
-        JLabel e = new JLabel("One Step to Success...");
-        e.setSize(150, 25);
-        JLabel f = new JLabel("Ultimate Fantasy!");
-        f.setSize(120, 25);
+
+
         a.setBounds(40, 30, 120, 25);
         b.setBounds(40, 60, 120, 25);
         c.setBounds(40, 90, 120, 25);
         d.setBounds(40, 120, 120, 25);
-        e.setBounds(40, 150, 150, 25);
-        f.setBounds(40, 180, 120, 25);
+
         targetSet.add(a);
         targetSet.add(b);
         targetSet.add(c);
         targetSet.add(d);
-        targetSet.add(e);
-        targetSet.add(f);
+
         targetSet.add(_64);
         targetSet.add(_128);
         targetSet.add(_256);
         targetSet.add(_512);
         targetSet.add(_1024);
-        targetSet.add(_2048);
+
         targetSet.setVisible(true);
     }
 
@@ -545,12 +569,32 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //Hammer
     private void HammerProp(int row, int col) {
         Props props = new Props();
-        String content = """
+
+        int[] arr;
+        String content_1;
+        String content;
+        if (gameModeSelector == POWER_OF_2) {
+            arr = new int[]{0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+            content_1 = "Invalid Input!\n" +
+                    "You can only input 0 or powers of 2 ( ≤ 2048),\n";
+            content = """
                 Prop: Hammer
                 Please input a valid number which is in the range
                 of 2 ~ 2048, to change that tile to this number.
                 You can also input 0 to dispose that tile.
                 """;
+        } else {
+            arr = new int[]{0, 3, 9, 27, 81, 243, 729};
+            content_1 = "Invalid Input!\n" +
+                    "You can only input 0 or powers of 3 ( ≤ 729 ),\n";
+            content = """
+                Prop: Hammer
+                Please input a valid number which is in the range
+                of 3 ~ 729, to change that tile to this number.
+                You can also input 0 to dispose that tile.
+                """;
+        }
+
         String inputText;
         char[] input;
         try {
@@ -562,11 +606,13 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             return;
         }
 
-        int[] arr = {0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384};
+
 
         //检验输入是否为数字
         String regex = "[0-9]+";
         if (!inputText.matches(regex)) {
+            JOptionPane.showMessageDialog(this, content_1 +
+                    "Please select again!", "Caution", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -580,8 +626,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 return;
             }
         }
-        JOptionPane.showMessageDialog(this, "Invalid Input!\n" +
-                "You can only input 0 or powers of 2,\n" +
+        JOptionPane.showMessageDialog(this, content_1 +
                 "Please select again!", "Caution", JOptionPane.WARNING_MESSAGE);
     }
 
@@ -661,23 +706,43 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             musicObject.playMusic(path);
         } else if (obj == _64) {
             System.out.println("target: 64");
-            motion.setTarget(64);
+            if (gameModeSelector == POWER_OF_2) {
+                motion.setTarget(64);
+            }else{
+                motion.setTarget(9);
+            }
             setImages();
         } else if (obj == _128) {
             System.out.println("target: 128");
-            motion.setTarget(128);
+            if (gameModeSelector == POWER_OF_2) {
+                motion.setTarget(128);
+            }else{
+                motion.setTarget(27);
+            }
             setImages();
         } else if (obj == _256) {
             System.out.println("target: 256");
-            motion.setTarget(256);
+            if (gameModeSelector == POWER_OF_2) {
+                motion.setTarget(256);
+            }else{
+                motion.setTarget(81);
+            }
             setImages();
         } else if (obj == _512) {
             System.out.println("target: 512");
-            motion.setTarget(512);
+            if (gameModeSelector == POWER_OF_2) {
+                motion.setTarget(512);
+            }else{
+                motion.setTarget(243);
+            }
             setImages();
         } else if (obj == _1024) {
             System.out.println("target: 1024");
-            motion.setTarget(1024);
+            if (gameModeSelector == POWER_OF_2) {
+                motion.setTarget(1024);
+            }else{
+                motion.setTarget(729);
+            }
             setImages();
         } else if (obj == _2048) {
             System.out.println("target: 2048");
@@ -712,7 +777,19 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             performUNDO();
         } else if (obj == hammer) {
             System.out.println("use prop hammer");
-            isHammerAvailable = true;
+            int ans = JOptionPane.showConfirmDialog(this, "Prop: Hammer\n" +
+                    " > This is Hammer Prop. \n" +
+                    " > Choose one tile and click, then enter a valid grid number\n" +
+                    "and then you can change the tile to that number.\n" +
+                    " > ZERO is a valid grid number, too. You can clear that grid\n" +
+                    "by entering '0'.\n" +
+                    " > Once you performed Hammer, this game's score won't\n" +
+                    " be noted to statistics data!\n" +
+                    "   Press 'OK' to confirm using the prop.", "Prop: Hammer", JOptionPane.OK_CANCEL_OPTION);
+            if (ans == 0) {
+                System.out.println("Confirm to use AI");
+                isHammerAvailable = true;
+            }
             setImages();
         } else if (obj == ai) {
             int ans = JOptionPane.showConfirmDialog(this, "Prop: AI\n" +

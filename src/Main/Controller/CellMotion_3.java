@@ -8,7 +8,7 @@ import java.util.Random;
 public class CellMotion_3 extends MotionBasic {
 
     //当前游戏目标
-    private int target = 243;
+    private int target = 729;
 
     //用于读取游戏的构造器
     public CellMotion_3(int steps, int[] score, int status, int target) {
