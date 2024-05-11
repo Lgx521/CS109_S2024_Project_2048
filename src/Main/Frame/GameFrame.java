@@ -1,7 +1,9 @@
 package Main.Frame;
 
-import Main.Controller.CellMotion;
+import Main.Controller.CellMotion_2;
+import Main.Controller.CellMotion_3;
 import Main.Controller.InitialGrids;
+import Main.Controller.MotionBasic;
 import Main.Data.GameDataStock;
 import Main.Features.AI;
 import Main.Features.Props;
@@ -11,8 +13,6 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
 
 public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
@@ -30,13 +30,13 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //设置游戏运行时的用户
     public void setID(int userID) {
-        this.USER_ID = userID;
+        USER_ID = userID;
         System.out.println("Current user's ID: " + USER_ID);
     }
 
     //获得游戏运行时的用户
     public int getID() {
-        return this.USER_ID;
+        return USER_ID;
     }
 
     //设置当前游戏运行模式
@@ -47,6 +47,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     public void setStatus(int status) {
         this.STATUS = status;
     }
+
+    //2或3模式，默认Power of 2
+    private int gameModeSelector = 0;
 
     //创建setup方法供外界访问
     public void setup() {
@@ -89,6 +92,18 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.setVisible(true);
     }
 
+    //重新加载游戏
+    public void replayGame() {
+        ai_prop.setMotion(gameModeSelector);
+        setMotion(gameModeSelector);
+        img = ImagePathEnum.DEFAULT;
+        NumImagePath = img.getPath();
+        setImages();
+        motion.EffectSoundPlayer(4);
+        isAiAvailable = false;
+        isHammerAvailable = false;
+    }
+
     //背景音乐播放对象
     bgmPlayer musicObject = new bgmPlayer();
 
@@ -96,8 +111,23 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     GameDataStock syncer = new GameDataStock();
     SaveAndLoad saverAndLoader;
 
+
+    InitialGrids initialGrids = new InitialGrids();
+
     //产生motion对象，实现每次重启游戏步数清零重计
-    CellMotion motion;
+    MotionBasic motion;
+    private final int POWER_OF_2 = 0;
+    private final int POWER_OF_3 = 1;
+    private void setMotion(int mode) {
+        if (mode == POWER_OF_2) {
+            data = initialGrids.setup();
+            motion = new CellMotion_2();
+        } else if (mode == POWER_OF_3) {
+            data = initialGrids.setup_3();
+            motion = new CellMotion_3();
+        }
+    }
+
 
     //产生AI对象
     AI ai_prop = new AI();
@@ -177,29 +207,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //枚举类：设置主题
     private String NumImagePath;
     ImagePathEnum img;
-
-    //重新加载游戏
-    public void replayGame() {
-        img = ImagePathEnum.DEFAULT;
-        NumImagePath = img.getPath();
-
-        //@test
-//        int[][] data_0 = {
-//                {0,1,0,0},
-//                {0,2,0,0},
-//                {0,0,0,4},
-//                {0,0,0,0}
-//        };
-//
-//        data = data_0;
-
-        data = new InitialGrids().setup();
-        motion = new CellMotion();
-        setImages();
-        motion.EffectSoundPlayer(4);
-        isAiAvailable = false;
-        isHammerAvailable = false;
-    }
 
     //初始化界面
     private void initialGameFrame() {
@@ -594,6 +601,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //AI
     private void AIRunning() {
+        ai_prop.setMotion(gameModeSelector);
         int direction = ai_prop.MonteCarlo(data);
         if (direction == 0) {
             motion.moveBeforeWin(motion.RIGHT, data);
@@ -720,9 +728,12 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             }
         } else if (obj == _2N) {
             System.out.println("2^n mode");
+            gameModeSelector = POWER_OF_2;
             replayGame();
         } else if (obj == _3N) {
             System.out.println("3^n mode");
+            gameModeSelector = POWER_OF_3;
+            replayGame();
         } else if (obj == countdown) {
             System.out.println("countdown mode");
         } else if (obj == target) {

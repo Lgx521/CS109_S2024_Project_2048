@@ -1,15 +1,11 @@
 package Main.Controller;
 
-import Main.Features.EffectMusicPalyer;
-
 import javax.swing.*;
-import java.io.Serializable;
-import java.util.Random;
 
-public class CellMotion extends JFrame {
+public class CellMotion_2 extends MotionBasic {
 
     //用于读取游戏的构造器
-    public CellMotion(int steps,int[] score, int status, int target) {
+    public CellMotion_2(int steps, int[] score, int status, int target) {
         this.status = status;
         this.target = target;
         undo.setSteps(steps);
@@ -18,96 +14,20 @@ public class CellMotion extends JFrame {
     }
 
     //空参构造
-    public CellMotion() {}
-
-    Random r = new Random();
-
-    Undo undo = new Undo();
-
-    EffectMusicPalyer effectMusicPalyer = new EffectMusicPalyer();
-
-    //游戏进程常量
-    public final int IN_PROGRESS = -1;
-    public final int YOU_WIN_CAN_PLAY = 0;
-    public final int YOU_WIN_CANNOT_PLAY = 1;
-    public final int YOU_LOST = 2;
-
-    //移动方向常量
-    public final int RIGHT = 0;
-    public final int LEFT = 1;
-    public final int UP = 2;
-    public final int DOWN = 3;
-
-    //游戏状态常量
-    /* status == 0: 正常游戏
-     * status == 1: 胜利后继续游玩
-     * status == 2: 胜利后重新开始游戏 */
-    public int status = 0;
+    public CellMotion_2() {
+    }
 
     //当前游戏目标
     private int target = 2048;
-
-    //获取步数
-    public int getSteps() {
-        int steps = undo.getSteps();
-        return steps;
-    }
 
     //分数记录解释
     /*
      * [0][0][2][2]  --->  [0][0][0][4]  分数 +4
      * 每合成一次新的格子，分数增加这个新格子的大小
      * */
-    private int[] score = {0, 0, 0, 0};
-
-    //用于在出现有效格点融合后增加分数
-    private void setScore(int step, int scoreIncreasing) {
-        if (step % 4 == 0) {
-            score[0] = score[0] + scoreIncreasing;
-        } else if (step % 4 == 1) {
-            score[1] = score[1] + scoreIncreasing;
-        } else if (step % 4 == 2) {
-            score[2] = score[2] + scoreIncreasing;
-        } else if (step % 4 == 3) {
-            score[3] = score[3] + scoreIncreasing;
-        }
-    }
-
-    //用于获取上一步已得到的分数
-    private int getScoreByIndex(int step) {
-        if ((step - 1) % 4 >= 0) {
-            score[(step) % 4] = 0;
-            return score[(step - 1) % 4];
-        } else {
-            score[0] = 0;
-            return score[3];
-        }
-    }
-
-    //获取分数
-    public int getScore(int step) {
-        if (step % 4 == 0) {
-            return score[0];
-        } else if (step % 4 == 1) {
-            return score[1];
-        } else if (step % 4 == 2) {
-            return score[2];
-        } else {
-            return score[3];
-        }
-    }
-
-    //获取分数数组
-    public int[] getScoreArr() {
-        return score;
-    }
-
-    //设置分数数组
-    public void setScoreArr(int[] score) {
-        System.arraycopy(score, 0, this.score, 0, score.length);
-    }
 
     //在游戏结束之前调用，判断是否出现目标格点
+    @Override
     public void moveBeforeWin(int issue, int[][] data) {
         if (issue == RIGHT) {
             moveRight(data);
@@ -122,6 +42,7 @@ public class CellMotion extends JFrame {
     }
 
     //在游戏结束之后调用，不判断是否出现目标格点，只判断是否能继续移动
+    @Override
     public void moveAfterWin(int issue, int[][] data) {
         if (issue == RIGHT) {
             moveRight(data);
@@ -136,19 +57,6 @@ public class CellMotion extends JFrame {
             JOptionPane.showMessageDialog(null, "Game Over!", "Notice", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
-    //在GameFrame中调用的声音播放
-    public void EffectSoundPlayer(int soundConstant) {
-        effectMusicPalyer.playEffectSound(soundConstant);
-    }
-
-    //在GameFrame中开关效果声
-    public void setEffectSoundStatus() {
-        effectMusicPalyer.EffectSoundStatus++;
-        String[] arr = {"ON", "OFF"};
-        System.out.printf("Effect Sound Status is %s.\n", arr[effectMusicPalyer.EffectSoundStatus % 2]);
-    }
-
 
     /*  移动方式解释
      *  每一次都进行移动，如果遇到相同的就进行融合
@@ -170,9 +78,15 @@ public class CellMotion extends JFrame {
      *  (Only Valid for both of the steps above can't operate)
      *  [2][2][4][8]  -->  [0][4][4][8]
      * */
+    //上下移动调用上下移动的逻辑方式
+    /*
+     *进行向上移动，我们只需要给矩阵取对称，然后利用向左移动逻辑，再进行逆变换即可
+     *进行向下移动，我们只需要给矩阵取对称，然后利用向右移动逻辑，再进行逆变换即可
+     * */
 
     //向右移动
-    private void moveRight(int[][] data) {
+    @Override
+    public void moveRight(int[][] data) {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -246,7 +160,8 @@ public class CellMotion extends JFrame {
     }
 
     //向左移动
-    private void moveLeft(int[][] data) {
+    @Override
+    public void moveLeft(int[][] data) {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -319,14 +234,9 @@ public class CellMotion extends JFrame {
         }
     }
 
-    //上下移动调用上下移动的逻辑方式
-    /*
-     *进行向上移动，我们只需要给矩阵取对称，然后利用向左移动逻辑，再进行逆变换即可
-     *进行向下移动，我们只需要给矩阵取对称，然后利用向右移动逻辑，再进行逆变换即可
-     * */
-
     //向上移动
-    private void moveUp(int[][] data) {
+    @Override
+    public void moveUp(int[][] data) {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -404,7 +314,8 @@ public class CellMotion extends JFrame {
     }
 
     //向下移动
-    private void moveDown(int[][] data) {
+    @Override
+    public void moveDown(int[][] data) {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -483,26 +394,22 @@ public class CellMotion extends JFrame {
 
     //判断所有行能否向右移动
     private boolean isFlagRight(int[][] data) {
-        boolean flag0 = false;
-        for (int i = 0; i < data.length; i++) {
-            if (isRightMovable(data[i]) || isRightHaveZero(data[i])) {
-                flag0 = true;
-                break;
+        for (int[] datum : data) {
+            if (isRightMovable(datum) || isRightHaveZero(datum)) {
+                return true;
             }
         }
-        return flag0;
+        return false;
     }
 
     //判断所有行能否向左移动
     private boolean isFlagLeft(int[][] data) {
-        boolean flag0 = false;
-        for (int i = 0; i < data.length; i++) {
-            if (isLeftMovable(data[i]) || isLeftHaveZero(data[i])) {
-                flag0 = true;
-                break;
+        for (int[] datum : data) {
+            if (isLeftMovable(datum) || isLeftHaveZero(datum)) {
+                return true;
             }
         }
-        return flag0;
+        return false;
     }
 
     //判断给定行能否在右侧有零的情况下移动
@@ -573,28 +480,12 @@ public class CellMotion extends JFrame {
         return false;
     }
 
-    //取对称矩阵
-    private int[][] SymmetryTransformation(int[][] data) {
-        int[][] Transformed = new int[data[0].length][data.length];
-        for (int i = 0; i < data[0].length; i++) {
-            for (int j = 0; j < data.length; j++) {
-                Transformed[i][j] = data[j][i];
-            }
-        }
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[0].length; j++) {
-                data[i][j] = Transformed[i][j];
-            }
-        }
-        return data;
-    }
-
     //移动后在空白位置增加一个新的2或4
     private void RandomAddingCell(int[][] data) {
         boolean flag = false;
-        for (int i = 0; i < data.length; i++) {
+        for (int[] datum : data) {
             for (int j = 0; j < data[0].length; j++) {
-                if (data[i][j] == 0) {
+                if (datum[j] == 0) {
                     flag = true;
                     break;
                 }
@@ -619,10 +510,11 @@ public class CellMotion extends JFrame {
     }
 
     //判断游戏是否已经不能移动了
-    private boolean isCanNotMovable(int[][] data) {
-        for (int i = 0; i < data.length; i++) {
-            if (isLeftMovable(data[i]) || isRightMovable(data[i])
-                    || isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
+    @Override
+    public boolean isCanNotMovable(int[][] data) {
+        for (int[] datum : data) {
+            if (isLeftMovable(datum) || isRightMovable(datum)
+                    || isLeftHaveZero(datum) || isRightHaveZero(datum)) {
                 return false;
             }
         }
@@ -641,9 +533,9 @@ public class CellMotion extends JFrame {
     //判断是否胜利
     private boolean ifYouWin(int[][] data) {
         int target = getTarget();
-        for (int i = 0; i < data.length; i++) {
+        for (int[] datum : data) {
             for (int j = 0; j < data[0].length; j++) {
-                if (data[i][j] == target) {
+                if (datum[j] == target) {
                     return true;
                 }
             }
@@ -652,24 +544,19 @@ public class CellMotion extends JFrame {
     }
 
     //目标getter
+    @Override
     public int getTarget() {
         return target;
     }
 
     //目标值setter
+    @Override
     public void setTarget(int target) {
         this.target = target;
     }
 
-    //UNDO
-    public void UNDO(int[][] data) {
-        effectMusicPalyer.playEffectSound(effectMusicPalyer.UNDO_SOUND);
-        undo.UNDO(data);
-    }
-
-    public int flagOfIsMovable = IN_PROGRESS;
-
     //判断游戏结束
+    @Override
     public void isEnding(int[][] data) {
         if (ifYouWin(data) && !isCanNotMovable(data)) {
             //胜利：胜利并且可以继续移动
@@ -691,49 +578,6 @@ public class CellMotion extends JFrame {
             effectMusicPalyer.playEffectSound(effectMusicPalyer.LOST_SOUND);
             flagOfIsMovable = YOU_LOST;
         }
-    }
-
-    //调用提示框
-    public void EndingNotice(int issue) {
-        String content = "initial";
-        if (status != 1) {
-            if (issue == YOU_WIN_CAN_PLAY) {
-                content = """
-                        You Win!
-                        Do you want to continue your play?
-                        Choose "Yes" to Continue
-                        Choose "No" to Restart game in next step""";
-                int option = JOptionPane.showConfirmDialog(this, content, "Notice", JOptionPane.YES_NO_OPTION);
-                if (option == 0) {
-                    //继续游玩
-                    status = 1;
-                } else {
-                    //重新开始游戏
-                    status = 2;
-                }
-            }
-        }
-        if (issue == YOU_WIN_CANNOT_PLAY) {
-            content = "You Win!\n" +
-                    "Game Over!";
-            JOptionPane.showMessageDialog(this, content, "Notice", JOptionPane.NO_OPTION);
-        }
-        if (issue == YOU_LOST) {
-            content = "You Lost,\n" +
-                    "Game Over!";
-            JOptionPane.showMessageDialog(this, content, "Notice", JOptionPane.NO_OPTION);
-        }
-    }
-
-    //在控制台输出当前棋盘
-    private void printData(int[][] data) {
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[0].length; j++) {
-                System.out.printf("%-4d", data[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println();
     }
 
 

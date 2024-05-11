@@ -1,6 +1,6 @@
 package Main.Frame;
 
-import Main.Controller.CellMotion;
+import Main.Controller.CellMotion_2;
 import Main.Data.GameDataStock;
 
 import javax.swing.*;
@@ -120,8 +120,8 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             this.getContentPane().add(browser);
         } else {
             saveToDirectory.setText("Directory");
-            saveToDirectory.setSize(100,25);
-            saveToDirectory.setBounds(350,270,100,25);
+            saveToDirectory.setSize(100, 25);
+            saveToDirectory.setBounds(350, 270, 100, 25);
             this.getContentPane().add(saveToDirectory);
         }
 
@@ -368,7 +368,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
         GameFrame loaded = new GameFrame();
 
-        loaded.motion = new CellMotion(steps, score, motionStatus, target);
+        loaded.motion = new CellMotion_2(steps, score, motionStatus, target);
         loaded.setData(gameData);
         loaded.setID(userID);
         loaded.setStatus(1); //设置为有用户已登陆

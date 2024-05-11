@@ -23,20 +23,35 @@ public class test extends JFrame implements Runnable {
     static int flag = 1;
 
     public static void main(String[] args) {
-        int k = 1;
-        while (k <= 40) {
-            System.out.println("次数：" + k);
-            int[][] data = {
-                    {2, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 4, 0, 0},
-                    {0, 0, 0, 0}
-            };
-            ai.AIMoving(2500, data);
-            printData(data);
-            System.out.println("------------------");
-            k++;
-        }
+//        int k = 1;
+//        while (k <= 40) {
+//            System.out.println("次数：" + k);
+        ai.setMotion(1);
+        int[][] data = {
+                {0, 0, 0, 3},
+                {0, 0, 0, 0},
+                {0, 3, 0, 0},
+                {0, 0, 0, 0}
+        };
+//        int[][] data = {
+//                {2, 0, 0, 0},
+//                {0, 0, 0, 0},
+//                {0, 4, 0, 0},
+//                {0, 0, 0, 0}
+//        };
+
+//        int[][] data = {
+//                {0, 3, 27, 9},
+//                {27, 3, 243, 27},
+//                {9, 81, 81, 27},
+//                {0, 3, 9, 9}
+//        };
+        ai.AIMoving(2500, data);
+//        ai.AIMovingNonStop(data);
+        printData(data);
+        System.out.println("------------------");
+//            k++;
+//        }
     }
 
     public static void printData(int[][] data) {
