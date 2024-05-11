@@ -372,6 +372,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         loaded.setData(gameData);
         loaded.setID(userID);
         loaded.setStatus(1); //设置为有用户已登陆
+        loaded.gameModeSelector = gameDataStock.getGameModeStatus();
 
         loaded.loadSetUp();
         JOptionPane.showMessageDialog(null, "Game Loaded Successfully", "Notice", JOptionPane.INFORMATION_MESSAGE);

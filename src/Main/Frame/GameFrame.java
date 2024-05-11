@@ -49,7 +49,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
     //2或3模式，默认Power of 2
-    private int gameModeSelector = 0;
+    public int gameModeSelector = 0;
 
     //创建setup方法供外界访问
     public void setup() {
@@ -64,11 +64,17 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.setVisible(true);
     }
 
+    //存储结果加载
     public void loadSetUp() {
         game.add(load);
         game.add(save);
         users.add(statistics);
         initialGameFrame();
+        if (gameModeSelector == POWER_OF_2) {
+            motion = new CellMotion_2();
+        } else {
+            motion = new CellMotion_3();
+        }
         users.add(logout);
         img = ImagePathEnum.DEFAULT;
         NumImagePath = img.getPath();
@@ -118,6 +124,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     MotionBasic motion;
     private final int POWER_OF_2 = 0;
     private final int POWER_OF_3 = 1;
+
     private void setMotion(int mode) {
         if (mode == POWER_OF_2) {
             data = initialGrids.setup();
@@ -398,7 +405,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
         //自动同步--当图形改变时就同步
         if (motion.getScore(motion.getSteps() - 1) < motion.getScore(motion.getSteps())) {
-            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status);
+            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector);
         }
 
         //添加到图层
@@ -421,6 +428,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         //刷新图层
         this.ImageContainer.repaint();
     }
+
     private void setImagesClicked(String name) {
         setComponents();
         //背景图
@@ -484,13 +492,14 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
     //设置目标块大小对话框
+    JDialog targetSet;
     private void setTargetDialog() {
-        JDialog targetSet = new JDialog();
+        targetSet = new JDialog();
         targetSet.setLayout(null);
         targetSet.setLocationRelativeTo(null);
         targetSet.setTitle("Set Your Target");
         if (gameModeSelector == POWER_OF_2) {
-            targetSet.setSize(280, 270);
+            targetSet.setSize(270, 260);
             _64.setText("64");
             _128.setText("128");
             _256.setText("256");
@@ -507,7 +516,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             targetSet.add(e);
             targetSet.add(f);
         } else {
-            targetSet.setSize(280, 220);
+            targetSet.setSize(270, 230);
             _64.setText("9");
             _128.setText("27");
             _256.setText("81");
@@ -578,21 +587,21 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             content_1 = "Invalid Input!\n" +
                     "You can only input 0 or powers of 2 ( ≤ 2048),\n";
             content = """
-                Prop: Hammer
-                Please input a valid number which is in the range
-                of 2 ~ 2048, to change that tile to this number.
-                You can also input 0 to dispose that tile.
-                """;
+                    Prop: Hammer
+                    Please input a valid number which is in the range
+                    of 2 ~ 2048, to change that tile to this number.
+                    You can also input 0 to dispose that tile.
+                    """;
         } else {
             arr = new int[]{0, 3, 9, 27, 81, 243, 729};
             content_1 = "Invalid Input!\n" +
                     "You can only input 0 or powers of 3 ( ≤ 729 ),\n";
             content = """
-                Prop: Hammer
-                Please input a valid number which is in the range
-                of 3 ~ 729, to change that tile to this number.
-                You can also input 0 to dispose that tile.
-                """;
+                    Prop: Hammer
+                    Please input a valid number which is in the range
+                    of 3 ~ 729, to change that tile to this number.
+                    You can also input 0 to dispose that tile.
+                    """;
         }
 
         String inputText;
@@ -605,7 +614,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             isHammerAvailable = false;
             return;
         }
-
 
 
         //检验输入是否为数字
@@ -675,7 +683,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == save) {
             System.out.println("Save Game");
             //同步数据
-            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status);
+            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status,gameModeSelector);
             //保存
             saverAndLoader.SAVE();
         } else if (obj == sound) {
@@ -708,45 +716,56 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             System.out.println("target: 64");
             if (gameModeSelector == POWER_OF_2) {
                 motion.setTarget(64);
-            }else{
+                targetSet.dispose();
+            } else {
                 motion.setTarget(9);
+                targetSet.dispose();
             }
             setImages();
         } else if (obj == _128) {
             System.out.println("target: 128");
             if (gameModeSelector == POWER_OF_2) {
                 motion.setTarget(128);
-            }else{
+                targetSet.dispose();
+            } else {
                 motion.setTarget(27);
+                targetSet.dispose();
             }
             setImages();
         } else if (obj == _256) {
             System.out.println("target: 256");
             if (gameModeSelector == POWER_OF_2) {
                 motion.setTarget(256);
-            }else{
+                targetSet.dispose();
+            } else {
                 motion.setTarget(81);
+                targetSet.dispose();
             }
             setImages();
         } else if (obj == _512) {
             System.out.println("target: 512");
             if (gameModeSelector == POWER_OF_2) {
                 motion.setTarget(512);
-            }else{
+                targetSet.dispose();
+            } else {
                 motion.setTarget(243);
+                targetSet.dispose();
             }
             setImages();
         } else if (obj == _1024) {
             System.out.println("target: 1024");
             if (gameModeSelector == POWER_OF_2) {
                 motion.setTarget(1024);
-            }else{
+                targetSet.dispose();
+            } else {
                 motion.setTarget(729);
+                targetSet.dispose();
             }
             setImages();
         } else if (obj == _2048) {
             System.out.println("target: 2048");
             motion.setTarget(2048);
+            targetSet.dispose();
             setImages();
         } else if (obj == signIn) {
             this.dispose();
