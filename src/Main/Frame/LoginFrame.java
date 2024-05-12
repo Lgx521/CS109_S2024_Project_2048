@@ -196,7 +196,11 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
             System.out.println("Try Guest Mode");
             this.dispose();
             gameFrame.setStatus(GUSET_MODE);
-            gameFrame.setupInGuestMode();
+            try {
+                gameFrame.setupInGuestMode();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 

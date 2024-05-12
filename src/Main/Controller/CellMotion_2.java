@@ -86,7 +86,7 @@ public class CellMotion_2 extends MotionBasic {
 
     //向右移动
     @Override
-    public void moveRight(int[][] data) {
+    public void moveRight(int[][] data){
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -151,7 +151,7 @@ public class CellMotion_2 extends MotionBasic {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
-            effectMusicPalyer.playEffectSound(effectMusicPalyer.MOTION_SOUND);
+            effectMusicPlayer.playEffectSound(effectMusicPlayer.MOTION_SOUND);
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -226,7 +226,7 @@ public class CellMotion_2 extends MotionBasic {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
-            effectMusicPalyer.playEffectSound(effectMusicPalyer.MOTION_SOUND);
+            effectMusicPlayer.playEffectSound(effectMusicPlayer.MOTION_SOUND);
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -236,7 +236,7 @@ public class CellMotion_2 extends MotionBasic {
 
     //向上移动
     @Override
-    public void moveUp(int[][] data) {
+    public void moveUp(int[][] data)  {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -304,7 +304,7 @@ public class CellMotion_2 extends MotionBasic {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
-            effectMusicPalyer.playEffectSound(effectMusicPalyer.MOTION_SOUND);
+            effectMusicPlayer.playEffectSound(effectMusicPlayer.MOTION_SOUND);
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -382,7 +382,7 @@ public class CellMotion_2 extends MotionBasic {
             System.out.println("Game Over!");
         } else {
             RandomAddingCell(data);
-            effectMusicPalyer.playEffectSound(effectMusicPalyer.MOTION_SOUND);
+            effectMusicPlayer.playEffectSound(effectMusicPlayer.MOTION_SOUND);
             undo.setSteps(undo.getSteps() + 1);
             undo.saveStatus(data);
             undo.setUndoTimes();
@@ -561,12 +561,14 @@ public class CellMotion_2 extends MotionBasic {
         if (ifYouWin(data) && !isCanNotMovable(data)) {
             //胜利：胜利并且可以继续移动
             System.out.println("Win and Can play");
-            effectMusicPalyer.playEffectSound(effectMusicPalyer.VICTORY_SOUND);
+            if (flagOfIsMovable != YOU_WIN_CAN_PLAY) {
+                effectMusicPlayer.playEffectSound(effectMusicPlayer.VICTORY_SOUND);
+            }
             flagOfIsMovable = YOU_WIN_CAN_PLAY;
         } else if (ifYouWin(data) && isCanNotMovable(data)) {
             //胜利：胜利且不能继续移动
             System.out.println("Win and can't play");
-            effectMusicPalyer.playEffectSound(effectMusicPalyer.VICTORY_SOUND);
+            effectMusicPlayer.playEffectSound(effectMusicPlayer.VICTORY_SOUND);
             flagOfIsMovable = YOU_WIN_CANNOT_PLAY;
         } else if (!ifYouWin(data) && !isCanNotMovable(data)) {
             //游戏中：未胜利且可以继续移动
@@ -575,7 +577,7 @@ public class CellMotion_2 extends MotionBasic {
         } else if (!ifYouWin(data) && isCanNotMovable(data)) {
             //失败：未胜利且不能继续移动
             System.out.println("lost");
-            effectMusicPalyer.playEffectSound(effectMusicPalyer.LOST_SOUND);
+            effectMusicPlayer.playEffectSound(effectMusicPlayer.LOST_SOUND);
             flagOfIsMovable = YOU_LOST;
         }
     }

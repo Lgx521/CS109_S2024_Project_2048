@@ -1,6 +1,7 @@
 package Main.Frame;
 
 import Main.Controller.CellMotion_2;
+import Main.Controller.CellMotion_3;
 import Main.Data.GameDataStock;
 
 import javax.swing.*;
@@ -181,8 +182,8 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             String content = String.format("Auto Saved When Score is %d.", getMaxScore());
             label_saved.setText(content);
             label_saved.setForeground(Color.WHITE);
-            label_saved.setSize(200, 30);
-            label_saved.setBounds(110, 267, 200, 30);
+            label_saved.setSize(240, 30);
+            label_saved.setBounds(110, 267, 240, 30);
             this.getContentPane().add(label_saved);
         }
 
@@ -291,7 +292,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     }
 
     //按文件加载并开始游戏
-    private void loadFileAndStartGame(File file) {
+    private void loadFileAndStartGame(File file) throws InterruptedException {
         GameDataStock gameDataStock_load;
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
@@ -337,7 +338,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     };
 
     //文件浏览器
-    private void addFileBrowser() {
+    private void addFileBrowser() throws InterruptedException {
         browserPanel.setDialogTitle("Please choose game data storage file (*.2048)");
         browserPanel.setVisible(true);
         browserPanel.addChoosableFileFilter(filter);
@@ -358,7 +359,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     }
 
     //读取数据开始新游戏
-    private void newGameSetUp(GameDataStock gameDataStock) {
+    private void newGameSetUp(GameDataStock gameDataStock) throws InterruptedException {
         int[][] gameData = gameDataStock.getGameData();
         int[] score = gameDataStock.getScore();
         int steps = gameDataStock.getSteps();
@@ -368,11 +369,17 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
         GameFrame loaded = new GameFrame();
 
-        loaded.motion = new CellMotion_2(steps, score, motionStatus, target);
+        loaded.gameModeSelector = gameDataStock.getGameModeStatus();
+
+        if (motionStatus == 0) {
+            loaded.motion = new CellMotion_2(steps, score, motionStatus, target);
+        } else {
+            loaded.motion = new CellMotion_3(steps, score, motionStatus, target);
+        }
+
         loaded.setData(gameData);
         loaded.setID(userID);
         loaded.setStatus(1); //设置为有用户已登陆
-        loaded.gameModeSelector = gameDataStock.getGameModeStatus();
 
         loaded.loadSetUp();
         JOptionPane.showMessageDialog(null, "Game Loaded Successfully", "Notice", JOptionPane.INFORMATION_MESSAGE);
@@ -417,7 +424,11 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
                 if (isSlotEmpty(1)) {
                     return;
                 }
-                newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_1.2048"));
+                try {
+                    newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_1.2048"));
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             } else {
                 System.out.println("slot_1 is clicked when status == 0(SAVE)");
                 if (!isSlotEmpty(1)) {
@@ -437,7 +448,11 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
                 if (isSlotEmpty(2)) {
                     return;
                 }
-                newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_2.2048"));
+                try {
+                    newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_2.2048"));
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             } else {
                 System.out.println("slot_2 is clicked when status = 0(SAVE)");
                 if (!isSlotEmpty(2)) {
@@ -457,7 +472,11 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
                 if (isSlotEmpty(3)) {
                     return;
                 }
-                newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_3.2048"));
+                try {
+                    newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_3.2048"));
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             } else {
                 System.out.println("slot_3 is clicked when status = 0(SAVE)");
                 if (!isSlotEmpty(3)) {
@@ -477,13 +496,21 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
                 if (isSlotEmpty(4)) {
                     return;
                 }
-                newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_autoSave.2048"));
+                try {
+                    newGameSetUp(loadFileWithPath(FilePath + thisUserID + "_autoSave.2048"));
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             } else {
                 System.out.println("slot_4 is clicked when status = 0(SAVE)");
             }
         } else if (obj == browser) {
             System.out.println("browser");
-            addFileBrowser();
+            try {
+                addFileBrowser();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (obj == saveToDirectory) {
             saveToAppointedDictionary();
         }

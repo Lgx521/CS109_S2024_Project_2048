@@ -65,16 +65,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
     //存储结果加载
-    public void loadSetUp() {
+    public void loadSetUp() throws InterruptedException {
         game.add(load);
         game.add(save);
         users.add(statistics);
         initialGameFrame();
-        if (gameModeSelector == POWER_OF_2) {
-            motion = new CellMotion_2();
-        } else {
-            motion = new CellMotion_3();
-        }
         users.add(logout);
         img = ImagePathEnum.DEFAULT;
         NumImagePath = img.getPath();
@@ -86,7 +81,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
     //用于访客模式的外界访问
-    public void setupInGuestMode() {
+    public void setupInGuestMode() throws InterruptedException {
 
         initialGameFrame();
         users.add(login);
@@ -493,6 +488,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //设置目标块大小对话框
     JDialog targetSet;
+
     private void setTargetDialog() {
         targetSet = new JDialog();
         targetSet.setLayout(null);
@@ -569,7 +565,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     }
 
     //进行重做操作
-    private void performUNDO() {
+    private void performUNDO() throws InterruptedException {
         System.out.println("undo");
         motion.UNDO(data);
         setImages();
@@ -653,7 +649,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private boolean isAiAvailable = false;
 
     //AI
-    private void AIRunning() {
+    private void AIRunning() throws InterruptedException {
         ai_prop.setMotion(gameModeSelector);
         int direction = ai_prop.MonteCarlo(data);
         if (direction == 0) {
@@ -683,7 +679,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == save) {
             System.out.println("Save Game");
             //同步数据
-            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status,gameModeSelector);
+            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector);
             //保存
             saverAndLoader.SAVE();
         } else if (obj == sound) {
@@ -793,7 +789,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     public void mouseReleased(MouseEvent e) {
         Object obj = e.getSource();
         if (obj == undo) {
-            performUNDO();
+            try {
+                performUNDO();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (obj == hammer) {
             System.out.println("use prop hammer");
             int ans = JOptionPane.showConfirmDialog(this, "Prop: Hammer\n" +
@@ -867,6 +867,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == a4) {
             System.out.println("a4");
             HammerProp(0, 3);
+
         } else if (obj == b1) {
             System.out.println("b1");
             HammerProp(1, 0);
@@ -933,7 +934,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         if (code == 37) {
             System.out.println("left");
             if (motion.status == 0) {
-                motion.moveBeforeWin(motion.LEFT, data);
+                    motion.moveBeforeWin(motion.LEFT, data);
             } else if (motion.status == 1) {
                 motion.moveAfterWin(motion.LEFT, data);
             } else if (motion.status == 2) {
@@ -975,7 +976,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             setImages();
             gameOverDialog();
         } else if (code == 32 && isAiAvailable) {
-            AIRunning();
+            try {
+                AIRunning();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
             gameOverDialog();
         }
     }

@@ -7,7 +7,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 import java.io.File;
 
-public class EffectMusicPalyer {
+public class EffectMusicPlayer{
 
     File musicPath;
 
@@ -23,6 +23,7 @@ public class EffectMusicPalyer {
             throw new RuntimeException(e);
         }
     }
+
 
     private void play(String musicLocation) {
         try {
