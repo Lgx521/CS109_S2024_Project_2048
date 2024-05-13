@@ -6,6 +6,9 @@ public class InitialGrids {
 
     Random r = new Random();
 
+    int[][] data = new int[4][4];
+
+
     public int[][] setup() {
         int[][] data = initialData();
         printData(data);
@@ -17,9 +20,6 @@ public class InitialGrids {
         printData(data);
         return data;
     }
-
-    int[][] data = new int[4][4];
-
     private int[][] initialData() {
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
