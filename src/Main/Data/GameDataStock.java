@@ -30,6 +30,7 @@ public class GameDataStock implements Serializable {
     private int target = -1;
     private int motionStatus = -2;
     private int gameModeStatus = -1;
+    private long timeLapsed = 0;
 
     public int getUserID() {
         return userID;
@@ -71,8 +72,12 @@ public class GameDataStock implements Serializable {
         return this.gameModeStatus;
     }
 
+    public long getTimeLapsed() {
+        return timeLapsed;
+    }
+
     //同步数据
-    public void sync(int userID, int[][] gameData, int steps, int[] score, int target, int motionStatus, int gameModeStatus) {
+    public void sync(int userID, int[][] gameData, int steps, int[] score, int target, int motionStatus, int gameModeStatus, long timeLapsed) {
         this.userID = userID;
         for (int i = 0; i < gameData.length; i++) {
             System.arraycopy(gameData[i], 0, this.gameData[i], 0, gameData.length);
@@ -82,6 +87,7 @@ public class GameDataStock implements Serializable {
         this.target = target;
         this.motionStatus = motionStatus;
         this.gameModeStatus = gameModeStatus;
+        this.timeLapsed = timeLapsed;
 //        System.out.printf("Synced, userID: %s, steps: %s, score: %s, target: %s\n", userID, steps, score, target);
     }
 

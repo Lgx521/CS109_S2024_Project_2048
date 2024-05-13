@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
 
 public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
@@ -59,13 +60,13 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         initialGameFrame();
         users.add(logout);
         replayGame();
-        addMouseListener(this);
-        addKeyListener(this);
+        this.addMouseListener(this);
+        this.addKeyListener(this);
         this.setVisible(true);
     }
 
     //存储结果加载
-    public void loadSetUp() throws InterruptedException {
+    public void loadSetUp() {
         game.add(load);
         game.add(save);
         users.add(statistics);
@@ -75,21 +76,22 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         NumImagePath = img.getPath();
         setImages();
         motion.EffectSoundPlayer(4);
+        timeCount.restart();
+        timeCount();
         addMouseListener(this);
         addKeyListener(this);
         this.setVisible(true);
     }
 
     //用于访客模式的外界访问
-    public void setupInGuestMode() throws InterruptedException {
-
+    public void setupInGuestMode() {
         initialGameFrame();
         users.add(login);
         users.add(signIn);
         replayGame();
 
-        addMouseListener(this);
-        addKeyListener(this);
+        this.addMouseListener(this);
+        this.addKeyListener(this);
         this.setVisible(true);
     }
 
@@ -103,6 +105,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         motion.EffectSoundPlayer(4);
         isAiAvailable = false;
         isHammerAvailable = false;
+        seconds = 0;
+        timeCoundDown.restart();
+        timeCount.restart();
+        setTimeLimit(timeLimit);
+        timeCount();
     }
 
     //背景音乐播放对象
@@ -112,7 +119,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     GameDataStock syncer = new GameDataStock();
     SaveAndLoad saverAndLoader;
 
-
     InitialGrids initialGrids = new InitialGrids();
 
     //产生motion对象，实现每次重启游戏步数清零重计
@@ -120,6 +126,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private final int POWER_OF_2 = 0;
     private final int POWER_OF_3 = 1;
 
+    //设置游戏移动逻辑
     private void setMotion(int mode) {
         if (mode == POWER_OF_2) {
             data = initialGrids.setup();
@@ -129,7 +136,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             motion = new CellMotion_3();
         }
     }
-
 
     //产生AI对象
     AI ai_prop = new AI();
@@ -195,7 +201,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JLabel d4 = new JLabel();
 
     //创建数组容器便于阅读
-    private JLabel[] labels = {a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4};
+    private final JLabel[] labels = {a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4};
 
     //背景图
     JLabel backgroundImage = new JLabel();
@@ -209,6 +215,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //枚举类：设置主题
     private String NumImagePath;
     ImagePathEnum img;
+
+    //时间格式化
+    SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
 
     //初始化界面
     private void initialGameFrame() {
@@ -305,10 +314,50 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         _1024.addActionListener(this);
         _2048.addActionListener(this);
 
+        _10sec.addActionListener(this);
+        _10min.addActionListener(this);
+        _30min.addActionListener(this);
+        _60min.addActionListener(this);
+
         this.setJMenuBar(jMenuBar);
 
+        //计时
+        timeCount.addActionListener(e -> {
+            seconds++;
+            String sdfed = sdf.format(seconds * 1000);
+            timeLabel.setText(sdfed);
+        });
+
+        //倒计时
+        timeCoundDown.addActionListener(e -> {
+            if (thisTimeLimit > 0) {
+                thisTimeLimit--;
+            } else {
+                int option = JOptionPane.showConfirmDialog(this, "Time out!\nPress 'OK' to retry, 'Cancel' to quit.", "Notice", JOptionPane.OK_CANCEL_OPTION);
+                if (option == 0) {
+                    replayGame();
+                    setTimeLimit(timeLimit);
+                    timeCountDownLabel.setForeground(new Color(0, 200, 120));
+                } else {
+                    setTimeLimit(timeLimit);
+                    timeCountDownLabel.setForeground(new Color(0, 200, 120));
+                    timeCoundDown.stop();
+                }
+            }
+            if (((double) thisTimeLimit / (double) timeLimit) <= 0.5) {
+                timeCountDownLabel.setForeground(Color.RED);
+            }
+            String sdfed = sdf.format(thisTimeLimit * 1000);
+            timeCountDownLabel.setText("Time remaining  " + sdfed);
+        });
+
+        quitCountDown.addActionListener(this);
 
     }
+
+    //退出倒计时按钮
+    JButton quitCountDown = new JButton();
+
 
     //表示Hammer是否开启
     private boolean isHammerAvailable = false;
@@ -320,6 +369,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private void setComponents() {
         this.ImageContainer.removeAll();
         this.setLayout(null);
+
+        this.ImageContainer.add(timeLabel);
+        this.ImageContainer.add(timeCountDownLabel);
+        this.ImageContainer.add(quitCountDown);
 
         this.ImageContainer.add(undo);
         this.ImageContainer.add(hammer);
@@ -400,7 +453,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
         //自动同步--当图形改变时就同步
         if (motion.getScore(motion.getSteps() - 1) < motion.getScore(motion.getSteps())) {
-            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector);
+            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector, seconds);
         }
 
         //添加到图层
@@ -410,6 +463,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.add(backgroundImage);
         this.ImageContainer.add(backImage);
         this.setContentPane(ImageContainer);
+        this.requestFocus();
     }
 
     //搭建图片
@@ -440,6 +494,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //判断显示游戏结束对话框
     private void gameOverDialog() {
         if (motion.flagOfIsMovable != motion.IN_PROGRESS) {
+            timeCoundDown.stop();
             motion.EndingNotice(motion.flagOfIsMovable);
         }
     }
@@ -489,10 +544,12 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //设置目标块大小对话框
     JDialog targetSet;
 
+    //目标块大小对话框界面搭建
     private void setTargetDialog() {
         targetSet = new JDialog();
         targetSet.setLayout(null);
         targetSet.setLocationRelativeTo(null);
+        targetSet.setAlwaysOnTop(true);
         targetSet.setTitle("Set Your Target");
         if (gameModeSelector == POWER_OF_2) {
             targetSet.setSize(270, 260);
@@ -645,11 +702,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         return ans;
     }
 
-
+    //AI是否可用标签
     private boolean isAiAvailable = false;
 
     //AI
-    private void AIRunning() throws InterruptedException {
+    private void AIRunning() {
         ai_prop.setMotion(gameModeSelector);
         int direction = ai_prop.MonteCarlo(data);
         if (direction == 0) {
@@ -664,6 +721,92 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         setImages();
     }
 
+    private long seconds;
+    private Timer timeCoundDown = new Timer(1000, this);
+    private Timer timeCount = new Timer(1000, this);
+    JLabel timeLabel = new JLabel("00:00");
+
+    //setter for 流逝时间
+    public void getSeconds(long seconds) {
+        this.seconds = seconds;
+    }
+
+    //计时
+    private void timeCount() {
+        timeLabel.setSize(100, 30);
+        timeLabel.setBounds(535, 323, 100, 30);
+        timeLabel.setFont(new Font("Arial", Font.ITALIC, 24));
+        timeLabel.setForeground(Color.WHITE);
+        timeCount.start();
+    }
+
+    public long timeLimit = 1000000;
+    public long thisTimeLimit = 10;
+
+    //设置倒计时
+    private void setTimeLimit(long timeLimit) {
+        thisTimeLimit = timeLimit;
+    }
+
+    JLabel timeCountDownLabel = new JLabel();
+
+    JDialog timeCountSelector;
+
+    JButton _10sec = new JButton();
+    JButton _10min = new JButton();
+    JButton _30min = new JButton();
+    JButton _60min = new JButton();
+
+    //倒计时时间选择对话框
+    private void setTimeCountDownDialog() {
+        timeCountSelector = new JDialog();
+        timeCountSelector.setLayout(null);
+        timeCountSelector.setAlwaysOnTop(true);
+        timeCountSelector.setLocationRelativeTo(this);
+        timeCountSelector.setTitle("Select limit");
+        timeCountSelector.setSize(180, 250);
+
+        JLabel message = new JLabel("Select time limit:");
+        message.setSize(150, 30);
+        message.setBounds(10, 10, 150, 30);
+        _10sec.setSize(100, 30);
+        _10sec.setBounds(40, 50, 100, 30);
+        _10sec.setText("10 sec");
+        _10min.setSize(100, 30);
+        _10min.setBounds(40, 90, 100, 30);
+        _10min.setText("10 min");
+        _30min.setSize(100, 30);
+        _30min.setBounds(40, 130, 100, 30);
+        _30min.setText("30 min");
+        _60min.setSize(100, 30);
+        _60min.setBounds(40, 170, 100, 30);
+        _60min.setText("60 min");
+
+        timeCountSelector.add(message);
+        timeCountSelector.add(_10sec);
+        timeCountSelector.add(_10min);
+        timeCountSelector.add(_30min);
+        timeCountSelector.add(_60min);
+
+        timeCountSelector.setVisible(true);
+    }
+
+    //倒计时
+    private void timeCountDown() {
+        quitCountDown.setSize(140, 30);
+        quitCountDown.setBounds(290, 50, 140, 30);
+        quitCountDown.setText("Quit Count Down");
+        timeCountDownLabel.setSize(300, 30);
+        timeCountDownLabel.setBounds(35, 50, 300, 30);
+        timeCountDownLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        timeCountDownLabel.setForeground(new Color(0, 200, 120));
+        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+        setTimeLimit(timeLimit);
+        timeCountDownLabel.setText("Time remaining  " + sdf.format(thisTimeLimit * 1000));
+        timeCoundDown.start();
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
@@ -675,11 +818,13 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == load) {
             System.out.println("Load Game");
             saverAndLoader.LOAD();
+            timeCoundDown.stop();
+            timeCount.stop();
             this.dispose();
         } else if (obj == save) {
             System.out.println("Save Game");
             //同步数据
-            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector);
+            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector, seconds);
             //保存
             saverAndLoader.SAVE();
         } else if (obj == sound) {
@@ -772,6 +917,31 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == statistics) {
             System.out.println("Game Statistics");
             new GameStatics().setUpGameStatics();
+        } else if (obj == _10sec) {
+            System.out.println("Set target time: 10 sec");
+            this.timeLimit = 10L;
+            timeCountSelector.dispose();
+            timeCountDown();
+        } else if (obj == _10min) {
+            System.out.println("Set target time: 10 min");
+            this.timeLimit = 600L;
+            timeCountSelector.dispose();
+            timeCountDown();
+        } else if (obj == _30min) {
+            System.out.println("Set target time: 30 min");
+            this.timeLimit = 1800L;
+            timeCountSelector.dispose();
+            timeCountDown();
+        } else if (obj == _60min) {
+            System.out.println("Set target time: 60 min");
+            this.timeLimit = 3600L;
+            timeCountSelector.dispose();
+            timeCountDown();
+        } else if (obj == quitCountDown) {
+            setTimeLimit(timeLimit);
+            timeCountDownLabel.setText("Time remaining  —:—");
+            timeCoundDown.stop();
+            setImages();
         }
     }
 
@@ -802,8 +972,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                     "and then you can change the tile to that number.\n" +
                     " > ZERO is a valid grid number, too. You can clear that grid\n" +
                     "by entering '0'.\n" +
-                    " > Once you performed Hammer, this game's score won't\n" +
-                    " be noted to statistics data!\n" +
+                    " > Once you performed Hammer, this game's score will\n" +
+                    " be noted at statistics data!\n" +
                     "   Press 'OK' to confirm using the prop.", "Prop: Hammer", JOptionPane.OK_CANCEL_OPTION);
             if (ans == 0) {
                 System.out.println("Confirm to use AI");
@@ -816,7 +986,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                     " > Every time you press 'space', AI will help you move\n" +
                     "automatically with the best predicted direction.\n" +
                     " > Once you performed AI to move even only one step,\n" +
-                    "this game's score won't be noted to statistics data!\n" +
+                    "this game's score will be noted at statistics data!\n" +
                     "   Press 'OK' to confirm using the prop.", "Prop: AI", JOptionPane.OK_CANCEL_OPTION);
             if (ans == 0) {
                 System.out.println("Confirm to use AI");
@@ -832,6 +1002,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             replayGame();
         } else if (obj == countdown) {
             System.out.println("countdown mode");
+            setTimeCountDownDialog();
         } else if (obj == target) {
             System.out.println("target select mode");
             setTargetDialog();
@@ -930,6 +1101,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
+        System.out.println(code);
         if (code == 37) {
             System.out.println("left");
             if (motion.status == 0) {
@@ -975,11 +1147,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             setImages();
             gameOverDialog();
         } else if (code == 32 && isAiAvailable) {
-            try {
-                AIRunning();
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
+            AIRunning();
             gameOverDialog();
         }
     }

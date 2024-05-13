@@ -366,6 +366,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         int motionStatus = gameDataStock.getMotionStatus();
         int userID = gameDataStock.getUserID();
         int target = gameDataStock.getTarget();
+        long timeLapsed = gameDataStock.getTimeLapsed();
 
         GameFrame loaded = new GameFrame();
 
@@ -380,7 +381,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         loaded.setData(gameData);
         loaded.setID(userID);
         loaded.setStatus(1); //设置为有用户已登陆
-
+        loaded.getSeconds(timeLapsed);
         loaded.loadSetUp();
         JOptionPane.showMessageDialog(null, "Game Loaded Successfully", "Notice", JOptionPane.INFORMATION_MESSAGE);
         this.dispose();

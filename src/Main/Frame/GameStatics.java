@@ -2,6 +2,7 @@ package Main.Frame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.awt.AWTEventMulticaster.add;
@@ -13,20 +14,75 @@ public class GameStatics extends JFrame {
         this.setVisible(true);
     }
 
+
+
+
     private void initialFrame() {
-        this.setSize(550, 420);
+        this.setSize(640, 448);
         this.setLocationRelativeTo(null);
         this.setTitle("2048 - Game Statistics");
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setLayout(null);
+
         addTipButton();
+
+        ImageIcon img = new ImageIcon("src/Main/Resources/statistics.png");
+        JLabel backgroundImage = new JLabel(img);
+        backgroundImage.setSize(655,420);
+        backgroundImage.setBounds(0, 0, 640, 420);
+
+
+        addContent();
+
+        this.getContentPane().add(backgroundImage);
+
+
+    }
+
+    private void addContent() {
+        JLabel title_1 = new JLabel("Achievements");
+        JLabel title_2 = new JLabel("Records");
+        JLabel title_3 = new JLabel("Gainer");
+
+        Font titleFont = new Font("Arial",Font.BOLD,22);
+        title_1.setBounds(52, 100, 150, 44);
+        title_1.setFont(titleFont);
+        title_2.setBounds(240, 100, 120, 44);
+        title_2.setFont(titleFont);
+        title_3.setBounds(390, 100, 100, 44);
+        title_3.setFont(titleFont);
+
+        JLabel column_1 = new JLabel("Max Tile in 2^n Mode");
+        JLabel column_2 = new JLabel("Max Tile in 3^n Mode");
+        JLabel column_3 = new JLabel("Minimum time to 2048");
+        JLabel column_4 = new JLabel("Minimum time to 1024");
+        JLabel column_5 = new JLabel("Minimum time to 729");
+        JLabel column_6 = new JLabel("Minimum time to 243");
+
+        column_1.setBounds(55, 145,165, 50);
+        column_2.setBounds(55, 185,165, 50);
+        column_3.setBounds(55, 225,165, 50);
+        column_4.setBounds(55, 265,165, 50);
+        column_5.setBounds(55, 305,165, 50);
+        column_6.setBounds(55, 345,165, 50);
+
+        this.getContentPane().add(column_1);
+        this.getContentPane().add(column_2);
+        this.getContentPane().add(column_3);
+        this.getContentPane().add(column_4);
+        this.getContentPane().add(column_5);
+        this.getContentPane().add(column_6);
+
+        this.getContentPane().add(title_1);
+        this.getContentPane().add(title_2);
+        this.getContentPane().add(title_3);
     }
 
 
     //todo
     private void addTipButton() {
         JButton button = new JButton("Tips");
-        button.setLocation(200, 100);
+        button.setLocation(520, 360);
         button.setSize(100, 40);
         add(button);
 

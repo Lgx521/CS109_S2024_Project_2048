@@ -1,9 +1,6 @@
 package Main.Features;
 
 import Main.Controller.AIMotionBasic;
-import Main.Controller.CellMotion_2;
-import Main.Controller.CellMotion_3;
-import Main.Controller.MotionBasic;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -16,10 +13,10 @@ public class AI {
     public void setMotion(int mode) {
         if (mode == 0) {
             motion = new AIMotion_2();
-            this.N = 350;
+            this.N = 360;
         } else if (mode == 1) {
             motion = new AIMotion_3();
-            this.N = 800;
+            this.N = 650;
         }
     }
 
