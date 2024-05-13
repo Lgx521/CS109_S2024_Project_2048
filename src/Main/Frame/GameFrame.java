@@ -933,7 +933,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         if (code == 37) {
             System.out.println("left");
             if (motion.status == 0) {
-                    motion.moveBeforeWin(motion.LEFT, data);
+                motion.moveBeforeWin(motion.LEFT, data);
             } else if (motion.status == 1) {
                 motion.moveAfterWin(motion.LEFT, data);
             } else if (motion.status == 2) {
