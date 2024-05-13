@@ -867,7 +867,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == a4) {
             System.out.println("a4");
             HammerProp(0, 3);
-
         } else if (obj == b1) {
             System.out.println("b1");
             HammerProp(1, 0);

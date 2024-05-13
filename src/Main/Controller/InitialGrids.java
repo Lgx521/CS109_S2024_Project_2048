@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class InitialGrids {
 
+    Random r = new Random();
+
     public int[][] setup() {
         int[][] data = initialData();
         printData(data);
@@ -24,10 +26,7 @@ public class InitialGrids {
                 data[i][j] = 0;
             }
         }
-        Random r = new Random();
-
         int[] position = generateRandomPosition();
-
         if (position[0] != position[2] || position[1] != position[3]) {
             data[position[0]][position[1]] = 2;
             data[position[2]][position[3]] = 4;
@@ -43,21 +42,17 @@ public class InitialGrids {
                 data[i][j] = 0;
             }
         }
-        Random r = new Random();
-
         int[] position = generateRandomPosition();
-
         if (position[0] != position[2] || position[1] != position[3]) {
             data[position[0]][position[1]] = 3;
             data[position[2]][position[3]] = 3;
         } else {
-            initialData();
+            initialData_3();
         }
         return data;
     }
 
     private int[] generateRandomPosition() {
-        Random r = new Random();
         int x_1 = r.nextInt(0, data.length);
         int y_1 = r.nextInt(0, data[0].length);
         int x_2 = r.nextInt(0, data.length);
