@@ -1,7 +1,6 @@
 package Main.UserOperation;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

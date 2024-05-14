@@ -10,11 +10,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.awt.AWTEventMulticaster.add;
-
 public class GameStatics extends JFrame {
 
-    //    JLabel
+    //JLabel
     JLabel column_1 = new JLabel();
     JLabel column_2 = new JLabel();
     JLabel column_3 = new JLabel();
@@ -268,7 +266,7 @@ public class GameStatics extends JFrame {
 
         column_1.setBounds(265, 145, 165, 50);
         column_2.setBounds(265, 185, 165, 50);
-        column_3.setBounds(228, 225, 165, 50);
+        column_3.setBounds(228, 227, 165, 50);
         column_4.setBounds(228, 267, 165, 50);
         column_5.setBounds(228, 308, 165, 50);
         column_6.setBounds(228, 347, 165, 50);
@@ -283,7 +281,7 @@ public class GameStatics extends JFrame {
 
         colume_1_user.setBounds(390, 145, 165, 50);
         colume_2_user.setBounds(390, 185, 165, 50);
-        colume_3_user.setBounds(390, 225, 165, 50);
+        colume_3_user.setBounds(390, 227, 165, 50);
         colume_4_user.setBounds(390, 267, 165, 50);
         colume_5_user.setBounds(390, 308, 165, 50);
         colume_6_user.setBounds(390, 347, 165, 50);
