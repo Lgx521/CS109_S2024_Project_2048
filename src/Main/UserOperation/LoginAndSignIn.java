@@ -123,7 +123,7 @@ public class LoginAndSignIn {
     }
 
     //获得某行数据
-    private String ReadAppointedLine(File file, int targetLine) throws IOException {
+    public String ReadAppointedLine(File file, int targetLine) throws IOException {
         Scanner sc = new Scanner(file);
         String result = null;
         int lineNumber = 0;
@@ -138,7 +138,7 @@ public class LoginAndSignIn {
     }
 
     //获得文件总行数
-    private int getTotalLines(File file) throws IOException {
+    public int getTotalLines(File file) throws IOException {
         FileReader in = new FileReader(file);
         LineNumberReader lineReader = new LineNumberReader(in);
         int totalLine = 0;

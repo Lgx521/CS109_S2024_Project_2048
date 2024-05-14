@@ -15,8 +15,8 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
     LoginAndSignIn userOpeartion = new LoginAndSignIn();
     GameFrame gameFrame = new GameFrame();
 
-    private final int GUSET_MODE = 0;
-    private final int LOG_IN = 1;
+    private final int GUSET_MODE = 1;
+    private final int LOG_IN = 0;
 
     JTextField loginUserName = new JTextField();
     JPasswordField userPassword = new JPasswordField();

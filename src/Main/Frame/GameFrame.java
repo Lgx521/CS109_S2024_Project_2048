@@ -5,6 +5,7 @@ import Main.Controller.CellMotion_3;
 import Main.Controller.InitialGrids;
 import Main.Controller.MotionBasic;
 import Main.Data.GameDataStock;
+import Main.Data.StatisticsDataStock;
 import Main.Features.AI;
 import Main.Features.Props;
 import Main.Features.bgmPlayer;
@@ -13,129 +14,15 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 public class GameFrame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
+    //Attributes --------------------
+
+    //游戏board大小记录
     private int[][] data;
-
-    public void setData(int[][] data) {
-        this.data = data;
-    }
-
-    //表示是否为登陆用户，用于显示Tips
-    private int STATUS;
-
-    //当前游戏玩家ID
-    private static int USER_ID;
-
-    //设置游戏运行时的用户
-    public void setID(int userID) {
-        USER_ID = userID;
-        System.out.println("Current user's ID: " + USER_ID);
-    }
-
-    //获得游戏运行时的用户
-    public int getID() {
-        return USER_ID;
-    }
-
-    //设置当前游戏运行模式
-    /*
-     * STATUS == 0: LOG_IN.
-     * STATUS == 1: GUEST;
-     * */
-    public void setStatus(int status) {
-        this.STATUS = status;
-    }
-
-    //2或3模式，默认Power of 2
-    public int gameModeSelector = 0;
-
-    //创建setup方法供外界访问
-    public void setup() {
-        game.add(load);
-        game.add(save);
-        users.add(statistics);
-        initialGameFrame();
-        users.add(logout);
-        replayGame();
-        this.addMouseListener(this);
-        this.addKeyListener(this);
-        this.setVisible(true);
-    }
-
-    //存储结果加载
-    public void loadSetUp() {
-        game.add(load);
-        game.add(save);
-        users.add(statistics);
-        initialGameFrame();
-        users.add(logout);
-        img = ImagePathEnum.DEFAULT;
-        NumImagePath = img.getPath();
-        setImages();
-        motion.EffectSoundPlayer(4);
-        timeCount.restart();
-        timeCount();
-        addMouseListener(this);
-        addKeyListener(this);
-        this.setVisible(true);
-    }
-
-    //用于访客模式的外界访问
-    public void setupInGuestMode() {
-        initialGameFrame();
-        users.add(login);
-        users.add(signIn);
-        replayGame();
-
-        this.addMouseListener(this);
-        this.addKeyListener(this);
-        this.setVisible(true);
-    }
-
-    //重新加载游戏
-    public void replayGame() {
-        ai_prop.setMotion(gameModeSelector);
-        setMotion(gameModeSelector);
-        img = ImagePathEnum.DEFAULT;
-        NumImagePath = img.getPath();
-        setImages();
-        motion.EffectSoundPlayer(4);
-        isAiAvailable = false;
-        isHammerAvailable = false;
-        seconds = 0;
-        timeCoundDown.restart();
-        timeCount.restart();
-        setTimeLimit(timeLimit);
-        timeCount();
-    }
-
-    //背景音乐播放对象
-    bgmPlayer musicObject = new bgmPlayer();
-
-    //游戏数据同步，便于保存
-    GameDataStock syncer = new GameDataStock();
-    SaveAndLoad saverAndLoader;
-
-    InitialGrids initialGrids = new InitialGrids();
-
-    //产生motion对象，实现每次重启游戏步数清零重计
-    MotionBasic motion;
-    private final int POWER_OF_2 = 0;
-    private final int POWER_OF_3 = 1;
-
-    //设置游戏移动逻辑
-    private void setMotion(int mode) {
-        if (mode == POWER_OF_2) {
-            data = initialGrids.setup();
-            motion = new CellMotion_2();
-        } else if (mode == POWER_OF_3) {
-            data = initialGrids.setup_3();
-            motion = new CellMotion_3();
-        }
-    }
 
     //产生AI对象
     AI ai_prop = new AI();
@@ -216,8 +103,204 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private String NumImagePath;
     ImagePathEnum img;
 
+    //背景音乐播放对象
+    bgmPlayer musicObject = new bgmPlayer();
+
+    //游戏数据同步，便于保存
+    GameDataStock syncer = new GameDataStock();
+    SaveAndLoad saverAndLoader;
+
+    //数据统计对象
+    StatisticsDataStock statisticsDataStock = new StatisticsDataStock();
+
     //时间格式化
     SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+
+    //data setter
+    public void setData(int[][] data) {
+        this.data = data;
+    }
+
+    //表示是否为登陆用户，用于显示Tips
+    private int STATUS;
+
+    //当前游戏玩家ID
+    private static int USER_ID;
+
+    //计时相关
+    private long seconds;
+    private final Timer timeCountDown = new Timer(1000, this);
+    private final Timer timeCount = new Timer(1000, this);
+    JLabel timeLabel = new JLabel("00:00");
+
+    //退出倒计时按钮
+    JButton quitCountDown = new JButton();
+
+    //表示Hammer是否开启
+    private boolean isHammerAvailable = false;
+
+    //当前鼠标所在块位置索引
+    private int cellIndex;
+
+    //设置目标块大小对话框
+    JDialog targetSet;
+
+    //格点生成初始化对象
+    InitialGrids initialGrids = new InitialGrids();
+
+    //产生motion对象，实现每次重启游戏步数清零重计
+    MotionBasic motion;
+    private final int POWER_OF_2 = 0;
+    private final int POWER_OF_3 = 1;
+
+    //倒计时label
+    JLabel timeCountDownLabel = new JLabel();
+
+    //倒计时选择对话框
+    JDialog timeCountSelector;
+
+    //Buttons
+    JButton _10sec = new JButton();
+    JButton _10min = new JButton();
+    JButton _30min = new JButton();
+    JButton _60min = new JButton();
+
+
+    //Methods ---------------------
+
+
+    //设置当前游戏运行模式
+    /*
+     * STATUS == 0: LOG_IN.
+     * STATUS == 1: GUEST.
+     * */
+    public void setStatus(int status) {
+        this.STATUS = status;
+    }
+
+    //2或3模式，默认Power of 2
+    public int gameModeSelector = 0;
+
+    //创建setup方法供外界访问
+    public void setup() {
+        game.add(load);
+        game.add(save);
+        users.add(statistics);
+        initialGameFrame();
+        users.add(logout);
+        this.addMouseListener(this);
+        this.addKeyListener(this);
+        this.setVisible(true);
+        replayGame();
+    }
+
+    //存储结果加载
+    public void loadSetUp() {
+        STATUS = 0;
+        game.add(load);
+        game.add(save);
+        users.add(statistics);
+        initialGameFrame();
+        users.add(logout);
+        img = ImagePathEnum.DEFAULT;
+        NumImagePath = img.getPath();
+        setImages();
+        motion.EffectSoundPlayer(4);
+        timeCount.restart();
+        timeCount();
+        addMouseListener(this);
+        addKeyListener(this);
+        this.setVisible(true);
+        this.requestFocus();
+    }
+
+    //用于访客模式的外界访问
+    public void setupInGuestMode() {
+        initialGameFrame();
+        users.add(login);
+        users.add(signIn);
+        STATUS = 1;
+        this.addMouseListener(this);
+        this.addKeyListener(this);
+        this.setVisible(true);
+        replayGame();
+    }
+
+    //重新加载游戏
+    public void replayGame() {
+        ai_prop.setMotion(gameModeSelector);
+        setMotion(gameModeSelector);
+        img = ImagePathEnum.DEFAULT;
+        NumImagePath = img.getPath();
+        setImages();
+        motion.EffectSoundPlayer(4);
+        isAiAvailable = false;
+        isHammerAvailable = false;
+        seconds = 0;
+        timeCountDown.restart();
+        timeCount.restart();
+        setTimeLimit(timeLimit);
+        timeCount();
+        syncStatisticsData();
+        this.requestFocus();
+    }
+
+    //统计数据同步
+    private void syncStatisticsData() {
+        if (STATUS == 1) {
+            return;
+        }
+        System.out.println("1");
+        if (gameModeSelector == POWER_OF_2) {
+            int maxTile = 0;
+            long timeTo_2048 = 0;
+            long timeTo_1024 = 0;
+            for (int[] datum : data) {
+                for (int j = 0; j < data[0].length; j++) {
+                    if (datum[j] > maxTile) {
+                        maxTile = datum[j];
+                    }
+                    if (datum[j] == 2048) {
+                        timeTo_2048 = seconds;
+                    }
+                    if (datum[j] == 1024) {
+                        timeTo_1024 = seconds;
+                    }
+                }
+            }
+            statisticsDataStock.syncStatistics_2(maxTile, timeTo_2048, timeTo_1024, USER_ID);
+        } else {
+            int maxTile = 0;
+            long timeTo_729 = 0;
+            long timeTo_243 = 0;
+            for (int[] datum : data) {
+                for (int j = 0; j < data[0].length; j++) {
+                    if (datum[j] > maxTile) {
+                        maxTile = datum[j];
+                    }
+                    if (datum[j] == 729) {
+                        timeTo_729 = seconds;
+                    }
+                    if (datum[j] == 243) {
+                        timeTo_243 = seconds;
+                    }
+                }
+            }
+            statisticsDataStock.syncStatistics_3(maxTile, timeTo_729, timeTo_243, USER_ID);
+            System.out.println("243--" + timeTo_243);
+        }
+    }
+
+    //设置游戏移动逻辑
+    private void setMotion(int mode) {
+        if (mode == POWER_OF_2) {
+            data = initialGrids.setup();
+            motion = new CellMotion_2();
+        } else if (mode == POWER_OF_3) {
+            data = initialGrids.setup_3();
+            motion = new CellMotion_3();
+        }
+    }
 
     //初始化界面
     private void initialGameFrame() {
@@ -293,6 +376,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         music_3.addActionListener(this);
         effectOff.addActionListener(this);
 
+        quitCountDown.addActionListener(this);
+
         statistics.addActionListener(this);
 
         undo.addMouseListener(this);
@@ -324,12 +409,21 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         //计时
         timeCount.addActionListener(e -> {
             seconds++;
+            if (STATUS == 0) {
+                if (seconds % 5 == 0) {
+                    //每五秒同步数据
+                    syncStatisticsData();
+                    //每5秒自动同步
+                    syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector, seconds);
+                    saverAndLoader.AutoSave();
+                }
+            }
             String sdfed = sdf.format(seconds * 1000);
             timeLabel.setText(sdfed);
         });
 
         //倒计时
-        timeCoundDown.addActionListener(e -> {
+        timeCountDown.addActionListener(e -> {
             if (thisTimeLimit > 0) {
                 thisTimeLimit--;
             } else {
@@ -341,7 +435,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 } else {
                     setTimeLimit(timeLimit);
                     timeCountDownLabel.setForeground(new Color(0, 200, 120));
-                    timeCoundDown.stop();
+                    timeCountDown.stop();
                 }
             }
             if (((double) thisTimeLimit / (double) timeLimit) <= 0.5) {
@@ -351,19 +445,18 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             timeCountDownLabel.setText("Time remaining  " + sdfed);
         });
 
-        quitCountDown.addActionListener(this);
-
     }
 
-    //退出倒计时按钮
-    JButton quitCountDown = new JButton();
+    //设置游戏运行时的用户
+    public void setID(int userID) {
+        USER_ID = userID;
+        System.out.println("Current user's ID: " + USER_ID);
+    }
 
-
-    //表示Hammer是否开启
-    private boolean isHammerAvailable = false;
-
-    //当前鼠标所在块位置索引
-    private int cellIndex;
+    //获得游戏运行时的用户
+    public int getID() {
+        return USER_ID;
+    }
 
     //搭建元素
     private void setComponents() {
@@ -385,6 +478,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.add(forest);
         this.ImageContainer.add(ocean);
         this.ImageContainer.add(flames);
+
+        quitCountDown.setSize(140, 30);
+        quitCountDown.setBounds(290, 50, 140, 30);
+        quitCountDown.setText("Quit Count Down");
 
         //hammer选择图层
         if (isHammerAvailable) {
@@ -416,7 +513,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         }
 
         //若在GUEST模式中，显示注册提示
-        if (this.STATUS == 0) {
+        if (this.STATUS == 1) {
             JLabel tips = new JLabel("Tips: Sign your own Account to Save your game!");
             tips.setSize(500, 25);
             tips.setForeground(Color.WHITE);
@@ -451,11 +548,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         backImage.setSize(800, 600);
         backImage.setBounds(0, 0, 800, 600);
 
-        //自动同步--当图形改变时就同步
-        if (motion.getScore(motion.getSteps() - 1) < motion.getScore(motion.getSteps())) {
-            syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector, seconds);
-        }
-
         //添加到图层
         this.ImageContainer.add(steplable);
         this.ImageContainer.add(scorelable);
@@ -463,7 +555,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.add(backgroundImage);
         this.ImageContainer.add(backImage);
         this.setContentPane(ImageContainer);
-        this.requestFocus();
+
     }
 
     //搭建图片
@@ -478,6 +570,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         this.ImageContainer.repaint();
     }
 
+    //鼠标移入显示实现
     private void setImagesClicked(String name) {
         setComponents();
         //背景图
@@ -494,7 +587,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //判断显示游戏结束对话框
     private void gameOverDialog() {
         if (motion.flagOfIsMovable != motion.IN_PROGRESS) {
-            timeCoundDown.stop();
+            timeCountDown.stop();
             motion.EndingNotice(motion.flagOfIsMovable);
         }
     }
@@ -540,9 +633,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         }
         this.getContentPane().repaint();
     }
-
-    //设置目标块大小对话框
-    JDialog targetSet;
 
     //目标块大小对话框界面搭建
     private void setTargetDialog() {
@@ -719,12 +809,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             motion.moveBeforeWin(motion.DOWN, data);
         }
         setImages();
+        syncStatisticsData();
     }
-
-    private long seconds;
-    private Timer timeCoundDown = new Timer(1000, this);
-    private Timer timeCount = new Timer(1000, this);
-    JLabel timeLabel = new JLabel("00:00");
 
     //setter for 流逝时间
     public void getSeconds(long seconds) {
@@ -747,15 +833,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     private void setTimeLimit(long timeLimit) {
         thisTimeLimit = timeLimit;
     }
-
-    JLabel timeCountDownLabel = new JLabel();
-
-    JDialog timeCountSelector;
-
-    JButton _10sec = new JButton();
-    JButton _10min = new JButton();
-    JButton _30min = new JButton();
-    JButton _60min = new JButton();
 
     //倒计时时间选择对话框
     private void setTimeCountDownDialog() {
@@ -793,9 +870,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //倒计时
     private void timeCountDown() {
-        quitCountDown.setSize(140, 30);
-        quitCountDown.setBounds(290, 50, 140, 30);
-        quitCountDown.setText("Quit Count Down");
+        quitCountDown.setVisible(true);
         timeCountDownLabel.setSize(300, 30);
         timeCountDownLabel.setBounds(35, 50, 300, 30);
         timeCountDownLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -803,9 +878,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
         setTimeLimit(timeLimit);
         timeCountDownLabel.setText("Time remaining  " + sdf.format(thisTimeLimit * 1000));
-        timeCoundDown.start();
+        timeCountDown.start();
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -818,7 +892,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == load) {
             System.out.println("Load Game");
             saverAndLoader.LOAD();
-            timeCoundDown.stop();
+            timeCountDown.stop();
             timeCount.stop();
             this.dispose();
         } else if (obj == save) {
@@ -916,7 +990,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             motion.setEffectSoundStatus();
         } else if (obj == statistics) {
             System.out.println("Game Statistics");
-            new GameStatics().setUpGameStatics();
+            try {
+                new GameStatics().setUpGameStatics();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         } else if (obj == _10sec) {
             System.out.println("Set target time: 10 sec");
             this.timeLimit = 10L;
@@ -940,8 +1018,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         } else if (obj == quitCountDown) {
             setTimeLimit(timeLimit);
             timeCountDownLabel.setText("Time remaining  —:—");
-            timeCoundDown.stop();
+            timeCountDown.stop();
             setImages();
+            this.requestFocus();
         }
     }
 
@@ -1112,6 +1191,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 replayGame();
             }
             setImages();
+            syncStatisticsData();
             gameOverDialog();
         } else if (code == 38) {
             System.out.println("up");
@@ -1123,6 +1203,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 replayGame();
             }
             setImages();
+            syncStatisticsData();
             gameOverDialog();
         } else if (code == 39) {
             System.out.println("right");
@@ -1134,6 +1215,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 replayGame();
             }
             setImages();
+            syncStatisticsData();
             gameOverDialog();
         } else if (code == 40) {
             System.out.println("down");
@@ -1145,6 +1227,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 replayGame();
             }
             setImages();
+            syncStatisticsData();
             gameOverDialog();
         } else if (code == 32 && isAiAvailable) {
             AIRunning();

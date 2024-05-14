@@ -1,0 +1,4 @@
+
+PowerOf2&TimeTo_2048=40&UserName=t
+PowerOf2&TimeTo_1024=45&UserName=t
+PowerOf2&TimeTo_1024=36&UserName=gan

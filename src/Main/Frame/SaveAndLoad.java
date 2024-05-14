@@ -96,17 +96,8 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     private final int STATUS_LOAD = 1;
     private int status = 0;
 
-    private int maxScore = 0;
-
-    //todo: debug
-    private int getMaxScore() {
-        int maxScore = 0;
-        if (gameDataStock.getCurrentScore() > maxScore) {
-            maxScore = gameDataStock.getCurrentScore();
-            AutoSave();
-            System.out.println("Auto saved");
-        }
-        return maxScore;
+    private long getSecond() {
+        return gameDataStock.getTimeLapsed();
     }
 
     //设置界面元素
@@ -179,7 +170,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
         if (!isSlotEmpty(4)) {
             JLabel label_saved = new JLabel();
-            String content = String.format("Auto Saved When Score is %d.", getMaxScore());
+            String content = String.format("Auto saved when elapsed %d sec.", getSecond());
             label_saved.setText(content);
             label_saved.setForeground(Color.WHITE);
             label_saved.setSize(240, 30);
@@ -260,8 +251,8 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
             oos.writeObject(gameDataStock);
             oos.close();
-//            toString(gameDataStock);
-//            System.out.println("Auto saved");
+            toString(gameDataStock);
+            System.out.println("Auto saved");
         } catch (IOException e) {
             System.out.println("Auto save failed");
             JOptionPane.showMessageDialog(null, "Auto save failed!", "Caution", JOptionPane.INFORMATION_MESSAGE);
@@ -380,7 +371,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
         loaded.setData(gameData);
         loaded.setID(userID);
-        loaded.setStatus(1); //设置为有用户已登陆
+        loaded.setStatus(0); //设置为有用户已登陆
         loaded.getSeconds(timeLapsed);
         loaded.loadSetUp();
         JOptionPane.showMessageDialog(null, "Game Loaded Successfully", "Notice", JOptionPane.INFORMATION_MESSAGE);
