@@ -34,3 +34,17 @@ PowerOf2&tile=4&UserName=t
 PowerOf2&tile=4&UserName=tt
 PowerOf2&tile=4&UserName=tt
 PowerOf2&tile=4&UserName=t
+PowerOf2&tile=4&UserName=gan
+PowerOf2&tile=8&UserName=gan
+PowerOf2&tile=16&UserName=gan
+PowerOf2&tile=32&UserName=gan
+PowerOf2&tile=64&UserName=gan
+PowerOf2&tile=128&UserName=gan
+PowerOf2&tile=256&UserName=gan
+PowerOf2&tile=512&UserName=gan
+PowerOf2&tile=2048&UserName=gan
+PowerOf2&tile=4096&UserName=gan
+PowerOf2&tile=4&UserName=CS_109
+PowerOf2&tile=4&UserName=t
+PowerOf2&tile=4&UserName=gan
+PowerOf2&tile=4&UserName=gan

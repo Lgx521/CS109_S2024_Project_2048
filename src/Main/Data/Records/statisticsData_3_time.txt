@@ -1,2 +1,10 @@
 PowerOf3&TimeTo_243=11&UserName=gan
 PowerOf3&TimeTo_243=9&UserName=test
+PowerOf3&TimeTo_243=24&UserName=gan
+PowerOf3&TimeTo_729=40&UserName=gan
+PowerOf3&TimeTo_243=11&UserName=CS_109
+PowerOf3&TimeTo_729=30&UserName=CS_109
+PowerOf3&TimeTo_243=13&UserName=gan
+PowerOf3&TimeTo_729=26&UserName=gan
+PowerOf3&TimeTo_729=68&UserName=gan
+PowerOf3&TimeTo_243=68&UserName=gan
