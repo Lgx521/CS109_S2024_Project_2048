@@ -26,13 +26,18 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //图片基础路径
     private final String ImagePath = "src/Main/Resources/";
+
+    //Timer
     private final Timer timeCountDown = new Timer(1000, this);
     private final Timer timeCount = new Timer(1000, this);
+
+    //game mode
     private final int POWER_OF_2 = 0;
     private final int POWER_OF_3 = 1;
 
     //2或3模式，默认Power of 2
     public int gameModeSelector = 0;
+
     public long timeLimit = 1000000;
     public long thisTimeLimit = 10;
 
@@ -687,6 +692,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         targetSet.setLayout(null);
         targetSet.setLocationRelativeTo(null);
         targetSet.setAlwaysOnTop(true);
+        targetSet.setFocusable(false);
         targetSet.setTitle("Set Your Target");
         if (gameModeSelector == POWER_OF_2) {
             targetSet.setSize(270, 260);
@@ -737,7 +743,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         c.setSize(120, 25);
         JLabel d = new JLabel("Push...Push...!");
         d.setSize(120, 25);
-
 
         a.setBounds(40, 30, 120, 25);
         b.setBounds(40, 60, 120, 25);
@@ -881,6 +886,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         timeCountSelector = new JDialog();
         timeCountSelector.setLayout(null);
         timeCountSelector.setAlwaysOnTop(true);
+        timeCountSelector.setFocusable(false);
         timeCountSelector.setLocationRelativeTo(this);
         timeCountSelector.setTitle("Select limit");
         timeCountSelector.setSize(180, 250);
@@ -939,6 +945,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             this.dispose();
         } else if (obj == save) {
             System.out.println("Save Game");
+            timeCountDown.stop();
+            timeCount.stop();
             //同步数据
             syncer.sync(USER_ID, data, motion.getSteps(), motion.getScoreArr(), motion.getTarget(), motion.status, gameModeSelector, seconds);
             //保存
@@ -948,10 +956,14 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             musicObject.stopMusic();
         } else if (obj == login) {
             System.out.println("Login");
+            timeCountDown.stop();
+            timeCount.stop();
             this.dispose();
             new LoginFrame().setup();
         } else if (obj == logout) {
             System.out.println("Logout");
+            timeCountDown.stop();
+            timeCount.stop();
             this.dispose();
             new LoginFrame().setup();
         } else if (obj == music_1) {
@@ -1270,7 +1282,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        System.out.println(code);
         if (code == 37) {
             System.out.println("left");
             if (motion.status == 0) {
@@ -1320,6 +1331,14 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             syncStatisticsData();
             gameOverDialog();
         } else if (code == 32 && isAiAvailable) {
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.LEFT, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.LEFT, data);
+            } else if (motion.status == 2) {
+                replayGame();
+                return;
+            }
             AIRunning();
             gameOverDialog();
         }
