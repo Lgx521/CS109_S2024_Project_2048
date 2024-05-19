@@ -451,8 +451,27 @@ public class GameStatics extends JFrame {
                             "   You can click button 'AI' to perform this prop.\n\n" +
                             "                                           Next Page --> Game Modes",
                     "---> Game Modes\n" +
-                            "",
-                    "Save和Load保存和加载游戏"
+                            " > 2^n: \n" +
+                            "   Classic 2048 Game.\n" +
+                            " > 3^n: \n" +
+                            "   Change the game rule to 3 grid with same number can\n" +
+                                    "merge to a new grid with the number of 3 times before.\n" +
+                            " > Count Down: \n" +
+                            "   You can select a time limit to challenge your limit.\n" +
+                            "When time limit is exceeded, you can't do any operation\n" +
+                            "or restart the game\n" +
+                            " > Target: \n" +
+                            "   You can select the target Tile to reach.\n" +
+                            "   You can continue to play after you reach your goal.\n" +
+                            "                                           Next Page --> Save and Load",
+                    "---> Save and Load\n" +
+                            "   We allow you to save you game progress.\n" +
+                            "   You have 3 save slots, additionally, you can save\n" +
+                            "to a single game file (*.2048) in your laptop.\n" +
+                            "   You can load your game from your archive slots or\n" +
+                            "from you previous save file. Please ensure that the game\n" +
+                            "file does belongs to you, or that file won't be loaded!\n\n\n\n" +
+                            "Enjoy your journey in this game playing!"
             };
 
             AtomicInteger currentIndex = new AtomicInteger(0);
