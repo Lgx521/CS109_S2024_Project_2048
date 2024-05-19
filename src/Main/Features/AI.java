@@ -13,7 +13,7 @@ public class AI {
     public void setMotion(int mode) {
         if (mode == 0) {
             motion = new AIMotion_2();
-            this.N = 360;
+            this.N = 450;
         } else if (mode == 1) {
             motion = new AIMotion_3();
             this.N = 650;
@@ -21,7 +21,7 @@ public class AI {
     }
 
     //最高迭代训练次数
-    private int N = 350;
+    private int N = 450;
 
     //原始数组，不予改动
     int[][] data;

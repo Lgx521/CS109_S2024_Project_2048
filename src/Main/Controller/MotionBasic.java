@@ -113,6 +113,12 @@ public abstract class MotionBasic extends JFrame{
         System.out.printf("Effect Sound Status is %s.\n", arr[effectMusicPlayer.EffectSoundStatus % 2]);
     }
 
+    //GameFrame中关闭效果声
+    public void closeEffectSound() {
+        effectMusicPlayer.EffectSoundStatus = 1;
+        System.out.println("Effect sound off");
+    }
+
     //取对称矩阵
     public int[][] SymmetryTransformation(int[][] data) {
         int[][] Transformed = new int[data[0].length][data.length];

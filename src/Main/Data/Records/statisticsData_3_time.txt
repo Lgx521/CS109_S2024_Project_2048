@@ -8,3 +8,4 @@ PowerOf3&TimeTo_243=13&UserName=gan
 PowerOf3&TimeTo_729=26&UserName=gan
 PowerOf3&TimeTo_729=68&UserName=gan
 PowerOf3&TimeTo_243=68&UserName=gan
+PowerOf3&TimeTo_243=20&UserName=gan

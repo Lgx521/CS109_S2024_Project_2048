@@ -63,6 +63,12 @@ public class GameStatics extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setLayout(null);
 
+        JLabel tips = new JLabel("Still confuse about this game?  " +
+                " Check the game instructor here!  --->");
+        tips.setSize(500,30);
+        tips.setForeground(Color.WHITE);
+        tips.setBounds(60, 388, 500, 30);
+
         addTipButton();
 
         ImageIcon img = new ImageIcon("src/Main/Resources/statistics.png");
@@ -70,12 +76,13 @@ public class GameStatics extends JFrame {
         backgroundImage.setSize(655, 420);
         backgroundImage.setBounds(0, 0, 640, 420);
 
+        this.getContentPane().add(tips);
+
         setJLabel();
 
         addContent();
 
         this.getContentPane().add(backgroundImage);
-
 
     }
 
@@ -205,14 +212,12 @@ public class GameStatics extends JFrame {
                 }
             }
         }
-
-        System.out.println(maxTile_2);
-        System.out.println(maxTile_3);
-        System.out.println(minTime_2048);
-        System.out.println(minTime_1024);
-        System.out.println(minTime_729);
-        System.out.println(minTime_243);
-
+//        System.out.println(maxTile_2);
+//        System.out.println(maxTile_3);
+//        System.out.println(minTime_2048);
+//        System.out.println(minTime_1024);
+//        System.out.println(minTime_729);
+//        System.out.println(minTime_243);
     }
 
     //JLabelSetter
@@ -352,8 +357,8 @@ public class GameStatics extends JFrame {
     //game instructor //todo
     private void addTipButton() {
         JButton button = new JButton("Tips");
-        button.setLocation(520, 360);
-        button.setSize(100, 40);
+        button.setLocation(508, 388);
+        button.setSize(100, 30);
         add(button);
         button.addActionListener(e -> {
             String[] manualSections = {
@@ -417,6 +422,7 @@ public class GameStatics extends JFrame {
                             "",
                     "Save和Load保存和加载游戏"
             };
+
             AtomicInteger currentIndex = new AtomicInteger(0);
 
             // 创建文本区域并设置初始内容
@@ -427,38 +433,35 @@ public class GameStatics extends JFrame {
             // 将文本区域放到滚动窗格中
             JScrollPane scrollPane = new JScrollPane(textArea);
 
-            //中英文切换
-
             // 创建"下一条"按钮
             JButton nextButton = new JButton("Next Page");
             nextButton.addActionListener(f -> {
                 // 切换到下一条内容
-                int nextIndex = currentIndex.incrementAndGet();
-                if (nextIndex < manualSections.length) {
-                    textArea.setText(manualSections[nextIndex]);
+                int index = currentIndex.incrementAndGet();
+                if (index < manualSections.length) {
+                    textArea.setText(manualSections[index]);
                 } else {
                     // 显示完所有内容后关闭弹窗
                     JOptionPane.getRootFrame().dispose();
                 }
             });
 
-            //创建“上一条”按钮
-            JButton lastButton = new JButton("Previous Page");
-            lastButton.addActionListener(f -> {
-                // 切换到上一条内容
-                int lastIndex = currentIndex.decrementAndGet();
-                if (lastIndex >= 0) {
-                    textArea.setText(manualSections[lastIndex]);
-                } else {
-                    // 显示完所有内容后关闭弹窗
-                    JOptionPane.getRootFrame().dispose();
-                }
-            });
+//            //创建“上一条”按钮
+//
+//            //todo: debug
+//            JButton lastButton = new JButton("Previous Page");
+//            lastButton.addActionListener(f -> {
+//                // 切换到上一条内容
+//                int index = currentIndex.decrementAndGet();
+//                if (index >= 0) {
+//                    textArea.setText(manualSections[index]);
+//                }
+//            });
 
             // 创建面板，将文本区域和按钮放置在一起
             JPanel panel = new JPanel();
             panel.add(scrollPane);
-            panel.add(lastButton);
+//            panel.add(lastButton);
             panel.add(nextButton);
             // 显示弹窗
             JOptionPane.showMessageDialog(this, panel, "2048 Instructor", JOptionPane.INFORMATION_MESSAGE);

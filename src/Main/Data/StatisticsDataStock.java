@@ -24,6 +24,7 @@ public class StatisticsDataStock {
     private long timeTo_729 = 36000L;
     private long timeTo_243 = 36000L;
 
+
     private final String filePathForPowerOf2 = "src/Main/Data/Records/statisticsData_2_tile.txt";
     private final String filePathForPowerOf2_time = "src/Main/Data/Records/statisticsData_2_time.txt";
     private final String filePathForPowerOf3 = "src/Main/Data/Records/statisticsData_3_tile.txt";

@@ -139,6 +139,9 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //表示Hammer是否开启
     private boolean isHammerAvailable = false;
 
+    //AI是否可用标签
+    private boolean isAiAvailable = false;
+
     //当前鼠标所在块位置索引
     private int cellIndex;
 
@@ -164,6 +167,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JButton _10min = new JButton();
     JButton _30min = new JButton();
     JButton _60min = new JButton();
+
+    //AI与Hammer是否使用标签
+    boolean isAiUsed = false;
+    boolean ishammerUsed = false;
 
 
     //Methods ---------------------
@@ -247,7 +254,8 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //统计数据同步
     private void syncStatisticsData() {
-        if (STATUS == 1) {
+        //若使用了Hammer，直接return，则不进行统计
+        if (ishammerUsed || STATUS == 1) {
             return;
         }
         System.out.println("1");
@@ -792,12 +800,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         return ans;
     }
 
-    //AI是否可用标签
-    private boolean isAiAvailable = false;
-
     //AI
     private void AIRunning() {
         ai_prop.setMotion(gameModeSelector);
+        motion.closeEffectSound();
         int direction = ai_prop.MonteCarlo(data);
         if (direction == 0) {
             motion.moveBeforeWin(motion.RIGHT, data);
@@ -1051,11 +1057,12 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                     "and then you can change the tile to that number.\n" +
                     " > ZERO is a valid grid number, too. You can clear that grid\n" +
                     "by entering '0'.\n" +
-                    " > Once you performed Hammer, this game's score will\n" +
+                    " > Once you performed Hammer, this game's score won't\n" +
                     " be noted at statistics data!\n" +
                     "   Press 'OK' to confirm using the prop.", "Prop: Hammer", JOptionPane.OK_CANCEL_OPTION);
             if (ans == 0) {
                 System.out.println("Confirm to use AI");
+                ishammerUsed = true;
                 isHammerAvailable = true;
             }
             setImages();
@@ -1064,12 +1071,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                     " > This AI prop is based on Monte Carlo's algorithm. \n" +
                     " > Every time you press 'space', AI will help you move\n" +
                     "automatically with the best predicted direction.\n" +
-                    " > Once you performed AI to move even only one step,\n" +
-                    "this game's score will be noted at statistics data!\n" +
                     "   Press 'OK' to confirm using the prop.", "Prop: AI", JOptionPane.OK_CANCEL_OPTION);
             if (ans == 0) {
                 System.out.println("Confirm to use AI");
                 isAiAvailable = true;
+                isAiUsed = true;
             }
         } else if (obj == _2N) {
             System.out.println("2^n mode");

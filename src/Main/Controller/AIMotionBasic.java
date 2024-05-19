@@ -1,6 +1,7 @@
 package Main.Controller;
 
 public abstract class AIMotionBasic {
+
     public abstract void moveUp(int[][] TempData);
 
     public abstract void moveDown(int[][] TempData);
