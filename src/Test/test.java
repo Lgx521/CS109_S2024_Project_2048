@@ -1,13 +1,8 @@
 package Test;
 
 import Main.Features.AI;
-import Main.Features.bgmPlayer;
-import Main.Frame.GameFrame;
-import Main.Frame.SaveAndLoad;
-
 
 import javax.swing.*;
-import java.util.Random;
 
 public class test extends JFrame implements Runnable {
     static AI ai = new AI();

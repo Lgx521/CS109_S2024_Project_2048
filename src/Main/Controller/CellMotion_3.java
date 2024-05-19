@@ -22,7 +22,7 @@ public class CellMotion_3 extends MotionBasic {
 
     //在游戏结束之前调用，判断是否出现目标格点
     @Override
-    public void moveBeforeWin(int issue, int[][] data){
+    public void moveBeforeWin(int issue, int[][] data) {
         if (issue == RIGHT) {
             moveRight(data);
         } else if (issue == LEFT) {
@@ -37,7 +37,7 @@ public class CellMotion_3 extends MotionBasic {
 
     //在游戏结束之后调用，不判断是否出现目标格点，只判断是否能继续移动
     @Override
-    public void moveAfterWin(int issue, int[][] data)  {
+    public void moveAfterWin(int issue, int[][] data) {
         if (issue == RIGHT) {
             moveRight(data);
         } else if (issue == LEFT) {
@@ -54,7 +54,7 @@ public class CellMotion_3 extends MotionBasic {
 
     //向右移动
     @Override
-    public void moveRight(int[][] data)  {
+    public void moveRight(int[][] data) {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -132,7 +132,7 @@ public class CellMotion_3 extends MotionBasic {
 
     //向左移动
     @Override
-    public void moveLeft(int[][] data){
+    public void moveLeft(int[][] data) {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -502,7 +502,7 @@ public class CellMotion_3 extends MotionBasic {
         if (ifYouWin(data) && !isCanNotMovable(data)) {
             //胜利：胜利并且可以继续移动
             System.out.println("Win and Can play");
-            if(flagOfIsMovable != YOU_WIN_CAN_PLAY) {
+            if (flagOfIsMovable != YOU_WIN_CAN_PLAY) {
                 effectMusicPlayer.playEffectSound(effectMusicPlayer.VICTORY_SOUND);
             }
             flagOfIsMovable = YOU_WIN_CAN_PLAY;

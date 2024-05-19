@@ -20,6 +20,7 @@ public class InitialGrids {
         printData(data);
         return data;
     }
+
     private int[][] initialData() {
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {

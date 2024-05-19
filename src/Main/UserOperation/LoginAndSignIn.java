@@ -1,10 +1,8 @@
 package Main.UserOperation;
 
-import javax.swing.*;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +34,7 @@ public class LoginAndSignIn {
             System.out.println("File Save Failed");
         }
         //保存MD5校验码
-        fileVerificationSaver(new File("src/Main/Data/UserData.txt"),"src/Main/Data/UserData_VerificationCode.txt");
+        fileVerificationSaver(new File("src/Main/Data/UserData.txt"), "src/Main/Data/UserData_VerificationCode.txt");
     }
 
     //查询用户是否存在
@@ -49,7 +47,7 @@ public class LoginAndSignIn {
         File UserData = new File("src/Main/Data/UserData.txt");
 
         //先进行文件完整性校验
-        if (!md5Verification(UserData,"src/Main/Data/UserData_VerificationCode.txt")) {
+        if (!md5Verification(UserData, "src/Main/Data/UserData_VerificationCode.txt")) {
             System.out.println("md5 verify failed!");
             return -3;
         }

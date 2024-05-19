@@ -5,18 +5,27 @@ import Main.Features.EffectMusicPlayer;
 import javax.swing.*;
 import java.util.Random;
 
-public abstract class MotionBasic extends JFrame{
+public abstract class MotionBasic extends JFrame {
 
     //抽象方法
     public abstract void moveBeforeWin(int issue, int[][] data);
+
     public abstract void moveAfterWin(int issue, int[][] data);
+
     public abstract int getTarget();
+
     public abstract void setTarget(int target);
+
     public abstract void isEnding(int[][] data);
+
     public abstract void moveRight(int[][] data);
-    public abstract void moveLeft(int[][] data) ;
+
+    public abstract void moveLeft(int[][] data);
+
     public abstract void moveUp(int[][] data);
-    public abstract void moveDown(int[][] data) ;
+
+    public abstract void moveDown(int[][] data);
+
     public abstract boolean isCanNotMovable(int[][] data);
 
     //游戏状态常量
@@ -102,7 +111,7 @@ public abstract class MotionBasic extends JFrame{
     }
 
     //在GameFrame中调用的声音播放
-    public void EffectSoundPlayer(int soundConstant){
+    public void EffectSoundPlayer(int soundConstant) {
         effectMusicPlayer.playEffectSound(soundConstant);
     }
 

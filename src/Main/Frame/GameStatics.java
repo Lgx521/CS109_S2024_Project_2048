@@ -65,7 +65,7 @@ public class GameStatics extends JFrame {
 
         JLabel tips = new JLabel("Still confuse about this game?  " +
                 " Check the game instructor here!  --->");
-        tips.setSize(500,30);
+        tips.setSize(500, 30);
         tips.setForeground(Color.WHITE);
         tips.setBounds(60, 388, 500, 30);
 

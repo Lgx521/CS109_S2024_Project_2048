@@ -86,7 +86,7 @@ public class CellMotion_2 extends MotionBasic {
 
     //向右移动
     @Override
-    public void moveRight(int[][] data){
+    public void moveRight(int[][] data) {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;
@@ -236,7 +236,7 @@ public class CellMotion_2 extends MotionBasic {
 
     //向上移动
     @Override
-    public void moveUp(int[][] data)  {
+    public void moveUp(int[][] data) {
         if (isCanNotMovable(data)) {
             System.out.println("Game Over!");
             return;

@@ -69,6 +69,12 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JButton _1024 = new JButton();
     JButton _2048 = new JButton();
 
+    //上下左右移动操作按钮
+    JButton move_Right = new JButton();
+    JButton move_Left = new JButton();
+    JButton move_Up = new JButton();
+    JButton move_Down = new JButton();
+
     //创建Hammer选择图层
     JLabel a1 = new JLabel();
     JLabel a2 = new JLabel();
@@ -384,6 +390,11 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         music_3.addActionListener(this);
         effectOff.addActionListener(this);
 
+        move_Right.addActionListener(this);
+        move_Left.addActionListener(this);
+        move_Up.addActionListener(this);
+        move_Down.addActionListener(this);
+
         quitCountDown.addActionListener(this);
 
         statistics.addActionListener(this);
@@ -555,6 +566,40 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         JLabel backImage = new JLabel(ImageBack);
         backImage.setSize(800, 600);
         backImage.setBounds(0, 0, 800, 600);
+
+        //移动button
+        move_Right.setBounds(40, 510, 90, 40);
+        move_Right.setText("Right");
+        move_Right.setFont(new Font("Arial", Font.BOLD, 18));
+        move_Right.setContentAreaFilled(false);
+        move_Right.setBorderPainted(false);
+        move_Right.setForeground(Color.WHITE);
+
+        move_Left.setBounds(140, 510, 90, 40);
+        move_Left.setText("Left");
+        move_Left.setFont(new Font("Arial", Font.BOLD, 18));
+        move_Left.setContentAreaFilled(false);
+        move_Left.setBorderPainted(false);
+        move_Left.setForeground(Color.WHITE);
+
+        move_Up.setBounds(240, 510, 90, 40);
+        move_Up.setText("Up");
+        move_Up.setFont(new Font("Arial", Font.BOLD, 18));
+        move_Up.setContentAreaFilled(false);
+        move_Up.setBorderPainted(false);
+        move_Up.setForeground(Color.WHITE);
+
+        move_Down.setBounds(340, 510, 95, 40);
+        move_Down.setText("Down");
+        move_Down.setFont(new Font("Arial", Font.BOLD, 18));
+        move_Down.setContentAreaFilled(false);
+        move_Down.setBorderPainted(false);
+        move_Down.setForeground(Color.WHITE);
+
+        this.ImageContainer.add(move_Right);
+        this.ImageContainer.add(move_Left);
+        this.ImageContainer.add(move_Up);
+        this.ImageContainer.add(move_Down);
 
         //添加到图层
         this.ImageContainer.add(steplable);
@@ -1027,6 +1072,54 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             timeCountDown.stop();
             setImages();
             this.requestFocus();
+        } else if (obj == move_Right) {
+            System.out.println("right");
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.RIGHT, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.RIGHT, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
+            setImages();
+            syncStatisticsData();
+            gameOverDialog();
+        } else if (obj == move_Left) {
+            System.out.println("left");
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.LEFT, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.LEFT, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
+            setImages();
+            syncStatisticsData();
+            gameOverDialog();
+        } else if (obj == move_Up) {
+            System.out.println("up");
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.UP, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.UP, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
+            setImages();
+            syncStatisticsData();
+            gameOverDialog();
+        } else if (obj == move_Down) {
+            System.out.println("down");
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.DOWN, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.DOWN, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
+            setImages();
+            syncStatisticsData();
+            gameOverDialog();
         }
     }
 

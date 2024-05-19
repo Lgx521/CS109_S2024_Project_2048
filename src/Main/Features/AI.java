@@ -166,7 +166,7 @@ public class AI {
                 return;
             }
             int direction = MonteCarlo(Data);
-             if (direction == 0) {
+            if (direction == 0) {
                 motion.moveRight(Data);
             } else if (direction == 1) {
                 motion.moveLeft(Data);
