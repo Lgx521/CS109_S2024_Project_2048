@@ -112,7 +112,6 @@ public class StatisticsDataStock {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            //todo
             System.out.println("File error");
         }
         //保存md5校验码
@@ -127,7 +126,6 @@ public class StatisticsDataStock {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            //todo
             System.out.println("File error");
         }
         //保存md5校验码
@@ -142,7 +140,6 @@ public class StatisticsDataStock {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            //todo
             System.out.println("File error");
         }
         //保存md5校验码
@@ -157,7 +154,6 @@ public class StatisticsDataStock {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            //todo
             System.out.println("File error");
         }
         //保存md5校验码
@@ -172,7 +168,6 @@ public class StatisticsDataStock {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            //todo
             System.out.println("File error");
         }
         //保存md5校验码
@@ -187,7 +182,6 @@ public class StatisticsDataStock {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            //todo
             System.out.println("File error");
         }
         //保存md5校验码
