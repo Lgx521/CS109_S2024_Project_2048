@@ -12,20 +12,30 @@ import java.io.IOException;
 
 public class LoginFrame extends JFrame implements ActionListener, ItemListener {
 
-    LoginAndSignIn userOpeartion = new LoginAndSignIn();
-    GameFrame gameFrame = new GameFrame();
-
     private final int GUSET_MODE = 1;
     private final int LOG_IN = 0;
 
+    //提示常量
+    private final int NONE_INPUT = 0;
+    private final int NONE_PASSWORD = 1;
+    private final int WRONG_PASSWORD = 2;
+    private final int INVALID_USERNAME = 3;
+
+    LoginAndSignIn userOpeartion = new LoginAndSignIn();
+
+    GameFrame gameFrame = new GameFrame();
+
     JTextField loginUserName = new JTextField();
+
     JPasswordField userPassword = new JPasswordField();
+
     Checkbox showPwd = new Checkbox("Display");
+
     JButton commitJbt = new JButton("Log in");
     JButton signinJtb = new JButton("Sign In");
     JButton guest = new JButton("Guest Mode");
-    JCheckBox a = new JCheckBox("test");
 
+    JCheckBox a = new JCheckBox("test");
 
     //创建setup方法供外界访问
     public void setup() {
@@ -107,12 +117,6 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
         this.getContentPane().add(background);
 
     }
-
-    //提示常量
-    private final int NONE_INPUT = 0;
-    private final int NONE_PASSWORD = 1;
-    private final int WRONG_PASSWORD = 2;
-    private final int INVALID_USERNAME = 3;
 
     //登陆失败提示框初始化
     private void initialLoginFailure(int issue) {

@@ -27,6 +27,7 @@ public class GameStatics extends JFrame {
     JLabel colume_5_user = new JLabel();
     JLabel colume_6_user = new JLabel();
 
+    LoginAndSignIn userOperator = new LoginAndSignIn();
 
     private String maxTile_2 = "0";
     private String userName_MaxTile_2 = "";
@@ -45,9 +46,6 @@ public class GameStatics extends JFrame {
 
     private String minTime_243 = "100000";
     private String userName_minTime_243 = "";
-
-
-    LoginAndSignIn userOperator = new LoginAndSignIn();
 
     //外部访问
     public void setUpGameStatics() throws IOException {
@@ -238,12 +236,7 @@ public class GameStatics extends JFrame {
         } else {
             modified = true;
         }
-//        System.out.println(maxTile_2);
-//        System.out.println(maxTile_3);
-//        System.out.println(minTime_2048);
-//        System.out.println(minTime_1024);
-//        System.out.println(minTime_729);
-//        System.out.println(minTime_243);
+
 
         if (modified) {
             JOptionPane.showMessageDialog(this, "Statistics data stock file is modified!\n" +
@@ -386,7 +379,7 @@ public class GameStatics extends JFrame {
         this.getContentPane().add(title_3);
     }
 
-    //game instructor //todo
+    //game instructor
     private void addTipButton() {
         JButton button = new JButton("Tips");
         button.setLocation(508, 388);
@@ -455,7 +448,7 @@ public class GameStatics extends JFrame {
                             "   Classic 2048 Game.\n" +
                             " > 3^n: \n" +
                             "   Change the game rule to 3 grid with same number can\n" +
-                                    "merge to a new grid with the number of 3 times before.\n" +
+                            "merge to a new grid with the number of 3 times before.\n" +
                             " > Count Down: \n" +
                             "   You can select a time limit to challenge your limit.\n" +
                             "When time limit is exceeded, you can't do any operation\n" +
@@ -497,25 +490,13 @@ public class GameStatics extends JFrame {
                 }
             });
 
-//            //创建“上一条”按钮
-//
-//            //todo: debug
-//            JButton lastButton = new JButton("Previous Page");
-//            lastButton.addActionListener(f -> {
-//                // 切换到上一条内容
-//                int index = currentIndex.decrementAndGet();
-//                if (index >= 0) {
-//                    textArea.setText(manualSections[index]);
-//                }
-//            });
-
             // 创建面板，将文本区域和按钮放置在一起
             JPanel panel = new JPanel();
             panel.add(scrollPane);
-//            panel.add(lastButton);
             panel.add(nextButton);
             // 显示弹窗
             JOptionPane.showMessageDialog(this, panel, "2048 Instructor", JOptionPane.INFORMATION_MESSAGE);
         });
     }
+
 }

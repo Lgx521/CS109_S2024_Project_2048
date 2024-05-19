@@ -41,7 +41,9 @@ public class LoginAndSignIn {
     /* 存在：返回其UserID
      * 不存在：返回-1
      * 文件无法匹配：返回-2
+     * 文件被修改：返回-3
      * */
+
     public int isUserConsistent(String userName) throws IOException {
 
         File UserData = new File("src/Main/Data/UserData.txt");
@@ -210,6 +212,5 @@ public class LoginAndSignIn {
             throw new RuntimeException(e);
         }
     }
-
 
 }

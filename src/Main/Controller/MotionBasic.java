@@ -7,6 +7,27 @@ import java.util.Random;
 
 public abstract class MotionBasic extends JFrame {
 
+    //游戏进程常量
+    public final int IN_PROGRESS = -1;
+    public final int YOU_WIN_CAN_PLAY = 0;
+    public final int YOU_WIN_CANNOT_PLAY = 1;
+    public final int YOU_LOST = 2;
+    //移动方向常量
+    public final int RIGHT = 0;
+    public final int LEFT = 1;
+    public final int UP = 2;
+    public final int DOWN = 3;
+    //游戏状态常量
+    /* status == 0: 正常游戏
+     * status == 1: 胜利后继续游玩
+     * status == 2: 胜利后重新开始游戏 */
+    public int status = 0;
+    public int flagOfIsMovable = IN_PROGRESS;
+    Random r = new Random();
+    Undo undo = new Undo();
+    EffectMusicPlayer effectMusicPlayer = new EffectMusicPlayer();
+    private final int[] score = {0, 0, 0, 0};
+
     //抽象方法
     public abstract void moveBeforeWin(int issue, int[][] data);
 
@@ -27,36 +48,6 @@ public abstract class MotionBasic extends JFrame {
     public abstract void moveDown(int[][] data);
 
     public abstract boolean isCanNotMovable(int[][] data);
-
-    //游戏状态常量
-    /* status == 0: 正常游戏
-     * status == 1: 胜利后继续游玩
-     * status == 2: 胜利后重新开始游戏 */
-    public int status = 0;
-
-    Random r = new Random();
-
-    Undo undo = new Undo();
-
-    EffectMusicPlayer effectMusicPlayer = new EffectMusicPlayer();
-
-
-    //游戏进程常量
-    public final int IN_PROGRESS = -1;
-    public final int YOU_WIN_CAN_PLAY = 0;
-    public final int YOU_WIN_CANNOT_PLAY = 1;
-    public final int YOU_LOST = 2;
-
-    //移动方向常量
-    public final int RIGHT = 0;
-    public final int LEFT = 1;
-    public final int UP = 2;
-    public final int DOWN = 3;
-
-
-    private int[] score = {0, 0, 0, 0};
-
-    public int flagOfIsMovable = IN_PROGRESS;
 
     //获取步数
     public int getSteps() {

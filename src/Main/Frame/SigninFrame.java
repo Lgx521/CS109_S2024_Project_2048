@@ -12,11 +12,22 @@ import java.io.IOException;
 
 public class SigninFrame extends JFrame implements ActionListener, ItemListener {
 
+    //提示常量
+    private final int NOTICE = 0;
+    private final int NO_USERNAME_INPUT = 1;
+    private final int NO_PASSWORD_INPUT = 2;
+    private final int NO_PASSWORD_VERIFICATION_INPUT = 3;
+    private final int VERIFICATION_ERROR = 4;
+    private final int USER_IS_ALREADY_IN = 5;
+
     JTextField loginUserName = new JTextField();
+
     JPasswordField userPassword = new JPasswordField();
     JPasswordField userPasswordCommit = new JPasswordField();
+
     Checkbox showPwd = new Checkbox("Display");
     Checkbox showPwd2 = new Checkbox("Display");
+
     JButton signIn = new JButton("Sign in");
     JButton guest = new JButton("Guest Mode");
 
@@ -101,14 +112,6 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
     }
 
-    //提示常量
-    private final int NOTICE = 0;
-    private final int NO_USERNAME_INPUT = 1;
-    private final int NO_PASSWORD_INPUT = 2;
-    private final int NO_PASSWORD_VERIFICATION_INPUT = 3;
-    private final int VERIFICATION_ERROR = 4;
-    private final int USER_IS_ALREADY_IN = 5;
-
     //验证用户名是否合法
     private boolean userNameValidation(String texts) {
         String regex = "\\w+";
@@ -174,7 +177,6 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
                 new LoginFrame().setup();
             } else if (userOperation.isUserConsistent(loginUserName.getText()) <= -2) {
                 JOptionPane.showMessageDialog(null, "Data file is modified!\nCan't read.\nPlease contact administrator.");
-                return;
             }
         } else {
             System.out.println("Wrong Password");

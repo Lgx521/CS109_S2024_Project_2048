@@ -290,9 +290,7 @@ public class AIMotion_3 extends AIMotionBasic {
             }
         }
         for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[0].length; j++) {
-                data[i][j] = Transformed[i][j];
-            }
+            System.arraycopy(Transformed[i], 0, data[i], 0, data[0].length);
         }
         return data;
     }

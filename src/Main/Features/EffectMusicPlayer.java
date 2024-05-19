@@ -9,12 +9,20 @@ import java.io.File;
 
 public class EffectMusicPlayer {
 
-    File musicPath;
-
-    Clip clip;
+    //效果声常数
+    public final int MOTION_SOUND = 0;
+    public final int VICTORY_SOUND = 1;
+    public final int LOST_SOUND = 2;
+    public final int UNDO_SOUND = 3;
+    public final int REPLAY_SOUND = 4;
+    public final int EXPLOSION_SOUND = 5;
 
     //效果声开关
     public int EffectSoundStatus = 2;
+
+    File musicPath;
+
+    Clip clip;
 
     {
         try {
@@ -23,7 +31,6 @@ public class EffectMusicPlayer {
             throw new RuntimeException(e);
         }
     }
-
 
     private void play(String musicLocation) {
         try {
@@ -41,15 +48,6 @@ public class EffectMusicPlayer {
             ex.printStackTrace();
         }
     }
-
-
-    //效果声常数
-    public final int MOTION_SOUND = 0;
-    public final int VICTORY_SOUND = 1;
-    public final int LOST_SOUND = 2;
-    public final int UNDO_SOUND = 3;
-    public final int REPLAY_SOUND = 4;
-    public final int EXPLOSION_SOUND = 5;
 
     //移动效果音播放
     public void playEffectSound(int soundConstant) {

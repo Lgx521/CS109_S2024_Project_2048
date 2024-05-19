@@ -9,6 +9,25 @@ public class AI {
 
     AIMotionBasic motion;
 
+    //原始数组，不予改动
+    int[][] data;
+
+    //测试数组
+    int[][] TempData = new int[4][4];
+
+    //随机数生成器
+    Random r = new Random();
+
+    //下一步预测成绩结果集
+    int[] nextStepScore = new int[4];
+
+    //最高迭代训练次数
+    private int N = 450;
+
+    //N次模拟结果集
+    int[] scoreResult = new int[N];
+    private int stepVerify = 0;
+
     //2^n, 3^n切换
     public void setMotion(int mode) {
         if (mode == 0) {
@@ -19,15 +38,6 @@ public class AI {
             this.N = 650;
         }
     }
-
-    //最高迭代训练次数
-    private int N = 450;
-
-    //原始数组，不予改动
-    int[][] data;
-
-    //测试数组
-    int[][] TempData = new int[4][4];
 
     //setter
     public void setData(int[][] data) {
@@ -40,15 +50,6 @@ public class AI {
             System.arraycopy(data[i], 0, TempData[i], 0, data[0].length);
         }
     }
-
-    //随机数生成器
-    Random r = new Random();
-
-    //N次模拟结果集
-    int[] scoreResult = new int[N];
-
-    //下一步预测成绩结果集
-    int[] nextStepScore = new int[4];
 
     //训练寻找下一步
     private void NextStepPrediction() {
@@ -116,8 +117,6 @@ public class AI {
 
         return result;
     }
-
-    private int stepVerify = 0;
 
     //蒙特卡洛
     public int MonteCarlo(int[][] data) {

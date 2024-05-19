@@ -24,12 +24,19 @@ public class GameDataStock implements Serializable {
 
     //初始值为-1，用于未进行游戏时便保存后读取的判断
     private int userID = -1;
-    private int[][] gameData = new int[4][4];
+
+    private final int[][] gameData = new int[4][4];
+
     private int steps = -1;
-    private int[] score = {0, 0, 0, 0};
+
+    private final int[] score = {0, 0, 0, 0};
+
     private int target = -1;
+
     private int motionStatus = -2;
+
     private int gameModeStatus = -1;
+
     private long timeLapsed = 0;
 
     public int getUserID() {

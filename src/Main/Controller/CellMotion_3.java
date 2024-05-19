@@ -469,7 +469,6 @@ public class CellMotion_3 extends MotionBasic {
                 RandomAddingCell(data);
             }
         } else {
-            return;
         }
 
 

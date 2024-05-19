@@ -369,9 +369,7 @@ public class AIMotion_2 extends AIMotionBasic {
             }
         }
         for (int i = 0; i < TempData.length; i++) {
-            for (int j = 0; j < TempData[0].length; j++) {
-                TempData[i][j] = Transformed[i][j];
-            }
+            System.arraycopy(Transformed[i], 0, TempData[i], 0, TempData[0].length);
         }
         return TempData;
     }
@@ -398,7 +396,6 @@ public class AIMotion_2 extends AIMotionBasic {
                 RandomAddingCell(TempData);
             }
         } else {
-            return;
         }
 
 
@@ -423,4 +420,5 @@ public class AIMotion_2 extends AIMotionBasic {
         SymmetryTransformation(TempData);
         return true;
     }
+
 }

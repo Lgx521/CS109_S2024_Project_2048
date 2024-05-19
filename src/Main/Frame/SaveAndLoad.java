@@ -19,14 +19,46 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
     private final String FilePath = "src/Main/Data/GameData/User";
 
-    private GameDataStock gameDataStock;
+    private final int BACKGROUND_0 = 0;
+    private final int BACKGROUND_1 = 1;
+    private final int BACKGROUND_2 = 2;
+    private final int BACKGROUND_3 = 3;
+    private final int BACKGROUND_4 = 4;
 
-    private int thisUserID = new GameFrame().getID();
+    //当为保存页面时，status == 0(STATUS_SAVE)，第四条无法被点击
+    private final int STATUS_SAVE = 0;
+    private final int STATUS_LOAD = 1;
 
     JLabel slot_1 = new JLabel();
     JLabel slot_2 = new JLabel();
     JLabel slot_3 = new JLabel();
     JLabel slot_4 = new JLabel();
+
+    //文件浏览器
+    JButton browser = new JButton();
+    JFileChooser browserPanel = new JFileChooser("src/Main/Data/GameData");
+
+    //选择保存文件夹
+    JButton saveToDirectory = new JButton();
+
+    //文件过滤器
+    FileFilter filter = new FileFilter() {
+        @Override
+        public boolean accept(File f) {
+            return f.getName().endsWith(".2048");
+        }
+
+        @Override
+        public String getDescription() {
+            return ".2048(Game Data File)";
+        }
+    };
+
+    private final GameDataStock gameDataStock;
+
+    private final int thisUserID = new GameFrame().getID();
+
+    private int status = 0;
 
     //构造器
     SaveAndLoad(GameDataStock gameDataStock) {
@@ -51,13 +83,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         addMouseListener(this);
         this.setVisible(true);
     }
-
-    //文件浏览器
-    JButton browser = new JButton();
-    JFileChooser browserPanel = new JFileChooser("src/Main/Data/GameData");
-
-    //选择保存文件夹
-    JButton saveToDirectory = new JButton();
 
     //初始化界面
     private void initialFrame() {
@@ -84,17 +109,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         browser.addMouseListener(this);
         saveToDirectory.addMouseListener(this);
     }
-
-    private final int BACKGROUND_0 = 0;
-    private final int BACKGROUND_1 = 1;
-    private final int BACKGROUND_2 = 2;
-    private final int BACKGROUND_3 = 3;
-    private final int BACKGROUND_4 = 4;
-
-    //当为保存页面时，status == 0(STATUS_SAVE)，第四条无法被点击
-    private final int STATUS_SAVE = 0;
-    private final int STATUS_LOAD = 1;
-    private int status = 0;
 
     private long getSecond() {
         return gameDataStock.getTimeLapsed();
@@ -244,7 +258,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
     }
 
     //自动保存
-    //todo
     public void AutoSave() {
         try {
             String fileName = FilePath + gameDataStock.getUserID() + "_AutoSave.2048";
@@ -312,22 +325,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         }
     }
 
-    //文件过滤器
-    FileFilter filter = new FileFilter() {
-        @Override
-        public boolean accept(File f) {
-            if (f.getName().endsWith(".2048")) {
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public String getDescription() {
-            return ".2048(Game Data File)";
-        }
-    };
-
     //文件浏览器
     private void addFileBrowser() throws InterruptedException {
         browserPanel.setDialogTitle("Please choose game data storage file (*.2048)");
@@ -390,7 +387,6 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             return !file.exists();
         }
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {

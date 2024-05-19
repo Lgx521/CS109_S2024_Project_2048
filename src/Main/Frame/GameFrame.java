@@ -21,8 +21,20 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //Attributes --------------------
 
-    //游戏board大小记录
-    private int[][] data;
+    //当前游戏玩家ID
+    private static int USER_ID;
+
+    //图片基础路径
+    private final String ImagePath = "src/Main/Resources/";
+    private final Timer timeCountDown = new Timer(1000, this);
+    private final Timer timeCount = new Timer(1000, this);
+    private final int POWER_OF_2 = 0;
+    private final int POWER_OF_3 = 1;
+
+    //2或3模式，默认Power of 2
+    public int gameModeSelector = 0;
+    public long timeLimit = 1000000;
+    public long thisTimeLimit = 10;
 
     //产生AI对象
     AI ai_prop = new AI();
@@ -30,22 +42,19 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     JMenu game = new JMenu("GamePlay");
     JMenu users = new JMenu("Users");
     JMenu music = new JMenu("Select BGM");
-    JMenuItem exit = new JMenuItem("Exit");
 
+    JMenuItem exit = new JMenuItem("Exit");
     JMenuItem replay = new JMenuItem("Replay Game");
     JMenuItem load = new JMenuItem("Load Game");
     JMenuItem save = new JMenuItem("Save Game");
     JMenuItem sound = new JMenuItem("Background Music Off");
     JMenuItem effectOff = new JMenuItem("Effect Sound On/Off");
-
     JMenuItem music_1 = new JMenuItem("Music 1");
     JMenuItem music_2 = new JMenuItem("Music 2");
     JMenuItem music_3 = new JMenuItem("Music 3");
-
     JMenuItem login = new JMenuItem("Log in");
     JMenuItem logout = new JMenuItem("Log out");
     JMenuItem signIn = new JMenuItem("Sign In");
-
     JMenuItem statistics = new JMenuItem("Game Statistics");
 
     //图形变化处理
@@ -102,11 +111,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     //内容图层版
     Container ImageContainer = new Container();
 
-    //图片基础路径
-    private final String ImagePath = "src/Main/Resources/";
-
-    //枚举类：设置主题
-    private String NumImagePath;
     ImagePathEnum img;
 
     //背景音乐播放对象
@@ -121,35 +125,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //时间格式化
     SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-
-    //data setter
-    public void setData(int[][] data) {
-        this.data = data;
-    }
-
-    //表示是否为登陆用户，用于显示Tips
-    private int STATUS;
-
-    //当前游戏玩家ID
-    private static int USER_ID;
-
-    //计时相关
-    private long seconds;
-    private final Timer timeCountDown = new Timer(1000, this);
-    private final Timer timeCount = new Timer(1000, this);
     JLabel timeLabel = new JLabel("00:00");
 
     //退出倒计时按钮
     JButton quitCountDown = new JButton();
-
-    //表示Hammer是否开启
-    private boolean isHammerAvailable = false;
-
-    //AI是否可用标签
-    private boolean isAiAvailable = false;
-
-    //当前鼠标所在块位置索引
-    private int cellIndex;
 
     //设置目标块大小对话框
     JDialog targetSet;
@@ -159,8 +138,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //产生motion对象，实现每次重启游戏步数清零重计
     MotionBasic motion;
-    private final int POWER_OF_2 = 0;
-    private final int POWER_OF_3 = 1;
 
     //倒计时label
     JLabel timeCountDownLabel = new JLabel();
@@ -178,9 +155,33 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     boolean isAiUsed = false;
     boolean ishammerUsed = false;
 
+    //游戏board大小记录
+    private int[][] data;
+
+    //枚举类：设置主题
+    private String NumImagePath;
+
+    //表示是否为登陆用户，用于显示Tips
+    private int STATUS;
+
+    //计时相关
+    private long seconds;
+
+    //表示Hammer是否开启
+    private boolean isHammerAvailable = false;
+
+    //AI是否可用标签
+    private boolean isAiAvailable = false;
+
+    //当前鼠标所在块位置索引
+    private int cellIndex;
 
     //Methods ---------------------
 
+    //data setter
+    public void setData(int[][] data) {
+        this.data = data;
+    }
 
     //设置当前游戏运行模式
     /*
@@ -190,9 +191,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
     public void setStatus(int status) {
         this.STATUS = status;
     }
-
-    //2或3模式，默认Power of 2
-    public int gameModeSelector = 0;
 
     //创建setup方法供外界访问
     public void setup() {
@@ -333,8 +331,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         jMenuBar.add(game);
         jMenuBar.add(users);
 
-//        game.add(load);
-//        game.add(save);
         game.add(replay);
         game.add(sound);
         game.add(effectOff);
@@ -345,8 +341,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         music.add(music_2);
         music.add(music_3);
 
-//        users.add(login);
-//        users.add(logout);
 
         //图形变化
         undo.setSize(140, 40);
@@ -466,15 +460,15 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+    //获得游戏运行时的用户
+    public int getID() {
+        return USER_ID;
+    }
+
     //设置游戏运行时的用户
     public void setID(int userID) {
         USER_ID = userID;
         System.out.println("Current user's ID: " + USER_ID);
-    }
-
-    //获得游戏运行时的用户
-    public int getID() {
-        return USER_ID;
     }
 
     //搭建元素
@@ -876,9 +870,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         timeLabel.setForeground(Color.WHITE);
         timeCount.start();
     }
-
-    public long timeLimit = 1000000;
-    public long thisTimeLimit = 10;
 
     //设置倒计时
     private void setTimeLimit(long timeLimit) {

@@ -11,6 +11,13 @@ import java.util.regex.Pattern;
 
 public class StatisticsDataStock {
 
+    private final String filePathForPowerOf2 = "src/Main/Data/Records/statisticsData_2_tile.txt";
+    private final String filePathForPowerOf2_time = "src/Main/Data/Records/statisticsData_2_time.txt";
+    private final String filePathForPowerOf3 = "src/Main/Data/Records/statisticsData_3_tile.txt";
+    private final String filePathForPowerOf3_time = "src/Main/Data/Records/statisticsData_3_time.txt";
+
+    private final String userDataFile = "src/Main/Data/UserData.txt";
+
     LoginAndSignIn userOperation = new LoginAndSignIn();
 
     private String userName;
@@ -19,18 +26,11 @@ public class StatisticsDataStock {
 
     private int maxTile_2 = 0;
     private int maxTile_3 = 0;
+
     private long timeTo_2048 = 36000L;
     private long timeTo_1024 = 36000L;
     private long timeTo_729 = 36000L;
     private long timeTo_243 = 36000L;
-
-
-    private final String filePathForPowerOf2 = "src/Main/Data/Records/statisticsData_2_tile.txt";
-    private final String filePathForPowerOf2_time = "src/Main/Data/Records/statisticsData_2_time.txt";
-    private final String filePathForPowerOf3 = "src/Main/Data/Records/statisticsData_3_tile.txt";
-    private final String filePathForPowerOf3_time = "src/Main/Data/Records/statisticsData_3_time.txt";
-
-    private final String userDataFile = "src/Main/Data/UserData.txt";
 
     //get userName
     private void setUserNameAccordingToFile(int userID) {
@@ -187,6 +187,5 @@ public class StatisticsDataStock {
         //保存md5校验码
         userOperation.fileVerificationSaver(new File(filePathForPowerOf3_time), "src/Main/Data/Records/md5/time_3_md5.txt");
     }
-
 
 }

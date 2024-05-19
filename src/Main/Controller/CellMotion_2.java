@@ -4,6 +4,9 @@ import javax.swing.*;
 
 public class CellMotion_2 extends MotionBasic {
 
+    //当前游戏目标
+    private int target = 2048;
+
     //用于读取游戏的构造器
     public CellMotion_2(int steps, int[] score, int status, int target) {
         this.status = status;
@@ -16,9 +19,6 @@ public class CellMotion_2 extends MotionBasic {
     //空参构造
     public CellMotion_2() {
     }
-
-    //当前游戏目标
-    private int target = 2048;
 
     //分数记录解释
     /*
@@ -503,7 +503,6 @@ public class CellMotion_2 extends MotionBasic {
                 RandomAddingCell(data);
             }
         } else {
-            return;
         }
 
 
