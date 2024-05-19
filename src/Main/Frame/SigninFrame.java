@@ -130,6 +130,7 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
 
     //注册验证
     private void SignInValidation() throws IOException {
+
         int passwordInputLength = userPassword.getPassword().length;
         int passwordCommitInputLength = userPasswordCommit.getPassword().length;
 
@@ -161,23 +162,24 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
             return;
         }
 
-
         if (passwordCommiting(userPassword.getPassword(), userPasswordCommit.getPassword())) {
             System.out.println("Sign In Password Verification Successfully");
             if (userOperation.isUserConsistent(loginUserName.getText()) >= 0) {
                 //该用户名已经存在
                 System.out.println("The UserName is already consistent!");
                 initialNoticeDialog(USER_IS_ALREADY_IN);
-            } else {
+            } else if (userOperation.isUserConsistent(loginUserName.getText()) == -1) {
                 userOperation.saveUserAccount(loginUserName.getText(), userPassword.getPassword());
                 this.dispose();
                 new LoginFrame().setup();
+            } else if (userOperation.isUserConsistent(loginUserName.getText()) <= -2) {
+                JOptionPane.showMessageDialog(null, "Data file is modified!\nCan't read.\nPlease contact administrator.");
+                return;
             }
         } else {
             System.out.println("Wrong Password");
             initialNoticeDialog(VERIFICATION_ERROR);
         }
-
     }
 
     //问题提示初始化

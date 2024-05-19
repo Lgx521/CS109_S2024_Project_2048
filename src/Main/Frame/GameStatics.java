@@ -94,6 +94,13 @@ public class GameStatics extends JFrame {
         File file_3_tile = new File("src/Main/Data/Records/statisticsData_3_tile.txt");
         File file_3_time = new File("src/Main/Data/Records/statisticsData_3_time.txt");
 
+        //md5校验
+        boolean tile_2 = userOperator.md5Verification(file_2_tile, "src/Main/Data/Records/md5/tile_2_md5.txt");
+        boolean tile_3 = userOperator.md5Verification(file_3_tile, "src/Main/Data/Records/md5/tile_3_md5.txt");
+        boolean time_2 = userOperator.md5Verification(file_2_time, "src/Main/Data/Records/md5/time_2_md5.txt");
+        boolean time_3 = userOperator.md5Verification(file_3_time, "src/Main/Data/Records/md5/time_3_md5.txt");
+
+
         try {
             file_2_time.exists();
             file_3_time.exists();
@@ -115,102 +122,121 @@ public class GameStatics extends JFrame {
         String UserNameRegex = "UserName=(\\w)+";
         Pattern userNameGetter = Pattern.compile(UserNameRegex);
 
+        //文件是否被修改
+        boolean modified = false;
+
 
         //第一次遍历file2tile，得到maxTile_2
-        for (int i = 0; i < userOperator.getTotalLines(file_2_tile); i++) {
-            String DataOfThis = userOperator.ReadAppointedLine(file_2_tile, i);
+        if (tile_2) {
+            for (int i = 0; i < userOperator.getTotalLines(file_2_tile); i++) {
+                String DataOfThis = userOperator.ReadAppointedLine(file_2_tile, i);
 
-            Matcher nameMatcher = userNameGetter.matcher(DataOfThis);
-            Matcher maxTileMatcher = maxTilePattern.matcher(DataOfThis);
+                Matcher nameMatcher = userNameGetter.matcher(DataOfThis);
+                Matcher maxTileMatcher = maxTilePattern.matcher(DataOfThis);
 
-            //匹配字符串
-            if (nameMatcher.find() && maxTileMatcher.find()) {
-                String maxTileStr = maxTileMatcher.group().substring(14);
-                String userNameStr = nameMatcher.group().substring(9);
+                //匹配字符串
+                if (nameMatcher.find() && maxTileMatcher.find()) {
+                    String maxTileStr = maxTileMatcher.group().substring(14);
+                    String userNameStr = nameMatcher.group().substring(9);
 
-                //比较判断是否改变最大块变量
-                if (stringCompare(maxTileStr, maxTile_2)) {
-                    maxTile_2 = maxTileStr;
-                    userName_MaxTile_2 = userNameStr;
+                    //比较判断是否改变最大块变量
+                    if (stringCompare(maxTileStr, maxTile_2)) {
+                        maxTile_2 = maxTileStr;
+                        userName_MaxTile_2 = userNameStr;
+                    }
+
                 }
-
             }
+        } else {
+            modified = true;
         }
 
         //第二次遍历file3tile，得到maxTile_3
-        for (int i = 0; i < userOperator.getTotalLines(file_3_tile); i++) {
-            String DataOfThis = userOperator.ReadAppointedLine(file_3_tile, i);
+        if (tile_3) {
+            for (int i = 0; i < userOperator.getTotalLines(file_3_tile); i++) {
+                String DataOfThis = userOperator.ReadAppointedLine(file_3_tile, i);
 
-            Matcher nameMatcher = userNameGetter.matcher(DataOfThis);
-            Matcher maxTileMatcher = maxTilePattern.matcher(DataOfThis);
+                Matcher nameMatcher = userNameGetter.matcher(DataOfThis);
+                Matcher maxTileMatcher = maxTilePattern.matcher(DataOfThis);
 
-            //匹配字符串
-            if (nameMatcher.find() && maxTileMatcher.find()) {
-                String maxTileStr = maxTileMatcher.group().substring(14);
-                String userNameStr = nameMatcher.group().substring(9);
+                //匹配字符串
+                if (nameMatcher.find() && maxTileMatcher.find()) {
+                    String maxTileStr = maxTileMatcher.group().substring(14);
+                    String userNameStr = nameMatcher.group().substring(9);
 
-                //比较判断是否改变最大块变量
-                if (stringCompare(maxTileStr, maxTile_3)) {
-                    maxTile_3 = maxTileStr;
-                    userName_MaxTile_3 = userNameStr;
+                    //比较判断是否改变最大块变量
+                    if (stringCompare(maxTileStr, maxTile_3)) {
+                        maxTile_3 = maxTileStr;
+                        userName_MaxTile_3 = userNameStr;
+                    }
+
                 }
-
             }
+        } else {
+            modified = true;
         }
 
         //第三次遍历file2time，得到minTime2048以及1024
-        for (int i = 0; i < userOperator.getTotalLines(file_2_time); i++) {
-            String DataOfThis = userOperator.ReadAppointedLine(file_2_time, i);
+        if (time_2) {
+            for (int i = 0; i < userOperator.getTotalLines(file_2_time); i++) {
+                String DataOfThis = userOperator.ReadAppointedLine(file_2_time, i);
 
-            Matcher nameMatcher = userNameGetter.matcher(DataOfThis);
-            Matcher minTimeMatcher = minTimePattern.matcher(DataOfThis);
+                Matcher nameMatcher = userNameGetter.matcher(DataOfThis);
+                Matcher minTimeMatcher = minTimePattern.matcher(DataOfThis);
 
-            if (nameMatcher.find() && minTimeMatcher.find()) {
+                if (nameMatcher.find() && minTimeMatcher.find()) {
 
-                String userNameStr = nameMatcher.group().substring(9);
-                String minTime = minTimeMatcher.group().substring(21);
+                    String userNameStr = nameMatcher.group().substring(9);
+                    String minTime = minTimeMatcher.group().substring(21);
 
-                String tileNum = minTimeMatcher.group().substring(16, 20);
+                    String tileNum = minTimeMatcher.group().substring(16, 20);
 
-                if (tileNum.equals("2048")) {
-                    if (stringCompare(minTime_2048, minTime)) {
-                        minTime_2048 = minTime;
-                        userName_minTime_2048 = userNameStr;
-                    }
-                } else if (tileNum.equals("1024")) {
-                    if (stringCompare(minTime_1024, minTime)) {
-                        minTime_1024 = minTime;
-                        userName_minTime_1024 = userNameStr;
+                    if (tileNum.equals("2048")) {
+                        if (stringCompare(minTime_2048, minTime)) {
+                            minTime_2048 = minTime;
+                            userName_minTime_2048 = userNameStr;
+                        }
+                    } else if (tileNum.equals("1024")) {
+                        if (stringCompare(minTime_1024, minTime)) {
+                            minTime_1024 = minTime;
+                            userName_minTime_1024 = userNameStr;
+                        }
                     }
                 }
             }
+        } else {
+            modified = true;
         }
 
         //第四次遍历file3time，得到minTime729以及243
-        for (int i = 0; i < userOperator.getTotalLines(file_3_time); i++) {
-            String DataOfThis = userOperator.ReadAppointedLine(file_3_time, i);
+        if (time_3) {
+            for (int i = 0; i < userOperator.getTotalLines(file_3_time); i++) {
+                String DataOfThis = userOperator.ReadAppointedLine(file_3_time, i);
 
-            Matcher nameMatcher = userNameGetter.matcher(DataOfThis);
-            Matcher minTimeMatcher = minTimePattern.matcher(DataOfThis);
+                Matcher nameMatcher = userNameGetter.matcher(DataOfThis);
+                Matcher minTimeMatcher = minTimePattern.matcher(DataOfThis);
 
-            if (nameMatcher.find() && minTimeMatcher.find()) {
-                String userNameStr = nameMatcher.group().substring(9);
-                String minTime = minTimeMatcher.group().substring(20);
+                if (nameMatcher.find() && minTimeMatcher.find()) {
+                    String userNameStr = nameMatcher.group().substring(9);
+                    String minTime = minTimeMatcher.group().substring(20);
 
-                String tileNum = minTimeMatcher.group().substring(16, 19);
+                    String tileNum = minTimeMatcher.group().substring(16, 19);
 
-                if (tileNum.equals("729")) {
-                    if (stringCompare(minTime_729, minTime)) {
-                        minTime_729 = minTime;
-                        userName_minTime_729 = userNameStr;
-                    }
-                } else if (tileNum.equals("243")) {
-                    if (stringCompare(minTime_243, minTime)) {
-                        minTime_243 = minTime;
-                        userName_minTime_243 = userNameStr;
+                    if (tileNum.equals("729")) {
+                        if (stringCompare(minTime_729, minTime)) {
+                            minTime_729 = minTime;
+                            userName_minTime_729 = userNameStr;
+                        }
+                    } else if (tileNum.equals("243")) {
+                        if (stringCompare(minTime_243, minTime)) {
+                            minTime_243 = minTime;
+                            userName_minTime_243 = userNameStr;
+                        }
                     }
                 }
             }
+        } else {
+            modified = true;
         }
 //        System.out.println(maxTile_2);
 //        System.out.println(maxTile_3);
@@ -218,6 +244,12 @@ public class GameStatics extends JFrame {
 //        System.out.println(minTime_1024);
 //        System.out.println(minTime_729);
 //        System.out.println(minTime_243);
+
+        if (modified) {
+            JOptionPane.showMessageDialog(this, "Statistics data stock file is modified!\n" +
+                    "Some information can't be displayed.");
+        }
+
     }
 
     //JLabelSetter

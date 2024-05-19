@@ -115,6 +115,8 @@ public class StatisticsDataStock {
             //todo
             System.out.println("File error");
         }
+        //保存md5校验码
+        userOperation.fileVerificationSaver(new File(filePathForPowerOf2),"src/Main/Data/Records/md5/tile_2_md5.txt");
     }
 
     private void writeMaxTileData_3(int tileNum, String userName) {
@@ -128,6 +130,8 @@ public class StatisticsDataStock {
             //todo
             System.out.println("File error");
         }
+        //保存md5校验码
+        userOperation.fileVerificationSaver(new File(filePathForPowerOf3),"src/Main/Data/Records/md5/tile_3_md5.txt");
     }
 
     private void writeMinTimeTo_2048(long timeTo_2048, String userName) {
@@ -141,6 +145,8 @@ public class StatisticsDataStock {
             //todo
             System.out.println("File error");
         }
+        //保存md5校验码
+        userOperation.fileVerificationSaver(new File(filePathForPowerOf2_time),"src/Main/Data/Records/md5/time_2_md5.txt");
     }
 
     private void writeMinTimeTo_1024(long timeTo_1024, String userName) {
@@ -154,6 +160,8 @@ public class StatisticsDataStock {
             //todo
             System.out.println("File error");
         }
+        //保存md5校验码
+        userOperation.fileVerificationSaver(new File(filePathForPowerOf2_time),"src/Main/Data/Records/md5/time_2_md5.txt");
     }
 
     private void writeMinTimeTo_243(long timeTo_243, String userName) {
@@ -167,6 +175,8 @@ public class StatisticsDataStock {
             //todo
             System.out.println("File error");
         }
+        //保存md5校验码
+        userOperation.fileVerificationSaver(new File(filePathForPowerOf3_time),"src/Main/Data/Records/md5/time_3_md5.txt");
     }
 
     private void writeMinTimeTo_729(long timeTo_729, String userName) {
@@ -180,6 +190,8 @@ public class StatisticsDataStock {
             //todo
             System.out.println("File error");
         }
+        //保存md5校验码
+        userOperation.fileVerificationSaver(new File(filePathForPowerOf3_time),"src/Main/Data/Records/md5/time_3_md5.txt");
     }
 
 

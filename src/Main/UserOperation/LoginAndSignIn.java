@@ -36,16 +36,23 @@ public class LoginAndSignIn {
             System.out.println("File Save Failed");
         }
         //保存MD5校验码
-        fileVerificationSaver(new File("src/Main/Data/UserData.txt"));
+        fileVerificationSaver(new File("src/Main/Data/UserData.txt"),"src/Main/Data/UserData_VerificationCode.txt");
     }
 
     //查询用户是否存在
     /* 存在：返回其UserID
      * 不存在：返回-1
-     * 文件损坏：返回-2
+     * 文件无法匹配：返回-2
      * */
     public int isUserConsistent(String userName) throws IOException {
+
         File UserData = new File("src/Main/Data/UserData.txt");
+
+        //先进行文件完整性校验
+        if (!md5Verification(UserData,"src/Main/Data/UserData_VerificationCode.txt")) {
+            System.out.println("md5 verify failed!");
+            return -3;
+        }
 
         String DetectorRegex = "UserID=(.)+&UserName=(\\w)+&Password=(.)+";
         String UserNameRegex = "UserName=(\\w)+";
@@ -62,7 +69,7 @@ public class LoginAndSignIn {
                     return i;
                 }
             } else {
-                //文件损坏
+                //文件无法匹配
                 return -2;
             }
         }
@@ -76,8 +83,7 @@ public class LoginAndSignIn {
         File UserData = new File("src/Main/Data/UserData.txt");
 
         //先进行文件完整性校验
-        if (!md5Verification(UserData)) {
-            JOptionPane.showMessageDialog(null, "Data file is modified!\nCan't read.");
+        if (!md5Verification(UserData, "src/Main/Data/UserData_VerificationCode.txt")) {
             System.out.println("md5 verify failed!");
             return false;
         }
@@ -163,8 +169,8 @@ public class LoginAndSignIn {
     }
 
     //md5校验
-    public boolean md5Verification(File fileToVerify) throws FileNotFoundException {
-        Scanner sc = new Scanner(new File("src/Main/Data/UserData_VerifacationCode.txt"));
+    public boolean md5Verification(File fileToVerify, String md5VerificationFilePath) throws FileNotFoundException {
+        Scanner sc = new Scanner(new File(md5VerificationFilePath));
         String code = "";
         code = sc.nextLine();
         String rawCode = md5HashCode(fileToVerify.getAbsolutePath());
@@ -174,18 +180,17 @@ public class LoginAndSignIn {
     }
 
     //md5校验码保存
-    public void fileVerificationSaver(File file) {
-        File file_code = new File("src/Main/Data/UserData_VerifacationCode.txt");
+    public void fileVerificationSaver(File file, String saveFilePath) {
+        File file_code = new File(saveFilePath);
         String code = md5HashCode(file.getAbsolutePath());
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("src/Main/Data/UserData_VerifacationCode.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(saveFilePath));
             writer.write(code);
             writer.flush();
             writer.close();
         } catch (IOException e) {
             System.out.println("MD5 Verification code file save Failed");
         }
-
     }
 
     //获取文件md5值

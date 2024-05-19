@@ -5,3 +5,4 @@ PowerOf2&TimeTo_2048=45&UserName=gan
 PowerOf2&TimeTo_1024=58&UserName=gan
 PowerOf2&TimeTo_1024=37&UserName=gan
 PowerOf2&TimeTo_2048=69&UserName=gan
+PowerOf2&TimeTo_1024=42&UserName=t

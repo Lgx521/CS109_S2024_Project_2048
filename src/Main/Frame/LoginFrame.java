@@ -147,9 +147,13 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
                 if (userOpeartion.isUserConsistent(loginUserName.getText()) >= 0) {
                     //存在
                     UserID = userOpeartion.isUserConsistent(loginUserName.getText());
-                } else {
+                } else if (userOpeartion.isUserConsistent(loginUserName.getText()) == -1) {
                     //不存在
                     initialLoginFailure(INVALID_USERNAME);
+                    return;
+                } else {
+                    //文件损坏
+                    JOptionPane.showMessageDialog(null, "Data file is modified!\nCan't operate.\nPlease contact administrator.");
                     return;
                 }
             } catch (IOException ex) {
@@ -196,7 +200,7 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
             System.out.println("Try Guest Mode");
             this.dispose();
             gameFrame.setStatus(GUSET_MODE);
-                gameFrame.setupInGuestMode();
+            gameFrame.setupInGuestMode();
         }
     }
 
