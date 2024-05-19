@@ -29,10 +29,10 @@ public class EffectMusicPlayer {
         try {
             musicPath = new File(musicLocation);
             if (musicPath.exists()) {
-//                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
-//                clip = AudioSystem.getClip();
-//                clip.open(audioInput);
-//                clip.start();
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+                clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.start();
             } else {
                 System.out.println("Error in playing Music");
                 JOptionPane.showMessageDialog(null, "Can't find the music file!", "Caution", JOptionPane.ERROR_MESSAGE);
