@@ -371,8 +371,8 @@ public class CellMotion_3 extends MotionBasic {
 
     //判断所有行能否向右移动
     private boolean isFlagRight(int[][] data) {
-        for (int i = 0; i < data.length; i++) {
-            if (isRightMovable(data[i]) || isRightHaveZero(data[i])) {
+        for (int[] datum : data) {
+            if (isRightMovable(datum) || isRightHaveZero(datum)) {
                 return true;
             }
         }
@@ -381,8 +381,8 @@ public class CellMotion_3 extends MotionBasic {
 
     //判断所有行能否向左移动
     private boolean isFlagLeft(int[][] data) {
-        for (int i = 0; i < data.length; i++) {
-            if (isLeftMovable(data[i]) || isLeftHaveZero(data[i])) {
+        for (int[] datum : data) {
+            if (isLeftMovable(datum) || isLeftHaveZero(datum)) {
                 return true;
             }
         }
@@ -450,9 +450,9 @@ public class CellMotion_3 extends MotionBasic {
     //移动后在空白位置增加一个新的3
     private void RandomAddingCell(int[][] data) {
         boolean flag = false;
-        for (int i = 0; i < data.length; i++) {
+        for (int[] datum : data) {
             for (int j = 0; j < data[0].length; j++) {
-                if (data[i][j] == 0) {
+                if (datum[j] == 0) {
                     flag = true;
                     break;
                 }
@@ -468,18 +468,16 @@ public class CellMotion_3 extends MotionBasic {
             } else {
                 RandomAddingCell(data);
             }
-        } else {
         }
-
 
     }
 
     //判断游戏是否已经不能移动了
     @Override
     public boolean isCanNotMovable(int[][] data) {
-        for (int i = 0; i < data.length; i++) {
-            if (isLeftMovable(data[i]) || isRightMovable(data[i])
-                    || isLeftHaveZero(data[i]) || isRightHaveZero(data[i])) {
+        for (int[] datum : data) {
+            if (isLeftMovable(datum) || isRightMovable(datum)
+                    || isLeftHaveZero(datum) || isRightHaveZero(datum)) {
                 return false;
             }
         }
@@ -525,9 +523,9 @@ public class CellMotion_3 extends MotionBasic {
     //判断是否胜利
     public boolean ifYouWin(int[][] data) {
         int target = getTarget();
-        for (int i = 0; i < data.length; i++) {
+        for (int[] datum : data) {
             for (int j = 0; j < data[0].length; j++) {
-                if (data[i][j] == target) {
+                if (datum[j] == target) {
                     return true;
                 }
             }
