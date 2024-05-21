@@ -502,9 +502,7 @@ public class CellMotion_2 extends MotionBasic {
             } else {
                 RandomAddingCell(data);
             }
-        } else {
         }
-
 
     }
 

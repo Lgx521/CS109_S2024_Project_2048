@@ -190,7 +190,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
 
     //设置当前游戏运行模式
     /*
-     * STATUS == 0: LOG_IN.
+     * STATUS == 0: LOG_IN,
      * STATUS == 1: GUEST.
      * */
     public void setStatus(int status) {
