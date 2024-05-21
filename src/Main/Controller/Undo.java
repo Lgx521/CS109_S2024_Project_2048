@@ -6,13 +6,16 @@ public class Undo extends JFrame {
 
     private final int MAX_TIMES = 0;
     private final int START_PLACE = 1;
+
     //用于保存之前三步信息的矩阵
     private final int[][] temp_0 = new int[4][4];
     private final int[][] temp_1 = new int[4][4];
     private final int[][] temp_2 = new int[4][4];
     private final int[][] temp_3 = new int[4][4];
+
     //步数统计
     private int steps = 0;
+
     //回退次数，初始值为3，表示最多回退3次
     private int undoTimes = 3;
 

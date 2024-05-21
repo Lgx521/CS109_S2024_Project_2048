@@ -47,3 +47,7 @@ PowerOf3&tile=27&UserName=t
 PowerOf3&tile=81&UserName=t
 PowerOf3&tile=243&UserName=t
 PowerOf3&tile=729&UserName=t
+PowerOf3&tile=3&UserName=gan
+PowerOf3&tile=9&UserName=gan
+PowerOf3&tile=27&UserName=gan
+PowerOf3&tile=27&UserName=gan

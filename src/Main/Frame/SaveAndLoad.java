@@ -297,7 +297,18 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
     //按文件加载并开始游戏
     private void loadFileAndStartGame(File file) throws InterruptedException {
+
+        try {
+            if (!file.exists()) {
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("Not choose a file!");
+            return;
+        }
+
         GameDataStock gameDataStock_load;
+
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
             gameDataStock_load = (GameDataStock) ois.readObject();
@@ -308,11 +319,11 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
             System.out.println("This isn't the correct game data storage file");
             JOptionPane.showMessageDialog(null, "This isn't the correct game data storage file!\n" +
                     "Please choose proper file (*.2048)", "Caution", JOptionPane.INFORMATION_MESSAGE);
-            throw new RuntimeException(e);
+            return;
         } catch (ClassNotFoundException e) {
             System.out.println("File can't be read");
             JOptionPane.showMessageDialog(null, "File load failed!\nPlease choose proper file", "Caution", JOptionPane.INFORMATION_MESSAGE);
-            throw new RuntimeException(e);
+            return;
         }
 
         //需要添加判断是否是当前用户读取该文件
@@ -332,9 +343,11 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
         browserPanel.addChoosableFileFilter(filter);
         browserPanel.setFileFilter(filter);
         browserPanel.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        browserPanel.showDialog(null, "Commit");
-        File selected = browserPanel.getSelectedFile();
-        loadFileAndStartGame(selected);
+        int option = browserPanel.showDialog(null, "Commit");
+        if (option == JFileChooser.APPROVE_OPTION) {
+            File selected = browserPanel.getSelectedFile();
+            loadFileAndStartGame(selected);
+        }
     }
 
     //显示保存信息
