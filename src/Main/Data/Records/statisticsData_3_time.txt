@@ -12,3 +12,10 @@ PowerOf3&TimeTo_243=20&UserName=gan
 PowerOf3&TimeTo_243=12&UserName=t
 PowerOf3&TimeTo_729=27&UserName=t
 PowerOf3&TimeTo_243=11&UserName=12311111
+PowerOf3&TimeTo_243=15&UserName=class_show_1
+PowerOf3&TimeTo_243=10&UserName=class_show_1
+PowerOf3&TimeTo_243=39&UserName=class_show_1
+PowerOf3&TimeTo_243=39&UserName=class_show_1
+PowerOf3&TimeTo_243=40&UserName=class_show_1
+PowerOf3&TimeTo_243=40&UserName=class_show_1
+PowerOf3&TimeTo_243=40&UserName=class_show_1

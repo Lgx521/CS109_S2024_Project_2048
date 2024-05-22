@@ -373,7 +373,7 @@ public class SaveAndLoad extends JFrame implements ActionListener, MouseListener
 
         loaded.gameModeSelector = gameDataStock.getGameModeStatus();
 
-        if (motionStatus == 0) {
+        if (gameDataStock.getGameModeStatus() == 0) {
             loaded.motion = new CellMotion_2(steps, score, motionStatus, target);
         } else {
             loaded.motion = new CellMotion_3(steps, score, motionStatus, target);
