@@ -22,7 +22,7 @@ public class AI {
     int[] nextStepScore = new int[4];
 
     //最高迭代训练次数
-    private int N = 450;
+    private int N = 800;
 
     //N次模拟结果集
     int[] scoreResult = new int[N];
@@ -32,10 +32,12 @@ public class AI {
     public void setMotion(int mode) {
         if (mode == 0) {
             motion = new AIMotion_2();
-            this.N = 450;
+            this.N = 360;
+            System.out.println(this.N);
         } else if (mode == 1) {
             motion = new AIMotion_3();
-            this.N = 650;
+            this.N = 800;
+            System.out.println(this.N);
         }
     }
 
@@ -143,7 +145,6 @@ public class AI {
                 direction = i;
             }
         }
-
 
         System.out.printf("R = %-6d, L = %-6d, U = %-6d, D = %-6d\n",
                 nextStepScore[0], nextStepScore[1],

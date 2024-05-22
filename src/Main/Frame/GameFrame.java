@@ -849,14 +849,39 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         ai_prop.setMotion(gameModeSelector);
         motion.closeEffectSound();
         int direction = ai_prop.MonteCarlo(data);
+
         if (direction == 0) {
-            motion.moveBeforeWin(motion.RIGHT, data);
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.RIGHT, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.RIGHT, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
         } else if (direction == 1) {
-            motion.moveBeforeWin(motion.LEFT, data);
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.LEFT, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.LEFT, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
         } else if (direction == 2) {
-            motion.moveBeforeWin(motion.UP, data);
-        } else if (direction == 3) {
-            motion.moveBeforeWin(motion.DOWN, data);
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.UP, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.UP, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
+        } else {
+            if (motion.status == 0) {
+                motion.moveBeforeWin(motion.DOWN, data);
+            } else if (motion.status == 1) {
+                motion.moveAfterWin(motion.DOWN, data);
+            } else if (motion.status == 2) {
+                replayGame();
+            }
         }
         setImages();
         syncStatisticsData();
@@ -1331,14 +1356,6 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             syncStatisticsData();
             gameOverDialog();
         } else if (code == 32 && isAiAvailable) {
-            if (motion.status == 0) {
-                motion.moveBeforeWin(motion.LEFT, data);
-            } else if (motion.status == 1) {
-                motion.moveAfterWin(motion.LEFT, data);
-            } else if (motion.status == 2) {
-                replayGame();
-                return;
-            }
             AIRunning();
             gameOverDialog();
         }

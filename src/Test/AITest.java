@@ -4,7 +4,7 @@ import Main.Features.AI;
 
 import javax.swing.*;
 
-public class test extends JFrame implements Runnable {
+public class AITest extends JFrame implements Runnable {
     static AI ai = new AI();
 
     static int[][] data = {
@@ -18,14 +18,12 @@ public class test extends JFrame implements Runnable {
     static int flag = 1;
 
     public static void main(String[] args) {
-//        int k = 1;
-//        while (k <= 40) {
-//            System.out.println("次数：" + k);
-        ai.setMotion(1);
+
+        ai.setMotion(0);
         int[][] data = {
-                {0, 0, 0, 3},
+                {0, 0, 0, 2},
                 {0, 0, 0, 0},
-                {0, 3, 0, 0},
+                {0, 2, 0, 0},
                 {0, 0, 0, 0}
         };
 //        int[][] data = {
@@ -45,8 +43,7 @@ public class test extends JFrame implements Runnable {
 //        ai.AIMovingNonStop(data);
         printData(data);
         System.out.println("------------------");
-//            k++;
-//        }
+
     }
 
     public static void printData(int[][] data) {
