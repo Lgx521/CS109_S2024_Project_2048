@@ -19,6 +19,6 @@ public class cellMotion_3Test {
     }
 
     public static void printData(int[][] data) {
-        test.printData(data);
+        AITest.printData(data);
     }
 }

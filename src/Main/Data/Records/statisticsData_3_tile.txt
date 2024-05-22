@@ -51,3 +51,12 @@ PowerOf3&tile=3&UserName=gan
 PowerOf3&tile=9&UserName=gan
 PowerOf3&tile=27&UserName=gan
 PowerOf3&tile=27&UserName=gan
+PowerOf3&tile=3&UserName=12311111
+PowerOf3&tile=9&UserName=12311111
+PowerOf3&tile=27&UserName=12311111
+PowerOf3&tile=81&UserName=12311111
+PowerOf3&tile=3&UserName=12311111
+PowerOf3&tile=9&UserName=12311111
+PowerOf3&tile=27&UserName=12311111
+PowerOf3&tile=81&UserName=12311111
+PowerOf3&tile=243&UserName=12311111
