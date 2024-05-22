@@ -387,7 +387,9 @@ public class AIMotion_2 extends AIMotionBasic {
 
         if (flag) {
             int[] selectable = {2, 4};
-            int newCell = r.nextInt(0, 2);
+            int pos = r.nextInt(10);
+            //90%产生2
+            int newCell = pos < 9 ? 0 : 1;
             int i = r.nextInt(TempData.length);
             int j = r.nextInt(TempData[0].length);
             if (TempData[i][j] == 0) {
@@ -395,9 +397,7 @@ public class AIMotion_2 extends AIMotionBasic {
             } else {
                 RandomAddingCell(TempData);
             }
-        } else {
         }
-
 
     }
 
