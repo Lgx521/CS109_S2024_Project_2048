@@ -7,3 +7,15 @@ PowerOf2&TimeTo_1024=37&UserName=gan
 PowerOf2&TimeTo_2048=69&UserName=gan
 PowerOf2&TimeTo_1024=42&UserName=t
 PowerOf2&TimeTo_1024=42&UserName=12311111
+PowerOf2&TimeTo_1024=36&UserName=class_show_1
+PowerOf2&TimeTo_2048=69&UserName=class_show_1
+PowerOf2&TimeTo_1024=79&UserName=class_show_1
+PowerOf2&TimeTo_1024=78&UserName=class_show_1
+PowerOf2&TimeTo_1024=78&UserName=class_show_1
+PowerOf2&TimeTo_2048=79&UserName=class_show_1
+PowerOf2&TimeTo_1024=36&UserName=class_show_1
+PowerOf2&TimeTo_2048=92&UserName=class_show_1
+PowerOf2&TimeTo_1024=93&UserName=class_show_1
+PowerOf2&TimeTo_2048=94&UserName=class_show_1
+PowerOf2&TimeTo_1024=94&UserName=class_show_1
+PowerOf2&TimeTo_2048=94&UserName=class_show_1

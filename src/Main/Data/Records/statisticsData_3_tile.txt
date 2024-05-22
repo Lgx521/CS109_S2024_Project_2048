@@ -60,3 +60,13 @@ PowerOf3&tile=9&UserName=12311111
 PowerOf3&tile=27&UserName=12311111
 PowerOf3&tile=81&UserName=12311111
 PowerOf3&tile=243&UserName=12311111
+PowerOf3&tile=3&UserName=class_show_1
+PowerOf3&tile=9&UserName=class_show_1
+PowerOf3&tile=27&UserName=class_show_1
+PowerOf3&tile=81&UserName=class_show_1
+PowerOf3&tile=243&UserName=class_show_1
+PowerOf3&tile=243&UserName=class_show_1
+PowerOf3&tile=243&UserName=class_show_1
+PowerOf3&tile=243&UserName=class_show_1
+PowerOf3&tile=243&UserName=class_show_1
+PowerOf3&tile=243&UserName=class_show_1
