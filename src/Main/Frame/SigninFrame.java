@@ -31,6 +31,8 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
     JButton signIn = new JButton("Sign in");
     JButton guest = new JButton("Guest Mode");
 
+    JButton backToLogIn = new JButton("Back");
+
     LoginAndSignIn userOperation = new LoginAndSignIn();
 
     //创建setup方法供外界访问
@@ -97,9 +99,17 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
         signIn.setBounds(176, 225, 100, 30);
         signIn.addActionListener(this);
 
+        backToLogIn.setBounds(370,255,70,30);
+        backToLogIn.addActionListener(this);
 
+        JLabel label = new JLabel("Back to log in -->");
+        label.setBounds(250, 254, 200, 30);
+        label.setForeground(Color.WHITE);
+
+        this.getContentPane().add(label);
         this.getContentPane().add(loginUserName);
         this.getContentPane().add(userPassword);
+        this.getContentPane().add(backToLogIn);
         this.getContentPane().add(UserNameTip);
         this.getContentPane().add(UserPasswordTip);
         this.getContentPane().add(userPasswordCommit);
@@ -216,7 +226,10 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-
+        } else if (obj == backToLogIn) {
+            System.out.println("back");
+            this.dispose();
+            new LoginFrame().setup();
         }
     }
 
