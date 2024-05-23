@@ -157,7 +157,8 @@ public class LoginFrame extends JFrame implements ActionListener, ItemListener {
                     return;
                 } else {
                     //文件损坏
-                    JOptionPane.showMessageDialog(null, "Data file is modified!\nCan't operate.\nPlease contact administrator.");
+                    JOptionPane.showMessageDialog(null, "Data file is modified!\nBut click 'OK' will restore the data.");
+                    userOpeartion.restoreData();
                     return;
                 }
             } catch (IOException ex) {
