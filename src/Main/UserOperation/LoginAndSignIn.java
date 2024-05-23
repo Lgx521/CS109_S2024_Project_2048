@@ -1,5 +1,6 @@
 package Main.UserOperation;
 
+import javax.swing.*;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -7,24 +8,32 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginAndSignIn {
+public class LoginAndSignIn extends JFrame {
 
     encrypt encoder = new encrypt();
 
-    //保存用户信息
+    verificationCodeStock verificationStock = new verificationCodeStock();
+
+    //保存用户信息 并保存序列化文件
     public void saveUserAccount(String userName, char[] password) throws IOException {
+        //密码加密
         StringBuilder password_str = new StringBuilder();
         for (int i = 0; i < password.length; i++) {
             password_str.append(password[i]);
         }
         String passwordEncrypted;
+
         try {
             passwordEncrypted = encoder.encryptBASE64(password_str.toString());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        //生成唯一的用户ID
         int userID = getTotalLines(new File("src/Main/Data/UserData.txt"));
+
         String saver = String.format("\nUserID=%s&UserName=%s&Password=%s", userID, userName, passwordEncrypted);
+
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("src/Main/Data/UserData.txt", true));
             writer.write(saver);
@@ -33,8 +42,23 @@ public class LoginAndSignIn {
         } catch (IOException e) {
             System.out.println("File Save Failed");
         }
+
+        //这是已经写入后到文件
+        File file = new File("src/Main/Data/UserData.txt");
+
         //保存MD5校验码
-        fileVerificationSaver(new File("src/Main/Data/UserData.txt"), "src/Main/Data/UserData_VerificationCode.txt");
+        fileVerificationSaver(file, "src/Main/Data/UserData_VerificationCode.txt");
+
+        //保存到库
+        for (int i = 0; i < getTotalLines(file); i++) {
+            String line = ReadAppointedLine(file, i);
+            verificationStock.addData(line);
+            System.out.println(line);
+        }
+
+        //序列化
+        serialize();
+
     }
 
     //查询用户是否存在
@@ -75,6 +99,39 @@ public class LoginAndSignIn {
         }
         //用户不存在
         return -1;
+    }
+
+    //文件被修改之后的方法
+    public void restoreData() throws IOException {
+
+        reSerialize();
+
+        //先覆盖原文件
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("src/Main/Data/UserData.txt"));
+            writer.write("");
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("File Save Failed");
+        }
+
+        for (int i = 0; i < verificationStock.getLine(); i++) {
+
+            String saver = verificationStock.getData(i) + "\n";
+
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter("src/Main/Data/UserData.txt", true));
+                writer.write(saver);
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                System.out.println("File Save Failed");
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, "Restore successfully","Notice",JOptionPane.INFORMATION_MESSAGE);
+
     }
 
     //读取文件查询用户
@@ -210,6 +267,47 @@ public class LoginAndSignIn {
         } catch (Exception e) {
             System.out.println("MD5 code getting error");
             throw new RuntimeException(e);
+        }
+    }
+
+    //序列化
+    private void serialize() {
+        try {
+            String fileName = "src/Main/Data/Records/md5/GameData.md5";
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+            oos.writeObject(verificationStock);
+            oos.close();
+            JOptionPane.showMessageDialog(null, "Game Saved Successfully", "Notice", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("Verification code saved");
+            this.dispose();
+        } catch (IOException e) {
+            System.out.println("Save failed");
+            JOptionPane.showMessageDialog(null, "File save failed!", "Caution", JOptionPane.INFORMATION_MESSAGE);
+            throw new RuntimeException(e);
+        }
+    }
+
+    //反序列化
+    private void reSerialize() {
+        File file;
+        try {
+            file = new File("src/Main/Data/Records/md5/GameData.md5");
+            if (!file.exists()) {
+                JOptionPane.showMessageDialog(null, "error", "Caution", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("error");
+            return;
+        }
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+            this.verificationStock = (verificationCodeStock) ois.readObject();
+            ois.close();
+            System.out.println("loaded verification code");
+        } catch (Exception e) {
+            System.out.println("Error");
+            JOptionPane.showMessageDialog(null, "File error", "Caution", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 

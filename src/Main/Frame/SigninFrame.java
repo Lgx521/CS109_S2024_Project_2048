@@ -186,7 +186,9 @@ public class SigninFrame extends JFrame implements ActionListener, ItemListener 
                 this.dispose();
                 new LoginFrame().setup();
             } else if (userOperation.isUserConsistent(loginUserName.getText()) <= -2) {
-                JOptionPane.showMessageDialog(null, "Data file is modified!\nCan't read.\nPlease contact administrator.");
+                JOptionPane.showMessageDialog(null, "Data file is modified!\nBut click 'OK' will restore the data.");
+                userOperation.restoreData();
+                return;
             }
         } else {
             System.out.println("Wrong Password");
