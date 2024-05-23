@@ -19,3 +19,10 @@ PowerOf2&TimeTo_1024=93&UserName=class_show_1
 PowerOf2&TimeTo_2048=94&UserName=class_show_1
 PowerOf2&TimeTo_1024=94&UserName=class_show_1
 PowerOf2&TimeTo_2048=94&UserName=class_show_1
+PowerOf2&TimeTo_1024=94&UserName=class_show_1
+PowerOf2&TimeTo_2048=95&UserName=class_show_1
+PowerOf2&TimeTo_1024=52&UserName=t
+PowerOf2&TimeTo_2048=96&UserName=t
+PowerOf2&TimeTo_1024=57&UserName=t
+PowerOf2&TimeTo_2048=101&UserName=t
+PowerOf2&TimeTo_1024=290&UserName=t
