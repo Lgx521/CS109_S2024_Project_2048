@@ -233,3 +233,5 @@ PowerOf2&tile=4&UserName=t
 PowerOf2&tile=4&UserName=t
 PowerOf2&tile=4&UserName=t
 PowerOf2&tile=4&UserName=gan
+PowerOf2&tile=4&UserName=gan
+PowerOf2&tile=4&UserName=gan
