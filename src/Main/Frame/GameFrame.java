@@ -1111,6 +1111,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             }
             setImages();
             syncStatisticsData();
+            this.requestFocus();
             gameOverDialog();
         } else if (obj == move_Left) {
             System.out.println("left");
@@ -1123,6 +1124,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             }
             setImages();
             syncStatisticsData();
+            this.requestFocus();
             gameOverDialog();
         } else if (obj == move_Up) {
             System.out.println("up");
@@ -1135,6 +1137,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             }
             setImages();
             syncStatisticsData();
+            this.requestFocus();
             gameOverDialog();
         } else if (obj == move_Down) {
             System.out.println("down");
@@ -1147,6 +1150,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             }
             setImages();
             syncStatisticsData();
+            this.requestFocus();
             gameOverDialog();
         }
     }
