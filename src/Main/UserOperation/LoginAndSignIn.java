@@ -117,9 +117,12 @@ public class LoginAndSignIn extends JFrame {
         }
 
         for (int i = 0; i < verificationStock.getLine(); i++) {
-
-            String saver = verificationStock.getData(i) + "\n";
-
+            String saver;
+            if (i != 0) {
+                saver = "\n" + verificationStock.getData(i);
+            }else {
+                saver = verificationStock.getData(i);
+            }
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter("src/Main/Data/UserData.txt", true));
                 writer.write(saver);
@@ -251,7 +254,7 @@ public class LoginAndSignIn extends JFrame {
     }
 
     //获取文件md5值
-    private String md5HashCode(String filePath) {
+    public String md5HashCode(String filePath) {
         try {
             InputStream fis = new FileInputStream(filePath);
             MessageDigest md = MessageDigest.getInstance("MD5");
