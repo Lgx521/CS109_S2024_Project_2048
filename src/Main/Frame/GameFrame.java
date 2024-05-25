@@ -253,7 +253,10 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
         isAiAvailable = false;
         isHammerAvailable = false;
         seconds = 0;
-        timeCountDown.restart();
+        timeCountDownLabel.setForeground(new Color(0, 200, 120));
+        timeCountDownLabel.setText("Time remaining  —:—");
+//        timeCountDown.restart();
+        timeCountDown.stop();
         timeCount.restart();
         setTimeLimit(timeLimit);
         timeCount();
@@ -448,6 +451,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
                 int option = JOptionPane.showConfirmDialog(this, "Time out!\nPress 'OK' to retry, 'Cancel' to quit.", "Notice", JOptionPane.OK_CANCEL_OPTION);
                 if (option == 0) {
                     replayGame();
+                    timeCountDown.restart();
                     setTimeLimit(timeLimit);
                     timeCountDownLabel.setForeground(new Color(0, 200, 120));
                 } else {
@@ -1096,6 +1100,7 @@ public class GameFrame extends JFrame implements ActionListener, MouseListener, 
             timeCountDown();
         } else if (obj == quitCountDown) {
             setTimeLimit(timeLimit);
+            timeCountDownLabel.setForeground(new Color(0, 200, 120));
             timeCountDownLabel.setText("Time remaining  —:—");
             timeCountDown.stop();
             setImages();
