@@ -9,6 +9,6 @@ public class getMD5 {
         LoginAndSignIn loginAndSignIn = new LoginAndSignIn();
 
 //        System.out.println(loginAndSignIn.md5HashCode("src/Main/Data/UserData.txt"));
-        System.out.println(loginAndSignIn.md5HashCode("src/Main/Data/Records/statisticsData_2_time.txt"));
+        System.out.println(loginAndSignIn.md5HashCode("src/Main/Data/Records/statisticsData_2_tile.txt"));
     }
 }
