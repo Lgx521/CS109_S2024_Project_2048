@@ -309,12 +309,12 @@ public class GameStatics extends JFrame {
         colume_5_user.setFont(font);
         colume_6_user.setFont(font);
 
-        colume_1_user.setBounds(390, 145, 165, 50);
-        colume_2_user.setBounds(390, 185, 165, 50);
-        colume_3_user.setBounds(390, 227, 165, 50);
-        colume_4_user.setBounds(390, 267, 165, 50);
-        colume_5_user.setBounds(390, 308, 165, 50);
-        colume_6_user.setBounds(390, 347, 165, 50);
+        colume_1_user.setBounds(372, 145, 165, 50);
+        colume_2_user.setBounds(372, 185, 165, 50);
+        colume_3_user.setBounds(372, 227, 165, 50);
+        colume_4_user.setBounds(372, 267, 165, 50);
+        colume_5_user.setBounds(372, 308, 165, 50);
+        colume_6_user.setBounds(372, 347, 165, 50);
 
         this.getContentPane().add(column_1);
         this.getContentPane().add(column_2);

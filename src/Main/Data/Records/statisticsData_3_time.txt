@@ -22,3 +22,4 @@ PowerOf3&TimeTo_243=40&UserName=class_show_1
 PowerOf3&TimeTo_243=39&UserName=class_show_1
 PowerOf3&TimeTo_243=39&UserName=class_show_1
 PowerOf3&TimeTo_243=39&UserName=class_show_1
+PowerOf3&TimeTo_243=39&UserName=class_show_1
